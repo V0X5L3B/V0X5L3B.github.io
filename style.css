@@ -83,6 +83,26 @@ body {
         0 0 0 1px var(--border-color),
         0 4px 24px rgba(0, 0, 0, 0.4),
         0 0 80px var(--accent-glow);
+    animation: card-float 6s ease-in-out infinite, card-glow 3s ease-in-out infinite alternate;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 
+        0 0 0 1px var(--accent),
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 0 120px var(--accent-glow);
+}
+
+@keyframes card-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes card-glow {
+    0% { box-shadow: 0 0 0 1px var(--border-color), 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 60px var(--accent-glow); }
+    100% { box-shadow: 0 0 0 1px var(--border-color), 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 100px var(--accent-glow); }
 }
 
 .glitch-border {
@@ -596,6 +616,35 @@ body {
 @keyframes splash-ring {
     0% { transform: scale(0.5); opacity: 1; }
     100% { transform: scale(2); opacity: 0; }
+}
+
+.profile-header {
+    animation: fade-slide-in 0.6s ease-out;
+}
+
+.social-links {
+    animation: fade-slide-in 0.6s ease-out 0.1s both;
+}
+
+.stats {
+    animation: fade-slide-in 0.6s ease-out 0.2s both;
+}
+
+.about-section {
+    animation: fade-slide-in 0.6s ease-out 0.3s both;
+}
+
+.skills-section {
+    animation: fade-slide-in 0.6s ease-out 0.4s both;
+}
+
+.footer {
+    animation: fade-slide-in 0.6s ease-out 0.5s both;
+}
+
+@keyframes fade-slide-in {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 520px) {
