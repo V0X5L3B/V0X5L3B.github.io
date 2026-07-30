@@ -28,17 +28,20 @@ function initViewCounter() {
     if (!viewCountEl) return;
 
     let count = parseInt(localStorage.getItem('profileViews') || '0', 10);
-    let viewTimes = JSON.parse(localStorage.getItem('profileViewTimes') || '[]');
+    let viewData = JSON.parse(localStorage.getItem('profileViewData') || '{"times":[],"total":0}');
     const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1000;
 
-    viewTimes = viewTimes.filter(t => now - t < oneDay);
+    viewData.times = viewData.times.filter(t => now - t < oneDay);
 
-    if (viewTimes.length < 2) {
-        count++;
-        viewTimes.push(now);
+    if (viewData.times.length < 2) {
+        viewData.times.push(now);
+        viewData.total++;
+        count = viewData.total;
         localStorage.setItem('profileViews', count.toString());
-        localStorage.setItem('profileViewTimes', JSON.stringify(viewTimes));
+        localStorage.setItem('profileViewData', JSON.stringify(viewData));
+    } else {
+        count = viewData.total;
     }
 
     animateCounter(viewCountEl, count);
