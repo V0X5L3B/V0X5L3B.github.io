@@ -1,0 +1,180 @@
+document.addEventListener('DOMContentLoaded', () => {
+    initAvatar();
+    initViewCounter();
+    initSkillBars();
+    initGlitchEffect();
+    initAudio();
+});
+
+function initAvatar() {
+    const avatar = document.getElementById('avatar');
+    const placeholder = document.getElementById('avatarPlaceholder');
+
+    if (avatar) {
+        avatar.onerror = () => {
+            avatar.style.display = 'none';
+            placeholder.classList.add('visible');
+        };
+
+        avatar.onload = () => {
+            placeholder.classList.remove('visible');
+        };
+    }
+}
+
+function initViewCounter() {
+    const viewCountEl = document.getElementById('viewCount');
+    if (!viewCountEl) return;
+
+    let count = parseInt(localStorage.getItem('profileViews') || '0', 10);
+    const hasViewed = sessionStorage.getItem('hasViewed');
+
+    if (!hasViewed) {
+        count++;
+        localStorage.setItem('profileViews', count.toString());
+        sessionStorage.setItem('hasViewed', 'true');
+    }
+
+    animateCounter(viewCountEl, count);
+}
+
+function animateCounter(element, target) {
+    const duration = 1500;
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (target - start) * eased);
+
+        element.textContent = current.toLocaleString();
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+
+    requestAnimationFrame(update);
+}
+
+function initSkillBars() {
+    const skillFills = document.querySelectorAll('.skill-fill');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const fill = entry.target;
+                const percent = fill.getAttribute('data-percent');
+                setTimeout(() => {
+                    fill.style.width = percent + '%';
+                }, 200);
+                observer.unobserve(fill);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    skillFills.forEach(fill => observer.observe(fill));
+}
+
+function initGlitchEffect() {
+    const name = document.querySelector('.name');
+    if (!name) return;
+
+    setInterval(() => {
+        if (Math.random() > 0.95) {
+            name.style.animation = 'none';
+            name.offsetHeight;
+            name.style.animation = null;
+        }
+    }, 3000);
+}
+
+function createParticle(x, y) {
+    const particle = document.createElement('div');
+    particle.style.cssText = `
+        position: fixed;
+        left: ${x}px;
+        top: ${y}px;
+        width: 4px;
+        height: 4px;
+        background: var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        animation: particle-fade 0.8s forwards;
+    `;
+    document.body.appendChild(particle);
+
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = 50 + Math.random() * 50;
+    const dx = Math.cos(angle) * velocity;
+    const dy = Math.sin(angle) * velocity;
+
+    particle.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: `translate(${dx}px, ${dy}px) scale(0)`, opacity: 0 }
+    ], {
+        duration: 800,
+        easing: 'cubic-bezier(0, 0.5, 0.5, 1)'
+    }).onfinish = () => particle.remove();
+}
+
+document.addEventListener('click', (e) => {
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => createParticle(e.clientX, e.clientY), i * 50);
+    }
+});
+
+function initAudio() {
+    const audio = document.getElementById('bgMusic');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeLabel = document.getElementById('volumeLabel');
+
+    if (!audio || !playPauseBtn) return;
+
+    audio.volume = 0.3;
+
+    const savedVolume = localStorage.getItem('audioVolume');
+    if (savedVolume !== null) {
+        audio.volume = parseFloat(savedVolume);
+        volumeSlider.value = savedVolume;
+        volumeLabel.textContent = Math.round(savedVolume * 100) + '%';
+    }
+
+    let isPlaying = false;
+
+    playPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            audio.pause();
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        } else {
+            audio.play().catch(() => {});
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+        }
+        isPlaying = !isPlaying;
+    });
+
+    volumeSlider.addEventListener('input', (e) => {
+        const vol = parseFloat(e.target.value);
+        audio.volume = vol;
+        volumeLabel.textContent = Math.round(vol * 100) + '%';
+        localStorage.setItem('audioVolume', vol.toString());
+    });
+
+    document.addEventListener('click', () => {
+        if (!isPlaying) {
+            audio.play().then(() => {
+                isPlaying = true;
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            }).catch(() => {});
+        }
+    }, { once: true });
+}
