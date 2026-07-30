@@ -27,8 +27,7 @@ function initViewCounter() {
     const viewCountEl = document.getElementById('viewCount');
     if (!viewCountEl) return;
 
-    let count = parseInt(localStorage.getItem('profileViews') || '0', 10);
-    let viewData = JSON.parse(localStorage.getItem('profileViewData') || '{"times":[],"total":0}');
+    let viewData = JSON.parse(localStorage.getItem('profileViewData') || '{"times":[],"count":0}');
     const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1000;
 
@@ -36,15 +35,11 @@ function initViewCounter() {
 
     if (viewData.times.length < 2) {
         viewData.times.push(now);
-        viewData.total++;
-        count = viewData.total;
-        localStorage.setItem('profileViews', count.toString());
+        viewData.count = viewData.times.length;
         localStorage.setItem('profileViewData', JSON.stringify(viewData));
-    } else {
-        count = viewData.total;
     }
 
-    animateCounter(viewCountEl, count);
+    animateCounter(viewCountEl, viewData.count);
 }
 
 function animateCounter(element, target) {
