@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    initSplash();
+    initFloatingCats();
     initAvatar();
     initViewCounter();
     initSkillBars();
@@ -148,7 +150,8 @@ function initAudio() {
 
     let isPlaying = false;
 
-    playPauseBtn.addEventListener('click', () => {
+    playPauseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (isPlaying) {
             audio.pause();
             playIcon.style.display = 'block';
@@ -162,13 +165,14 @@ function initAudio() {
     });
 
     volumeSlider.addEventListener('input', (e) => {
+        e.stopPropagation();
         const vol = parseFloat(e.target.value);
         audio.volume = vol;
         volumeLabel.textContent = Math.round(vol * 100) + '%';
         localStorage.setItem('audioVolume', vol.toString());
     });
 
-    document.addEventListener('click', () => {
+    window.startAudio = () => {
         if (!isPlaying) {
             audio.play().then(() => {
                 isPlaying = true;
@@ -176,5 +180,40 @@ function initAudio() {
                 pauseIcon.style.display = 'block';
             }).catch(() => {});
         }
-    }, { once: true });
+    };
+}
+
+function initSplash() {
+    const splash = document.getElementById('splashScreen');
+    if (!splash) return;
+
+    splash.addEventListener('click', () => {
+        splash.classList.add('hidden');
+        if (window.startAudio) window.startAudio();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            splash.classList.add('hidden');
+            if (window.startAudio) window.startAudio();
+        }
+    });
+}
+
+function initFloatingCats() {
+    const container = document.getElementById('floatingCats');
+    if (!container) return;
+
+    const catEmojis = ['🐱', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾', '🐈', '🐈‍⬛'];
+    const catCount = 15;
+
+    for (let i = 0; i < catCount; i++) {
+        const cat = document.createElement('div');
+        cat.className = 'floating-cat';
+        cat.textContent = catEmojis[Math.floor(Math.random() * catEmojis.length)];
+        cat.style.left = Math.random() * 100 + '%';
+        cat.style.animationDelay = Math.random() * 30 + 's';
+        cat.style.fontSize = (20 + Math.random() * 30) + 'px';
+        container.appendChild(cat);
+    }
 }

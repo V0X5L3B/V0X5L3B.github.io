@@ -493,6 +493,141 @@ body {
     min-width: 32px;
 }
 
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    cursor: pointer;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.splash-content {
+    text-align: center;
+}
+
+.splash-cat {
+    font-size: 80px;
+    margin-bottom: 24px;
+    animation: cat-bounce 2s ease-in-out infinite;
+}
+
+@keyframes cat-bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.05); }
+}
+
+.splash-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.splash-title::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 3px;
+    color: var(--accent);
+    opacity: 0;
+    animation: glitch 2s infinite;
+}
+
+.splash-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--text-secondary);
+    letter-spacing: 3px;
+    animation: fade-pulse 2s ease-in-out infinite;
+}
+
+@keyframes fade-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.splash-pulse {
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    margin: 32px auto 0;
+    animation: splash-ring 2s ease-out infinite;
+}
+
+@keyframes splash-ring {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+.floating-cats {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.floating-cat {
+    position: absolute;
+    font-size: 30px;
+    opacity: 0.15;
+    animation: float-cat linear infinite;
+    filter: grayscale(0.5);
+}
+
+@keyframes float-cat {
+    0% {
+        transform: translateY(110vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.15;
+    }
+    90% {
+        opacity: 0.15;
+    }
+    100% {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.floating-cat:nth-child(odd) {
+    animation-duration: 25s;
+}
+
+.floating-cat:nth-child(even) {
+    animation-duration: 35s;
+}
+
+.floating-cat:nth-child(3n) {
+    font-size: 40px;
+    opacity: 0.1;
+}
+
+.floating-cat:nth-child(5n) {
+    animation-duration: 45s;
+}
+
 @media (max-width: 520px) {
     .profile-card {
         padding: 24px;
