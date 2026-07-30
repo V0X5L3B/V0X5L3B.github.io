@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     initSplash();
-    initFloatingCats();
     initAvatar();
     initViewCounter();
     initSkillBars();
@@ -198,22 +197,4 @@ function initSplash() {
             if (window.startAudio) window.startAudio();
         }
     });
-}
-
-function initFloatingCats() {
-    const container = document.getElementById('floatingCats');
-    if (!container) return;
-
-    const catEmojis = ['🐱', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾', '🐈', '🐈‍⬛'];
-    const catCount = 15;
-
-    for (let i = 0; i < catCount; i++) {
-        const cat = document.createElement('div');
-        cat.className = 'floating-cat';
-        cat.textContent = catEmojis[Math.floor(Math.random() * catEmojis.length)];
-        cat.style.left = Math.random() * 100 + '%';
-        cat.style.animationDelay = Math.random() * 30 + 's';
-        cat.style.fontSize = (20 + Math.random() * 30) + 'px';
-        container.appendChild(cat);
-    }
 }
