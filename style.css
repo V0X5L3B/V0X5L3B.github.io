@@ -9,10 +9,10 @@
     --bg-secondary: #111114;
     --bg-card: #151518;
     --border-color: #1c1c22;
-    --accent: #b0b0b8;
+    --accent: #b8b8c0;
     --accent-dim: #707078;
-    --accent-glow: rgba(176, 176, 184, 0.12);
-    --text-primary: #e8e8ec;
+    --accent-glow: rgba(184, 184, 192, 0.15);
+    --text-primary: #eaeaf0;
     --text-secondary: #8888a0;
     --text-muted: #4a4a5a;
     --danger: #ff4466;
@@ -59,8 +59,8 @@ body {
     width: calc(100% + 100px);
     height: calc(100% + 100px);
     background-image:
-        linear-gradient(rgba(176, 176, 184, 0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(176, 176, 184, 0.07) 1px, transparent 1px);
+        linear-gradient(rgba(184, 184, 192, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184, 184, 192, 0.07) 1px, transparent 1px);
     background-size: 50px 50px;
     mask-image: radial-gradient(ellipse at center, black 15%, transparent 65%);
     -webkit-mask-image: radial-gradient(ellipse at center, black 15%, transparent 65%);
@@ -92,7 +92,7 @@ body {
         0 0 0 1px var(--border-color),
         0 4px 24px rgba(0, 0, 0, 0.5),
         0 20px 60px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(176, 176, 184, 0.05);
+        inset 0 1px 0 rgba(184, 184, 192, 0.06);
     transition: box-shadow 0.4s ease;
     opacity: 0;
     visibility: hidden;
@@ -118,7 +118,7 @@ body {
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent 10%, rgba(176, 176, 184, 0.15) 50%, transparent 90%);
+    background: linear-gradient(90deg, transparent 10%, rgba(184, 184, 192, 0.2) 50%, transparent 90%);
     z-index: 5;
 }
 
@@ -128,8 +128,8 @@ body {
     top: 0; left: 0;
     width: 100%; height: 100%;
     background:
-        linear-gradient(90deg, rgba(176, 176, 184, 0.02) 1px, transparent 1px),
-        linear-gradient(rgba(176, 176, 184, 0.02) 1px, transparent 1px);
+        linear-gradient(90deg, rgba(184, 184, 192, 0.02) 1px, transparent 1px),
+        linear-gradient(rgba(184, 184, 192, 0.02) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
     z-index: 0;
@@ -140,10 +140,11 @@ body {
 
 .profile-card:hover {
     box-shadow:
-        0 0 0 1px rgba(176, 176, 184, 0.3),
+        0 0 0 1px rgba(184, 184, 192, 0.25),
+        0 0 40px rgba(184, 184, 192, 0.03),
         0 8px 32px rgba(0, 0, 0, 0.6),
         0 25px 80px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(176, 176, 184, 0.08);
+        inset 0 1px 0 rgba(184, 184, 192, 0.1);
 }
 
 .profile-card.card-tilt-active {
@@ -188,7 +189,7 @@ body {
     100% { opacity: 1; transform: translateX(0) rotateY(0) scale(1); filter: blur(0); }
 }
 
-.left-column:hover { border-color: rgba(176, 176, 184, 0.3); }
+.left-column:hover { border-color: rgba(184, 184, 192, 0.25); box-shadow: inset 0 0 30px rgba(184, 184, 192, 0.02); }
 
 .left-column-bg {
     position: absolute;
@@ -310,6 +311,7 @@ body {
     width: 60px; height: 1px;
     background: var(--accent);
     animation: header-line 3s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(184, 184, 192, 0.3);
 }
 
 @keyframes header-line {
@@ -354,7 +356,7 @@ body {
     position: absolute;
     top: -6px; left: -6px; right: -6px; bottom: -6px;
     border-radius: 50%;
-    border: 1px solid rgba(176, 176, 184, 0.2);
+    border: 1px solid rgba(184, 184, 192, 0.25);
     animation: ring-outer-spin 8s linear infinite;
 }
 
@@ -363,7 +365,7 @@ body {
     position: absolute;
     top: -10px; left: -10px; right: -10px; bottom: -10px;
     border-radius: 50%;
-    border: 1px dashed rgba(176, 176, 184, 0.1);
+    border: 1px dashed rgba(184, 184, 192, 0.12);
     animation: ring-outer-spin 12s linear infinite reverse;
 }
 
@@ -411,6 +413,7 @@ body {
 .status-dot.online {
     background: var(--accent);
     animation: pulse 2s infinite;
+    box-shadow: 0 0 6px rgba(184, 184, 192, 0.3);
 }
 
 @keyframes pulse {
@@ -426,7 +429,7 @@ body {
     margin-bottom: 6px;
     position: relative;
     display: inline-block;
-    text-shadow: 0 0 20px rgba(176, 176, 184, 0.2);
+    text-shadow: 0 0 20px rgba(184, 184, 192, 0.2);
     transition: text-shadow 0.3s;
     opacity: 0;
 }
@@ -443,7 +446,7 @@ body {
 }
 
 .name:hover {
-    text-shadow: 0 0 30px rgba(176, 176, 184, 0.4), 0 0 60px rgba(176, 176, 184, 0.15);
+    text-shadow: 0 0 30px rgba(184, 184, 192, 0.5), 0 0 60px rgba(184, 184, 192, 0.2);
 }
 
 .entered .name.name-glitch {
@@ -561,9 +564,10 @@ body {
 .social-btn:hover {
     border-color: #5865F2;
     color: #5865F2;
-    background: rgba(88, 101, 242, 0.1);
+    background: rgba(88, 101, 242, 0.08);
+    box-shadow: 0 0 20px rgba(88, 101, 242, 0.1), inset 0 0 20px rgba(88, 101, 242, 0.03);
     transform: translateY(-2px) !important;
-    transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.3s;
+    transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .social-btn.discord::after {
@@ -709,7 +713,8 @@ body {
 }
 
 .skill-category:hover {
-    border-color: rgba(176, 176, 184, 0.2);
+    border-color: rgba(184, 184, 192, 0.2);
+    box-shadow: inset 0 0 20px rgba(184, 184, 192, 0.02);
 }
 
 .entered .skill-category:hover {
@@ -817,6 +822,7 @@ body {
     transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 0 8px rgba(184, 184, 192, 0.15);
 }
 
 .skill-fill::before {
@@ -850,6 +856,7 @@ body {
 
 .skill-fill.security {
     background: linear-gradient(90deg, #606068, var(--security-accent));
+    box-shadow: 0 0 8px rgba(144, 144, 152, 0.12);
 }
 
 .skill-fill.security::after { background: var(--security-accent); }
@@ -948,7 +955,7 @@ body {
     transition: color 0.3s, opacity 0.3s;
 }
 
-.footer:hover .copyright { color: var(--accent); opacity: 0.8; }
+.footer:hover .copyright { color: var(--accent); opacity: 0.8; text-shadow: 0 0 8px rgba(184, 184, 192, 0.15); }
 
 .audio-controls {
     position: fixed;
@@ -1453,6 +1460,13 @@ body {
     animation: random-skew 0.3s step-end;
 }
 
+@keyframes card-scan-sweep {
+    0% { top: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
 /* ==================== HEX STREAM ==================== */
 .hex-stream {
     position: absolute;
@@ -1507,7 +1521,11 @@ body {
 .skill-item:hover::before { width: 100%; }
 
 .skill-item:hover .skill-name {
-    text-shadow: 0 0 8px rgba(176, 176, 184, 0.3);
+    text-shadow: 0 0 8px rgba(184, 184, 192, 0.3);
+}
+
+.skill-item:hover .skill-percent {
+    text-shadow: 0 0 6px rgba(184, 184, 192, 0.2);
 }
 
 /* ==================== FOOTER UNDERLINE ==================== */
@@ -1518,6 +1536,7 @@ body {
     width: 0; height: 1px;
     background: var(--accent);
     transition: width 0.4s ease;
+    box-shadow: 0 0 6px rgba(184, 184, 192, 0.2);
 }
 
 .footer:hover .footer-text::before { width: 100%; }

@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBootSequence();
     initSplashCanvas();
     initViewsCounter();
+    initCardScanline();
 });
 
 function initAvatar() {
@@ -833,4 +834,25 @@ function initSplashCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     });
+}
+
+function initCardScanline() {
+    const card = document.getElementById('profileCard');
+    if (!card) return;
+    setInterval(() => {
+        if (Math.random() > 0.7) {
+            const scanline = document.createElement('div');
+            scanline.style.cssText = `
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 2px;
+                background: linear-gradient(90deg, transparent, rgba(184, 184, 192, 0.12), transparent);
+                pointer-events: none;
+                z-index: 10;
+                animation: card-scan-sweep 1.2s linear forwards;
+            `;
+            card.appendChild(scanline);
+            setTimeout(() => scanline.remove(), 1300);
+        }
+    }, 4000);
 }
