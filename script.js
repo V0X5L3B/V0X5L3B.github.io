@@ -789,37 +789,6 @@ function initHexDataStream() {
 }
 
 function initHolographicCard() {
-    const card = document.getElementById('profileCard');
-    if (!card) return;
-
-    const holo = document.createElement('div');
-    holo.className = 'holo-effect';
-    card.appendChild(holo);
-
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = (e.clientY - rect.top) / rect.height;
-
-        const hue = Math.floor(x * 360);
-        const lightness = 40 + y * 20;
-
-        holo.style.background = `
-            radial-gradient(
-                circle at ${x * 100}% ${y * 100}%,
-                hsla(${hue}, 0%, ${lightness}%, 0.06) 0%,
-                transparent 50%
-            )
-        `;
-        holo.style.opacity = '1';
-
-        card.style.setProperty('--holo-x', `${x * 100}%`);
-        card.style.setProperty('--holo-y', `${y * 100}%`);
-    });
-
-    card.addEventListener('mouseleave', () => {
-        holo.style.opacity = '0';
-    });
 }
 
 function initDiscordPulse() {

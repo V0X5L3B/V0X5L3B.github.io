@@ -133,37 +133,6 @@ body {
     100% { box-shadow: 0 0 0 1px var(--border-color), 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 100px var(--accent-glow); }
 }
 
-.profile-card::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: 18px;
-    background: conic-gradient(
-        from var(--border-angle, 0deg),
-        transparent 40%,
-        var(--accent) 50%,
-        transparent 60%
-    );
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: -1;
-    animation: border-chase 4s linear infinite;
-}
-
-@property --border-angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
-}
-
-@keyframes border-chase {
-    from { --border-angle: 0deg; }
-    to { --border-angle: 360deg; }
-}
-
 .profile-card:hover::before {
     opacity: 1;
 }
@@ -804,7 +773,7 @@ body {
     left: -100%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(176, 176, 184, 0.1), transparent);
     animation: shimmer 3s ease-in-out infinite;
 }
 
@@ -1577,51 +1546,8 @@ body {
     100% { transform: translateY(50%); }
 }
 
-.holo-effect {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    mix-blend-mode: screen;
-}
-
 .profile-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 16px;
-    background: linear-gradient(
-        135deg,
-        transparent 30%,
-        rgba(176, 176, 184, 0.03) 45%,
-        rgba(176, 176, 184, 0.06) 50%,
-        rgba(176, 176, 184, 0.03) 55%,
-        transparent 70%
-    );
-    background-size: 200% 200%;
-    animation: holo-sweep 6s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0;
-    transition: opacity 0.4s;
-}
-
-.profile-card:hover::after {
-    opacity: 1;
-}
-
-@keyframes holo-sweep {
-    0% { background-position: 0% 0%; }
-    50% { background-position: 100% 100%; }
-    100% { background-position: 0% 0%; }
+    content: none;
 }
 
 .social-btn.discord {
@@ -1664,19 +1590,7 @@ body {
 }
 
 .skill-category::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(176, 176, 184, 0.04), transparent);
-    transition: left 0.6s ease;
-    pointer-events: none;
-}
-
-.skill-category:hover::after {
-    left: 120%;
+    content: none;
 }
 
 .skill-item {
@@ -1728,32 +1642,6 @@ body {
     position: relative;
 }
 
-.avatar-wrapper::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    border-radius: 50%;
-    background: conic-gradient(
-        from 0deg,
-        transparent 0%,
-        rgba(176, 176, 184, 0.3) 25%,
-        transparent 50%,
-        rgba(176, 176, 184, 0.15) 75%,
-        transparent 100%
-    );
-    animation: avatar-ring-spin 4s linear infinite;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.avatar-wrapper:hover::before {
-    opacity: 1;
-}
-
 @keyframes avatar-ring-spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -1778,11 +1666,6 @@ body {
 @keyframes title-line-scan {
     0%, 100% { left: -100%; opacity: 0; }
     50% { left: 110%; opacity: 1; }
-}
-
-.profile-card {
-    --holo-x: 50%;
-    --holo-y: 50%;
 }
 
 .footer-text {
