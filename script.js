@@ -101,6 +101,7 @@ document.addEventListener('click', (e) => {
 
 function initAudio() {
     const audio = document.getElementById('bgMusic');
+    const audioSource = document.getElementById('audioSource');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const playIcon = document.getElementById('playIcon');
     const pauseIcon = document.getElementById('pauseIcon');
@@ -108,6 +109,21 @@ function initAudio() {
     const volumeLabel = document.getElementById('volumeLabel');
 
     if (!audio || !playPauseBtn) return;
+
+    const tracks = ['audio/track1.mp3', 'audio/track3.mp3'];
+    let currentTrack = 0;
+
+    function pickRandomTrack() {
+        let next = Math.floor(Math.random() * tracks.length);
+        if (next === currentTrack && tracks.length > 1) {
+            next = (next + 1) % tracks.length;
+        }
+        currentTrack = next;
+        audioSource.src = tracks[currentTrack];
+        audio.load();
+    }
+
+    pickRandomTrack();
 
     audio.volume = 0.3;
 
@@ -119,6 +135,13 @@ function initAudio() {
     }
 
     let isPlaying = false;
+
+    audio.addEventListener('ended', () => {
+        pickRandomTrack();
+        if (isPlaying) {
+            audio.play().catch(() => {});
+        }
+    });
 
     playPauseBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -144,6 +167,7 @@ function initAudio() {
 
     window.startAudio = () => {
         if (!isPlaying) {
+            pickRandomTrack();
             audio.play().then(() => {
                 isPlaying = true;
                 playIcon.style.display = 'none';
