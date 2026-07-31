@@ -25,6 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initParticleCanvas();
     initAmbientDots();
     initMouseGlow();
+    initHexGrid();
+    initMouseTrail();
+    initClickBursts();
+    initFloatingShapes();
+    initOrbitRings();
+    initNameGlitch();
 });
 
 function initAvatar() {
@@ -1057,5 +1063,262 @@ function initMouseGlow() {
         card.addEventListener('mouseleave', () => {
             glow.style.background = 'transparent';
         });
+    });
+}
+
+function initHexGrid() {
+    const canvas = document.getElementById('hexGridCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let time = 0;
+    const hexSize = 40;
+    const cols = Math.ceil(canvas.width / (hexSize * 1.75)) + 2;
+    const rows = Math.ceil(canvas.height / (hexSize * 1.5)) + 2;
+
+    function drawHex(x, y, size, alpha, hue) {
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI / 3) * i - Math.PI / 6;
+            const hx = x + size * Math.cos(angle);
+            const hy = y + size * Math.sin(angle);
+            if (i === 0) ctx.moveTo(hx, hy);
+            else ctx.lineTo(hx, hy);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `hsla(${hue}, 50%, 60%, ${alpha})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        time += 0.003;
+
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                const x = col * hexSize * 1.75 + (row % 2 ? hexSize * 0.875 : 0);
+                const y = row * hexSize * 1.5;
+                const dist = Math.sqrt(
+                    Math.pow(x - canvas.width / 2, 2) +
+                    Math.pow(y - canvas.height / 2, 2)
+                );
+                const maxDist = Math.sqrt(Math.pow(canvas.width / 2, 2) + Math.pow(canvas.height / 2, 2));
+                const distFactor = 1 - dist / maxDist;
+
+                const pulse = Math.sin(time * 2 + dist * 0.005) * 0.5 + 0.5;
+                const alpha = distFactor * pulse * 0.08;
+                const hue = 240 + Math.sin(time + dist * 0.003) * 60;
+
+                drawHex(x, y, hexSize, alpha, hue);
+            }
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+}
+
+function initMouseTrail() {
+    const container = document.getElementById('mouseTrail');
+    if (!container) return;
+    let lastX = 0, lastY = 0;
+    const colors = [
+        'rgba(120, 120, 255, ',
+        'rgba(200, 80, 192, ',
+        'rgba(79, 195, 247, ',
+        'rgba(118, 255, 3, ',
+    ];
+
+    document.addEventListener('mousemove', (e) => {
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        const speed = Math.sqrt(dx * dx + dy * dy);
+
+        if (speed > 5) {
+            for (let i = 0; i < Math.min(speed / 8, 3); i++) {
+                const particle = document.createElement('div');
+                particle.className = 'mouse-trail-particle';
+                const size = Math.random() * 6 + 2;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const angle = Math.atan2(dy, dx);
+                const spread = (Math.random() - 0.5) * 2;
+
+                particle.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${e.clientX + spread * 10}px;
+                    top: ${e.clientY + spread * 10}px;
+                    background: ${color}0.8);
+                    box-shadow: 0 0 ${size * 2}px ${color}0.5), 0 0 ${size * 4}px ${color}0.2);
+                    transition: none;
+                `;
+                container.appendChild(particle);
+
+                const targetX = -Math.cos(angle) * (30 + Math.random() * 30) + spread * 20;
+                const targetY = -Math.sin(angle) * (30 + Math.random() * 30) + spread * 20;
+
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 0.8 },
+                    { transform: `translate(${targetX}px, ${targetY}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 400 + Math.random() * 300,
+                    easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+                }).onfinish = () => particle.remove();
+            }
+        }
+
+        lastX = e.clientX;
+        lastY = e.clientY;
+    });
+}
+
+function initClickBursts() {
+    const colors = [
+        'rgba(120, 120, 255, 0.6)',
+        'rgba(200, 80, 192, 0.6)',
+        'rgba(79, 195, 247, 0.6)',
+    ];
+
+    document.addEventListener('click', (e) => {
+        const flash = document.createElement('div');
+        flash.className = 'screen-flash';
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 700);
+
+        for (let i = 0; i < 8; i++) {
+            const burst = document.createElement('div');
+            burst.className = 'click-burst';
+            const size = Math.random() * 60 + 20;
+            const angle = (Math.PI * 2 / 8) * i + (Math.random() - 0.5) * 0.5;
+            const distance = 60 + Math.random() * 80;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            burst.style.cssText = `
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                width: ${size}px;
+                height: ${size}px;
+                margin-left: ${-size / 2}px;
+                margin-top: ${-size / 2}px;
+                border-color: ${color};
+                background: transparent;
+            `;
+
+            document.body.appendChild(burst);
+
+            burst.animate([
+                { transform: 'scale(0)', opacity: 1 },
+                { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1)`, opacity: 0 }
+            ], {
+                duration: 600 + Math.random() * 400,
+                easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+            }).onfinish = () => burst.remove();
+        }
+
+        for (let i = 0; i < 15; i++) {
+            const spark = document.createElement('div');
+            spark.className = 'mouse-trail-particle';
+            const size = Math.random() * 4 + 1;
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 120 + 30;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            spark.style.cssText = `
+                width: ${size}px;
+                height: ${size}px;
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                background: ${color};
+                box-shadow: 0 0 ${size * 3}px ${color};
+            `;
+
+            document.body.appendChild(spark);
+
+            spark.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 500 + Math.random() * 500,
+                easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+            }).onfinish = () => spark.remove();
+        }
+    });
+}
+
+function initFloatingShapes() {
+    const container = document.getElementById('floatingShapes');
+    if (!container) return;
+    const shapes = ['hex', 'diamond', 'triangle', 'circle'];
+
+    function spawnShape() {
+        const shape = document.createElement('div');
+        shape.className = `floating-shape ${shapes[Math.floor(Math.random() * shapes.length)]}`;
+        const duration = Math.random() * 25 + 20;
+        const size = Math.random() * 0.6 + 0.5;
+
+        shape.style.cssText = `
+            left: ${Math.random() * 100}%;
+            animation-duration: ${duration}s;
+            animation-delay: ${Math.random() * -duration}s;
+            transform: scale(${size});
+        `;
+        container.appendChild(shape);
+        setTimeout(() => shape.remove(), (duration + 2) * 1000);
+    }
+
+    for (let i = 0; i < 10; i++) spawnShape();
+    setInterval(spawnShape, 3000);
+}
+
+function initOrbitRings() {
+    const wrapper = document.querySelector('.avatar-wrapper');
+    if (!wrapper) return;
+
+    const ring1 = document.createElement('div');
+    ring1.className = 'orbit-ring';
+    wrapper.appendChild(ring1);
+
+    const ring2 = document.createElement('div');
+    ring2.className = 'orbit-ring';
+    wrapper.appendChild(ring2);
+
+    for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'orbit-dot';
+        dot.style.cssText = `
+            animation-delay: ${i * 0.7}s;
+        `;
+        ring1.appendChild(dot);
+
+        const angle = (Math.PI * 2 / 3) * i;
+        const radius = 65;
+        dot.style.position = 'absolute';
+        dot.style.left = `${65 + Math.cos(angle) * radius}px`;
+        dot.style.top = `${65 + Math.sin(angle) * radius}px`;
+    }
+}
+
+function initNameGlitch() {
+    const name = document.querySelector('.name');
+    if (!name) return;
+
+    setInterval(() => {
+        if (Math.random() > 0.7) {
+            name.classList.add('name-glitch-active');
+            setTimeout(() => name.classList.remove('name-glitch-active'), 300);
+        }
+    }, 3000);
+
+    name.addEventListener('mouseenter', () => {
+        name.classList.add('name-glitch-active');
+        setTimeout(() => name.classList.remove('name-glitch-active'), 300);
     });
 }
