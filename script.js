@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     initSplash();
     initAvatar();
-    initViewCounter();
     initSkillBars();
     initGlitchEffect();
     initAudio();
@@ -23,46 +22,6 @@ function initAvatar() {
             placeholder.classList.remove('visible');
         };
     }
-}
-
-function initViewCounter() {
-    const viewCountEl = document.getElementById('viewCount');
-    if (!viewCountEl) return;
-
-    let viewData = JSON.parse(localStorage.getItem('profileViewData') || '{"times":[],"count":0}');
-    const now = Date.now();
-    const oneDay = 24 * 60 * 60 * 1000;
-
-    viewData.times = viewData.times.filter(t => now - t < oneDay);
-
-    if (viewData.times.length < 2) {
-        viewData.times.push(now);
-        viewData.count = viewData.times.length;
-        localStorage.setItem('profileViewData', JSON.stringify(viewData));
-    }
-
-    animateCounter(viewCountEl, viewData.count);
-}
-
-function animateCounter(element, target) {
-    const duration = 1500;
-    const start = 0;
-    const startTime = performance.now();
-
-    function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const current = Math.floor(start + (target - start) * eased);
-
-        element.textContent = current.toLocaleString();
-
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        }
-    }
-
-    requestAnimationFrame(update);
 }
 
 function initSkillBars() {
@@ -212,17 +171,21 @@ function initSplashGrid() {
     let mouseY = 0;
     let currentX = 0;
     let currentY = 0;
+    let targetScale = 1.1;
+    let currentScale = 1.1;
 
     document.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 80;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 80;
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 120;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 120;
+        targetScale = 1.1 + Math.abs(e.clientX - window.innerWidth/2) / window.innerWidth * 0.1;
     });
 
     function animate() {
-        currentX += (mouseX - currentX) * 0.08;
-        currentY += (mouseY - currentY) * 0.08;
+        currentX += (mouseX - currentX) * 0.1;
+        currentY += (mouseY - currentY) * 0.1;
+        currentScale += (targetScale - currentScale) * 0.05;
 
-        grid.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.1)`;
+        grid.style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
         requestAnimationFrame(animate);
     }
 
@@ -237,17 +200,21 @@ function initMainGrid() {
     let mouseY = 0;
     let currentX = 0;
     let currentY = 0;
+    let targetScale = 1;
+    let currentScale = 1;
 
     document.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 60;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 60;
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 100;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 100;
+        targetScale = 1 + Math.abs(e.clientX - window.innerWidth/2) / window.innerWidth * 0.15;
     });
 
     function animate() {
-        currentX += (mouseX - currentX) * 0.06;
-        currentY += (mouseY - currentY) * 0.06;
+        currentX += (mouseX - currentX) * 0.08;
+        currentY += (mouseY - currentY) * 0.08;
+        currentScale += (targetScale - currentScale) * 0.04;
 
-        grid.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        grid.style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
         requestAnimationFrame(animate);
     }
 

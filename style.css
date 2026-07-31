@@ -64,19 +64,35 @@ body {
 
 .main-bg-grid {
     position: fixed;
-    top: -30px;
-    left: -30px;
-    width: calc(100% + 60px);
-    height: calc(100% + 60px);
+    top: -50px;
+    left: -50px;
+    width: calc(100% + 100px);
+    height: calc(100% + 100px);
     background-image: 
-        linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+        linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 15%, transparent 65%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 15%, transparent 65%);
     pointer-events: none;
     z-index: 0;
     will-change: transform;
+}
+
+.main-bg-grid::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.06) 0%, transparent 50%);
+    animation: main-grid-glow 6s ease-in-out infinite alternate;
+}
+
+@keyframes main-grid-glow {
+    0% { opacity: 0.2; }
+    100% { opacity: 0.7; }
 }
 
 .container {
@@ -367,84 +383,6 @@ body {
     font-size: 12px;
 }
 
-.stats {
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-}
-
-.stats::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), transparent);
-    pointer-events: none;
-}
-
-.stats-inner {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.stats-icon {
-    width: 24px;
-    height: 24px;
-    color: var(--accent);
-    flex-shrink: 0;
-}
-
-.stats-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.stat-number {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-    text-shadow: 0 0 10px var(--accent-glow);
-}
-
-.stat-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-top: 2px;
-}
-
-.stats-bar {
-    height: 3px;
-    background: var(--bg-primary);
-    border-radius: 2px;
-    margin-top: 10px;
-    overflow: hidden;
-}
-
-.stats-bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--accent), var(--security-accent));
-    border-radius: 2px;
-    animation: bar-fill 2s ease-out 0.5s forwards;
-}
-
-@keyframes bar-fill {
-    0% { width: 0%; }
-    100% { width: 100%; }
-}
-
 .about-section {
     margin-bottom: 20px;
 }
@@ -693,17 +631,33 @@ body {
 
 .splash-bg-grid {
     position: absolute;
-    top: -30px;
-    left: -30px;
-    width: calc(100% + 60px);
-    height: calc(100% + 60px);
+    top: -50px;
+    left: -50px;
+    width: calc(100% + 100px);
+    height: calc(100% + 100px);
     background-image: 
-        linear-gradient(rgba(0, 255, 136, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 136, 0.08) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse at center, black 20%, transparent 65%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 65%);
+        linear-gradient(rgba(0, 255, 136, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.12) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 15%, transparent 60%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 15%, transparent 60%);
     will-change: transform;
+}
+
+.splash-bg-grid::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.08) 0%, transparent 50%);
+    animation: grid-glow 4s ease-in-out infinite alternate;
+}
+
+@keyframes grid-glow {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.8; }
 }
 
 .splash-content {
