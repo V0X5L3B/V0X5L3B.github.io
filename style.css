@@ -59,13 +59,74 @@ body {
     width: calc(100% + 100px);
     height: calc(100% + 100px);
     background-image:
-        linear-gradient(rgba(184, 184, 192, 0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(184, 184, 192, 0.07) 1px, transparent 1px);
-    background-size: 50px 50px;
-    mask-image: radial-gradient(ellipse at center, black 15%, transparent 65%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 15%, transparent 65%);
+        linear-gradient(rgba(184, 184, 192, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184, 184, 192, 0.1) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
     pointer-events: none;
     z-index: 0;
+}
+
+/* ==================== ANIMATED GRADIENT ==================== */
+.bg-gradient {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    background: 
+        radial-gradient(ellipse at 20% 50%, rgba(30, 30, 40, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(25, 25, 35, 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(20, 20, 30, 0.3) 0%, transparent 50%);
+    animation: gradient-shift 15s ease-in-out infinite alternate;
+}
+
+@keyframes gradient-shift {
+    0% { 
+        background: 
+            radial-gradient(ellipse at 20% 50%, rgba(30, 30, 40, 0.4) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 20%, rgba(25, 25, 35, 0.3) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 80%, rgba(20, 20, 30, 0.3) 0%, transparent 50%);
+    }
+    100% { 
+        background: 
+            radial-gradient(ellipse at 70% 30%, rgba(30, 30, 40, 0.4) 0%, transparent 50%),
+            radial-gradient(ellipse at 30% 70%, rgba(25, 25, 35, 0.3) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(20, 20, 30, 0.3) 0%, transparent 50%);
+    }
+}
+
+/* ==================== SMOKE / FOG ==================== */
+.bg-fog {
+    position: fixed;
+    top: 0; left: -50%;
+    width: 200%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    background: 
+        radial-gradient(ellipse at 25% 50%, rgba(184, 184, 192, 0.02) 0%, transparent 40%),
+        radial-gradient(ellipse at 75% 50%, rgba(184, 184, 192, 0.015) 0%, transparent 40%);
+    animation: fog-drift 25s linear infinite;
+    opacity: 0.8;
+}
+
+.bg-fog.fog-2 {
+    background: 
+        radial-gradient(ellipse at 35% 40%, rgba(184, 184, 192, 0.015) 0%, transparent 35%),
+        radial-gradient(ellipse at 65% 60%, rgba(184, 184, 192, 0.01) 0%, transparent 35%);
+    animation: fog-drift-2 35s linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes fog-drift {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(50%); }
+}
+
+@keyframes fog-drift-2 {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-40%); }
 }
 
 .container {
