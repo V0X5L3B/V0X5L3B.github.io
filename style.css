@@ -81,21 +81,34 @@ body {
     pointer-events: none;
 }
 
-.clanker-link {
+.clanker-section {
     position: fixed;
     top: 360px;
     right: 50px;
     z-index: 3;
+}
+
+.clanker-link {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: var(--text-muted);
     text-decoration: none;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
+    display: block;
 }
 
 .clanker-link:hover {
     color: var(--accent);
+}
+
+.clanker-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    opacity: 0.6;
 }
 
 .container {
