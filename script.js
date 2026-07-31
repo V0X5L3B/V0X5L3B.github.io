@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initAudio();
     initSplashGrid();
     initMainGrid();
-    initTerrain();
     initCardTilt();
     initCRTFlicker();
     initFooterTyping();
@@ -245,127 +244,6 @@ function initMainGrid() {
     }
 
     animate();
-}
-
-function initTerrain() {
-    const canvas = document.getElementById('terrainCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    let mouseX = canvas.width / 2;
-    let mouseY = canvas.height / 2;
-    let time = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    const gridSize = 30;
-    const rows = Math.ceil(canvas.height / gridSize) + 4;
-    const cols = Math.ceil(canvas.width / gridSize) + 4;
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        time += 0.008;
-
-        const offsetX = (canvas.width - cols * gridSize) / 2;
-        const offsetY = (canvas.height - rows * gridSize) / 2;
-
-        const mouseGridX = mouseX / gridSize;
-        const mouseGridY = mouseY / gridSize;
-
-        for (let y = 0; y < rows; y++) {
-            for (let x = 0; x < cols; x++) {
-                const wx = x * gridSize + offsetX;
-                const wy = y * gridSize + offsetY;
-
-                const dx = x - mouseGridX;
-                const dy = y - mouseGridY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                const wave1 = Math.sin(x * 0.3 + time * 2) * 8;
-                const wave2 = Math.cos(y * 0.25 + time * 1.5) * 6;
-                const wave3 = Math.sin((x + y) * 0.2 + time) * 4;
-                const mouseWave = dist < 8 ? Math.sin(dist * 0.8 - time * 4) * (8 - dist) * 2 : 0;
-
-                const elevation = wave1 + wave2 + wave3 + mouseWave;
-                const px = wx;
-                const py = wy + elevation;
-
-                const brightness = 0.3 + (elevation + 18) / 36 * 0.7;
-                const alpha = 0.08 + (dist < 10 ? (10 - dist) / 10 * 0.15 : 0);
-
-                ctx.fillStyle = `rgba(176, 176, 184, ${alpha * brightness})`;
-                ctx.fillRect(px - 0.5, py - 0.5, 1, 1);
-
-                if (x < cols - 1) {
-                    const nx = (x + 1) * gridSize + offsetX;
-                    const nWave1 = Math.sin((x + 1) * 0.3 + time * 2) * 8;
-                    const nWave2 = Math.cos(y * 0.25 + time * 1.5) * 6;
-                    const nWave3 = Math.sin((x + 1 + y) * 0.2 + time) * 4;
-                    const nDist = Math.sqrt((x + 1 - mouseGridX) ** 2 + dy ** 2);
-                    const nMouseWave = nDist < 8 ? Math.sin(nDist * 0.8 - time * 4) * (8 - nDist) * 2 : 0;
-                    const nElevation = nWave1 + nWave2 + nWave3 + nMouseWave;
-                    const npx = nx;
-                    const npy = wy + nElevation;
-
-                    const lineAlpha = alpha * 0.25 * Math.min(brightness, (0.3 + (nElevation + 18) / 36 * 0.7));
-                    ctx.beginPath();
-                    ctx.moveTo(px, py);
-                    ctx.lineTo(npx, npy);
-                    ctx.strokeStyle = `rgba(176, 176, 184, ${lineAlpha})`;
-                    ctx.lineWidth = 0.3;
-                    ctx.stroke();
-                }
-
-                if (y < rows - 1) {
-                    const bx = x * gridSize + offsetX;
-                    const bWave1 = Math.sin(x * 0.3 + time * 2) * 8;
-                    const bWave2 = Math.cos((y + 1) * 0.25 + time * 1.5) * 6;
-                    const bWave3 = Math.sin((x + y + 1) * 0.2 + time) * 4;
-                    const bDist = Math.sqrt(dx ** 2 + (y + 1 - mouseGridY) ** 2);
-                    const bMouseWave = bDist < 8 ? Math.sin(bDist * 0.8 - time * 4) * (8 - bDist) * 2 : 0;
-                    const bElevation = bWave1 + bWave2 + bWave3 + bMouseWave;
-                    const bpx = bx;
-                    const bpy = wy + gridSize + bElevation;
-
-                    const lineAlpha = alpha * 0.25 * Math.min(brightness, (0.3 + (bElevation + 18) / 36 * 0.7));
-                    ctx.beginPath();
-                    ctx.moveTo(px, py);
-                    ctx.lineTo(bpx, bpy);
-                    ctx.strokeStyle = `rgba(176, 176, 184, ${lineAlpha})`;
-                    ctx.lineWidth = 0.3;
-                    ctx.stroke();
-                }
-            }
-        }
-
-        for (let i = 0; i < 3; i++) {
-            const sparkleX = (Math.sin(time * 3.7 + i * 2.1) * 0.5 + 0.5) * canvas.width;
-            const sparkleY = (Math.cos(time * 2.3 + i * 1.7) * 0.5 + 0.5) * canvas.height;
-            const sparkleAlpha = Math.sin(time * 5 + i) * 0.15 + 0.15;
-
-            ctx.beginPath();
-            ctx.arc(sparkleX, sparkleY, 1, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(176, 176, 184, ${sparkleAlpha})`;
-            ctx.shadowBlur = 4;
-            ctx.shadowColor = `rgba(176, 176, 184, ${sparkleAlpha * 0.3})`;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
-
-        requestAnimationFrame(draw);
-    }
-
-    draw();
 }
 
 function initCardTilt() {
