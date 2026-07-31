@@ -29,7 +29,7 @@ function initTypewriter() {
     const el = document.getElementById('aboutText');
     if (!el) return;
 
-    const text = "Modder and developer focused on game hacking, reverse engineering, and building tools. I spend my time breaking things apart to understand how they work, then putting them back together better than before.";
+    const text = "Modder and developer who mostly lives in Frida scripts, IL2CPP dumps, and whatever game I've broken this week. I build mod menus, tear them apart, and rebuild them better (or at least try to). I spend a lot of time experimenting with hooks, patches, and random ideas that usually start as 'what if…' and end in a working exploit or something actually useful. Debugging is basically part of the hobby at this point. I like understanding how things work under the hood — APIs, anti-cheat, game logic, all of it. Outside of modding, I'm usually still thinking about code, or gaming, or tweaking projects that probably didn't need more tweaking. Just building, breaking, and shipping things when they're ready.";
     const cursor = el.querySelector('.typewriter-cursor');
     let i = 0;
 
