@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initAudio();
     initSplashGrid();
     initMainGrid();
+    initParticles();
+    initSplashParticles();
+    initCardTilt();
+    initMouseGlow();
+    initCRTFlicker();
+    initFooterTyping();
 });
 
 function initAvatar() {
@@ -219,4 +225,261 @@ function initMainGrid() {
     }
 
     animate();
+}
+
+function initParticles() {
+    const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const particles = [];
+    const count = 60;
+
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            size: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.4 + 0.1,
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 255, 136, ${p.alpha})`;
+            ctx.fill();
+        });
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 255, 136, ${0.06 * (1 - dist / 120)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+}
+
+function initSplashParticles() {
+    const canvas = document.getElementById('splashParticles');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const particles = [];
+    const count = 40;
+
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.5 + 0.1,
+            pulse: Math.random() * Math.PI * 2,
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.pulse += 0.02;
+
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+
+            const flicker = 0.5 + Math.sin(p.pulse) * 0.5;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 255, 136, ${p.alpha * flicker})`;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 255, 136, ${p.alpha * flicker * 0.15})`;
+            ctx.fill();
+        });
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 255, 136, ${0.08 * (1 - dist / 150)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+}
+
+function initCardTilt() {
+    const card = document.getElementById('profileCard');
+    if (!card) return;
+
+    const tracker = document.getElementById('cardGlowTracker');
+
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -2;
+        const rotateY = ((x - centerX) / centerX) * 2;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+        if (tracker) {
+            tracker.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0, 255, 136, 0.08) 0%, transparent 60%)`;
+        }
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        if (tracker) {
+            tracker.style.background = 'none';
+        }
+    });
+}
+
+function initMouseGlow() {
+    const glow = document.getElementById('mouseGlow');
+    if (!glow) return;
+
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+    });
+
+    function animate() {
+        currentX += (targetX - currentX) * 0.08;
+        currentY += (targetY - currentY) * 0.08;
+        glow.style.left = currentX + 'px';
+        glow.style.top = currentY + 'px';
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+}
+
+function initCRTFlicker() {
+    setInterval(() => {
+        if (Math.random() > 0.92) {
+            const flicker = document.createElement('div');
+            flicker.className = 'crt-flicker';
+            document.body.appendChild(flicker);
+            setTimeout(() => flicker.remove(), 150);
+
+            if (Math.random() > 0.5) {
+                setTimeout(() => {
+                    const flicker2 = document.createElement('div');
+                    flicker2.className = 'crt-flicker-2';
+                    document.body.appendChild(flicker2);
+                    setTimeout(() => flicker2.remove(), 200);
+                }, 50);
+            }
+        }
+    }, 2000);
+}
+
+function initFooterTyping() {
+    const footerText = document.querySelector('.footer-text');
+    if (!footerText) return;
+
+    const text = '> built with caffeine and bad decisions';
+    footerText.innerHTML = '';
+
+    const span = document.createElement('span');
+    span.className = 'footer-type';
+    footerText.appendChild(span);
+
+    const cursor = document.createElement('span');
+    cursor.className = 'footer-cursor';
+    footerText.appendChild(cursor);
+
+    let i = 0;
+    function type() {
+        if (i < text.length) {
+            span.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, 40 + Math.random() * 30);
+        } else {
+            setTimeout(() => {
+                cursor.style.display = 'none';
+            }, 2000);
+        }
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setTimeout(type, 800);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    observer.observe(footerText);
 }
