@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCardScanline();
     initParticleCanvas();
     initAmbientDots();
+    initMouseGlow();
 });
 
 function initAvatar() {
@@ -1038,4 +1039,23 @@ function initAmbientDots() {
     }
 
     for (let i = 0; i < 12; i++) spawnDot();
+}
+
+function initMouseGlow() {
+    const cards = document.querySelectorAll('.profile-card, .skills-card');
+    cards.forEach(card => {
+        const glow = card.querySelector('.card-mouse-glow');
+        if (!glow) return;
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            glow.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(120, 120, 255, 0.08), rgba(200, 80, 192, 0.03), transparent)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            glow.style.background = 'transparent';
+        });
+    });
 }
