@@ -399,7 +399,7 @@ body {
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 16px;
-    margin-top: auto;
+    margin-top: 60px;
 }
 
 .social-btn {
