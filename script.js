@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDiscordPulse();
     initBootSequence();
     initSplashCanvas();
+    initFloatingCode();
     initViewsCounter();
     initCardScanline();
 });
@@ -736,27 +737,34 @@ function initSplashCanvas() {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const lines = [];
-    const hexChars = '0123456789ABCDEF';
+    const codeLines = [];
 
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 80; i++) {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            vx: (Math.random() - 0.5) * 0.5,
-            vy: (Math.random() - 0.5) * 0.5,
-            size: Math.random() * 2 + 0.5,
-            alpha: Math.random() * 0.3 + 0.05,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            size: Math.random() * 1.5 + 0.3,
+            alpha: Math.random() * 0.2 + 0.03,
         });
     }
 
-    for (let i = 0; i < 8; i++) {
-        lines.push({
+    const codeFragments = [
+        '0x4F2A', 'ptr;', 'shellcode', 'mmap()', '0xFF00', 'hook()',
+        'inject', 'bypass', 'exploit', 'decrypt', 'alloc', '0xDEAD',
+        'struct', 'socket', 'ioctl', 'fork()', 'root', '0xBEEF',
+        'void*', 'malloc', 'trace', 'bind()', 'recv', '0xCAFE',
+    ];
+
+    for (let i = 0; i < 12; i++) {
+        codeLines.push({
             x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            length: Math.random() * 150 + 50,
-            speed: Math.random() * 2 + 0.5,
-            alpha: Math.random() * 0.15 + 0.02,
+            y: -Math.random() * canvas.height,
+            text: codeFragments[Math.floor(Math.random() * codeFragments.length)],
+            speed: Math.random() * 1.5 + 0.3,
+            alpha: Math.random() * 0.1 + 0.02,
+            size: Math.random() * 3 + 7,
         });
     }
 
@@ -783,42 +791,35 @@ function initSplashCanvas() {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 120) {
+                if (dist < 100) {
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(176, 176, 184, ${(1 - dist / 120) * 0.06})`;
-                    ctx.lineWidth = 0.4;
+                    ctx.strokeStyle = `rgba(176, 176, 184, ${(1 - dist / 100) * 0.04})`;
+                    ctx.lineWidth = 0.3;
                     ctx.stroke();
                 }
             }
         }
 
-        lines.forEach(l => {
+        codeLines.forEach(l => {
             l.y += l.speed;
-            if (l.y > canvas.height + 200) {
-                l.y = -200;
+            if (l.y > canvas.height + 30) {
+                l.y = -30;
                 l.x = Math.random() * canvas.width;
+                l.text = codeFragments[Math.floor(Math.random() * codeFragments.length)];
             }
 
-            const charSize = 9;
-            const charCount = Math.floor(l.length / charSize);
-            for (let c = 0; c < charCount; c++) {
-                const charY = l.y - c * charSize;
-                if (charY < 0 || charY > canvas.height) continue;
-                const charAlpha = l.alpha * (1 - c / charCount);
-                const char = hexChars[Math.floor(Math.random() * hexChars.length)];
-                ctx.font = '8px JetBrains Mono';
-                ctx.fillStyle = `rgba(176, 176, 184, ${charAlpha})`;
-                ctx.fillText(char, l.x, charY);
-            }
+            ctx.font = `${l.size}px JetBrains Mono`;
+            ctx.fillStyle = `rgba(176, 176, 184, ${l.alpha})`;
+            ctx.fillText(l.text, l.x, l.y);
         });
 
-        if (frame % 10 === 0) {
+        if (frame % 8 === 0) {
             const glitchCount = Math.floor(Math.random() * 3);
             for (let g = 0; g < glitchCount; g++) {
                 const gy = Math.random() * canvas.height;
-                const gw = Math.random() * 200 + 50;
+                const gw = Math.random() * 150 + 30;
                 const gx = Math.random() * canvas.width;
                 ctx.fillStyle = `rgba(176, 176, 184, ${Math.random() * 0.03})`;
                 ctx.fillRect(gx, gy, gw, 1);
@@ -834,6 +835,72 @@ function initSplashCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     });
+}
+
+function initFloatingCode() {
+    const container = document.getElementById('floatingCode');
+    if (!container) return;
+
+    const snippets = [
+        'fn main() {',
+        'async fn exploit()',
+        'SELECT * FROM users',
+        'import frida',
+        'hook_function(0x7fff)',
+        'class Exploit:',
+        'ptr = ctypes.c_void_p',
+        'recv(sock, buf, len)',
+        'while True: inject()',
+        'git commit -m "hack"',
+        'chmod +x payload.sh',
+        'ssh root@target',
+        'nmap -sV -p-',
+        'msfconsole -q',
+        'payload.encode("hex")',
+        'struct.unpack("<I")',
+        'mmap(PROT_READ|PROT_WRITE)',
+        'ioctl(fd, request, arg)',
+        'interceptTraffic()',
+        'bypass(DEP, ASLR)',
+        'const key = new Uint8Array',
+        'for (let i = 0; i < 256;)',
+        'process.memory.arread()',
+        'return shellcode[]',
+        'socket.connect((host,port))',
+        'decrypt(aes_key, data)',
+        'hashlib.sha256(salt+pw)',
+        'import sys; sys.exit(0)',
+        '#!/usr/bin/env python3',
+        'void* mmap(NULL, size, ...)',
+        'dlopen("lib.so", RTLD_NOW)',
+        'ptrace(PTRACE_ATTACH, pid)',
+        'read(fd, buffer, 4096)',
+        'write(1, "\x90", 1)',
+        'if (rc != SQLITE_OK)',
+        'curl -X POST /api/v2/',
+        'docker run -it --rm',
+        'kubectl apply -f pod.yaml',
+        'git push origin main --force',
+    ];
+
+    function spawnSnippet() {
+        const el = document.createElement('div');
+        el.className = 'floating-code-snippet' + (Math.random() > 0.85 ? ' bright' : '');
+        el.textContent = snippets[Math.floor(Math.random() * snippets.length)];
+        el.style.left = Math.random() * 100 + '%';
+        el.style.bottom = '-20px';
+        const duration = Math.random() * 20 + 15;
+        el.style.animationDuration = duration + 's';
+        el.style.animationDelay = (Math.random() * 5) + 's';
+        el.style.fontSize = (Math.random() * 4 + 8) + 'px';
+        container.appendChild(el);
+        setTimeout(() => el.remove(), (duration + 5) * 1000);
+    }
+
+    for (let i = 0; i < 15; i++) {
+        setTimeout(spawnSnippet, Math.random() * 4000);
+    }
+    setInterval(spawnSnippet, 1200);
 }
 
 function initCardScanline() {
