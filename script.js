@@ -178,12 +178,14 @@ function initSplash() {
     splash.addEventListener('click', () => {
         splash.classList.add('hidden');
         if (window.startAudio) window.startAudio();
+        setTimeout(() => { splash.remove(); }, 900);
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             splash.classList.add('hidden');
             if (window.startAudio) window.startAudio();
+            setTimeout(() => { splash.remove(); }, 900);
         }
     });
 }
