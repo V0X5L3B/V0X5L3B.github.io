@@ -682,8 +682,8 @@ function initViewsCounter() {
     if (!countEl) return;
 
     // TODO: Replace with your Supabase credentials
-    const SUPABASE_URL = 'https://your-project.supabase.co';
-    const SUPABASE_KEY = 'your-anon-key-here';
+const SUPABASE_URL = 'https://joahwuqfmuasrotpacmm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvYWh3dXFmbXVhc3JvdHBhY21tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU1MTM0NTcsImV4cCI6MjEwMTA4OTQ1N30.Pe7G8Ika3XQ9yxjXC5DSAsHBnuKfWqwiNTAB-j507yA';
     const NAMESPACE = 'v0x5l3b';
     const KEY = 'views';
 
