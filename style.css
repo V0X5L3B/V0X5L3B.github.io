@@ -155,12 +155,12 @@ body {
 }
 
 @keyframes card-glitch-flash {
-    0% { transform: translateX(0) translateY(0) skewX(0); }
-    20% { transform: translateX(-4px) translateY(-2px) skewX(2deg); }
-    40% { transform: translateX(3px) translateY(1px) skewX(-1deg); }
-    60% { transform: translateX(-2px) translateY(2px) skewX(1deg); }
-    80% { transform: translateX(1px) translateY(-1px) skewX(-2deg); }
-    100% { transform: translateX(0) translateY(0) skewX(0); }
+    0% { filter: hue-rotate(0deg) saturate(1); }
+    20% { filter: hue-rotate(90deg) saturate(3) brightness(1.5); }
+    40% { filter: saturate(5) contrast(2) brightness(2); }
+    60% { filter: invert(0.1) hue-rotate(180deg) saturate(3); }
+    80% { filter: hue-rotate(-60deg) saturate(4) brightness(1.8); }
+    100% { filter: none; }
 }
 
 .card-layout {
