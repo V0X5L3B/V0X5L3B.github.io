@@ -657,12 +657,6 @@ function initHolographicCard() {}
 function initDiscordPulse() {
     const discordBtn = document.querySelector('.social-btn.discord');
     if (!discordBtn) return;
-    setTimeout(() => {
-        setInterval(() => {
-            discordBtn.classList.add('pulse-active');
-            setTimeout(() => { discordBtn.classList.remove('pulse-active'); }, 600);
-        }, 4000);
-    }, 3000);
     const label = discordBtn.querySelector('.social-label');
     if (label) {
         const originalText = label.textContent;
