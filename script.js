@@ -111,7 +111,7 @@ function initAudio() {
     if (!audio || !playPauseBtn) return;
 
     function loadTrack() {
-        audioSource.src = 'audio/track3.mp3';
+        audioSource.src = 'audio/track2.mp3';
         audio.load();
     }
     loadTrack();
