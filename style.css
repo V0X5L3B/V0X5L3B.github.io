@@ -266,17 +266,22 @@ body {
 .social-btn {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
+    gap: 8px;
+    padding: 10px 16px;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     color: var(--text-secondary);
     text-decoration: none;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     transition: all 0.2s ease;
     cursor: pointer;
+}
+
+.social-btn.wide {
+    width: 100%;
+    justify-content: center;
 }
 
 .social-btn:hover {
