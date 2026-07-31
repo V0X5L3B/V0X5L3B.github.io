@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initCRTFlicker();
     initFooterTyping();
     initKeyboardGlitch();
-    initInteractiveDots();
 });
 
 function initAvatar() {
@@ -110,16 +109,11 @@ function initAudio() {
 
     if (!audio || !playPauseBtn) return;
 
-    const tracks = ['audio/track1.mp3', 'audio/track3.mp3'];
+    const tracks = ['audio/track3.mp3'];
     let currentTrack = 0;
 
     function pickRandomTrack() {
-        let next = Math.floor(Math.random() * tracks.length);
-        if (next === currentTrack && tracks.length > 1) {
-            next = (next + 1) % tracks.length;
-        }
-        currentTrack = next;
-        audioSource.src = tracks[currentTrack];
+        audioSource.src = tracks[0];
         audio.load();
     }
 
