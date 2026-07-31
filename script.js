@@ -29,7 +29,7 @@ function initTypewriter() {
     const el = document.getElementById('aboutText');
     if (!el) return;
 
-    const text = "Modder focused on game hacking, reverse engineering, and building tools. I hook into processes, analyze binaries, and write injection scripts. I like understanding how things work — the deeper, the better. I don't stick to one stack; I use whatever works. Just building and breaking things until they ship.";
+    const text = "Modder focused on game hacking, reverse engineering, and building tools. I hook into processes, analyze binaries, and write injection scripts. Breaking systems apart to understand how they work, then rebuilding them better.";
     const cursor = el.querySelector('.typewriter-cursor');
     let i = 0;
 
