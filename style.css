@@ -1917,7 +1917,6 @@ body {
 /* Skills card border glow */
 .skills-card {
     border: none !important;
-    position: relative;
 }
 
 .skills-card::before {
