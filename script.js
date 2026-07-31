@@ -6,13 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initAudio();
     initSplashGrid();
     initMainGrid();
-    initMatrixRain();
-    initSplashMatrix();
+    initTerrain();
     initCardTilt();
     initCRTFlicker();
     initFooterTyping();
     initKeyboardGlitch();
     initLeftColumnDots();
+    initRandomGlitchLines();
+    initScreenTears();
 });
 
 function initAvatar() {
@@ -55,12 +56,12 @@ function initGlitchEffect() {
     if (!name) return;
 
     setInterval(() => {
-        if (Math.random() > 0.95) {
+        if (Math.random() > 0.85) {
             name.style.animation = 'none';
             name.offsetHeight;
             name.style.animation = null;
         }
-    }, 3000);
+    }, 2000);
 }
 
 function createParticle(x, y) {
@@ -111,7 +112,6 @@ function initAudio() {
     if (!audio || !playPauseBtn) return;
 
     const tracks = ['audio/track3.mp3'];
-    let currentTrack = 0;
 
     function pickRandomTrack() {
         audioSource.src = tracks[0];
@@ -247,8 +247,8 @@ function initMainGrid() {
     animate();
 }
 
-function initMatrixRain() {
-    const canvas = document.getElementById('matrixCanvas');
+function initTerrain() {
+    const canvas = document.getElementById('terrainCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
@@ -259,66 +259,107 @@ function initMatrixRain() {
     resize();
     window.addEventListener('resize', resize);
 
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~`アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-    const fontSize = 14;
-    const columns = Math.floor(canvas.width / fontSize);
-    const drops = new Array(columns).fill(1);
+    let mouseX = canvas.width / 2;
+    let mouseY = canvas.height / 2;
+    let time = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    const gridSize = 30;
+    const rows = Math.ceil(canvas.height / gridSize) + 4;
+    const cols = Math.ceil(canvas.width / gridSize) + 4;
 
     function draw() {
-        ctx.fillStyle = 'rgba(10, 10, 12, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        time += 0.008;
 
-        ctx.fillStyle = '#b0b0b8';
-        ctx.font = `${fontSize}px monospace`;
+        const offsetX = (canvas.width - cols * gridSize) / 2;
+        const offsetY = (canvas.height - rows * gridSize) / 2;
 
-        for (let i = 0; i < drops.length; i++) {
-            const char = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+        const mouseGridX = mouseX / gridSize;
+        const mouseGridY = mouseY / gridSize;
 
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const wx = x * gridSize + offsetX;
+                const wy = y * gridSize + offsetY;
+
+                const dx = x - mouseGridX;
+                const dy = y - mouseGridY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                const wave1 = Math.sin(x * 0.3 + time * 2) * 8;
+                const wave2 = Math.cos(y * 0.25 + time * 1.5) * 6;
+                const wave3 = Math.sin((x + y) * 0.2 + time) * 4;
+                const mouseWave = dist < 8 ? Math.sin(dist * 0.8 - time * 4) * (8 - dist) * 2 : 0;
+
+                const elevation = wave1 + wave2 + wave3 + mouseWave;
+                const px = wx;
+                const py = wy + elevation;
+
+                const brightness = 0.3 + (elevation + 18) / 36 * 0.7;
+                const alpha = 0.15 + (dist < 10 ? (10 - dist) / 10 * 0.4 : 0);
+
+                ctx.fillStyle = `rgba(176, 176, 184, ${alpha * brightness})`;
+                ctx.fillRect(px - 1, py - 1, 2, 2);
+
+                if (x < cols - 1) {
+                    const nx = (x + 1) * gridSize + offsetX;
+                    const nWave1 = Math.sin((x + 1) * 0.3 + time * 2) * 8;
+                    const nWave2 = Math.cos(y * 0.25 + time * 1.5) * 6;
+                    const nWave3 = Math.sin((x + 1 + y) * 0.2 + time) * 4;
+                    const nDist = Math.sqrt((x + 1 - mouseGridX) ** 2 + dy ** 2);
+                    const nMouseWave = nDist < 8 ? Math.sin(nDist * 0.8 - time * 4) * (8 - nDist) * 2 : 0;
+                    const nElevation = nWave1 + nWave2 + nWave3 + nMouseWave;
+                    const npx = nx;
+                    const npy = wy + nElevation;
+
+                    const lineAlpha = alpha * 0.4 * Math.min(brightness, (0.3 + (nElevation + 18) / 36 * 0.7));
+                    ctx.beginPath();
+                    ctx.moveTo(px, py);
+                    ctx.lineTo(npx, npy);
+                    ctx.strokeStyle = `rgba(176, 176, 184, ${lineAlpha})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+
+                if (y < rows - 1) {
+                    const bx = x * gridSize + offsetX;
+                    const bWave1 = Math.sin(x * 0.3 + time * 2) * 8;
+                    const bWave2 = Math.cos((y + 1) * 0.25 + time * 1.5) * 6;
+                    const bWave3 = Math.sin((x + y + 1) * 0.2 + time) * 4;
+                    const bDist = Math.sqrt(dx ** 2 + (y + 1 - mouseGridY) ** 2);
+                    const bMouseWave = bDist < 8 ? Math.sin(bDist * 0.8 - time * 4) * (8 - bDist) * 2 : 0;
+                    const bElevation = bWave1 + bWave2 + bWave3 + bMouseWave;
+                    const bpx = bx;
+                    const bpy = wy + gridSize + bElevation;
+
+                    const lineAlpha = alpha * 0.4 * Math.min(brightness, (0.3 + (bElevation + 18) / 36 * 0.7));
+                    ctx.beginPath();
+                    ctx.moveTo(px, py);
+                    ctx.lineTo(bpx, bpy);
+                    ctx.strokeStyle = `rgba(176, 176, 184, ${lineAlpha})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
             }
-            drops[i]++;
         }
 
-        requestAnimationFrame(draw);
-    }
+        for (let i = 0; i < 3; i++) {
+            const sparkleX = (Math.sin(time * 3.7 + i * 2.1) * 0.5 + 0.5) * canvas.width;
+            const sparkleY = (Math.cos(time * 2.3 + i * 1.7) * 0.5 + 0.5) * canvas.height;
+            const sparkleAlpha = Math.sin(time * 5 + i) * 0.3 + 0.3;
 
-    draw();
-}
-
-function initSplashMatrix() {
-    const canvas = document.getElementById('splashMatrix');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    const chars = 'V0X5L3Bアイウエオカキクケコ0123456789';
-    const fontSize = 16;
-    const columns = Math.floor(canvas.width / fontSize);
-    const drops = new Array(columns).fill(1);
-
-    function draw() {
-        ctx.fillStyle = 'rgba(10, 10, 12, 0.04)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = '#b0b0b8';
-        ctx.font = `${fontSize}px monospace`;
-
-        for (let i = 0; i < drops.length; i++) {
-            const char = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-            drops[i]++;
+            ctx.beginPath();
+            ctx.arc(sparkleX, sparkleY, 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(176, 176, 184, ${sparkleAlpha})`;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = `rgba(176, 176, 184, ${sparkleAlpha * 0.5})`;
+            ctx.fill();
+            ctx.shadowBlur = 0;
         }
 
         requestAnimationFrame(draw);
@@ -370,18 +411,29 @@ function triggerMegaGlitch() {
     const card = document.getElementById('profileCard');
     if (!card) return;
 
-    card.style.animation = 'none';
-    card.offsetHeight;
-    card.style.filter = 'hue-rotate(90deg) saturate(2) brightness(1.3)';
-    card.style.transform = `skewX(${(Math.random() - 0.5) * 5}deg)`;
+    card.classList.add('glitch-active');
+    setTimeout(() => card.classList.remove('glitch-active'), 400);
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 12; i++) {
         setTimeout(() => {
             const flicker = document.createElement('div');
             flicker.className = Math.random() > 0.5 ? 'crt-flicker' : 'crt-flicker-2';
             document.body.appendChild(flicker);
             setTimeout(() => flicker.remove(), 150);
-        }, i * 50);
+        }, i * 30);
+    }
+
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            const line = document.createElement('div');
+            line.className = 'glitch-line';
+            line.style.top = Math.random() * 100 + 'vh';
+            line.style.height = (Math.random() * 4 + 1) + 'px';
+            line.style.background = `linear-gradient(90deg, transparent, rgba(176, 176, 184, ${Math.random() * 0.4 + 0.2}), transparent)`;
+            line.classList.add('active');
+            document.body.appendChild(line);
+            setTimeout(() => line.remove(), 200);
+        }, i * 40);
     }
 
     document.querySelectorAll('.skill-fill').forEach(fill => {
@@ -395,36 +447,94 @@ function triggerMegaGlitch() {
     });
 
     document.querySelectorAll('.name, .tagline, .section-title, .footer-text').forEach(el => {
+        el.style.animation = 'mega-glitch-text 0.4s step-end';
         el.style.textShadow = `0 0 20px rgba(176, 176, 184, 0.8), ${(Math.random()-0.5)*10}px ${(Math.random()-0.5)*5}px 0 rgba(144, 144, 152, 0.5)`;
         setTimeout(() => {
+            el.style.animation = '';
             el.style.textShadow = '';
-        }, 300);
+        }, 400);
     });
+}
 
-    setTimeout(() => {
-        card.style.filter = '';
-        card.style.transform = '';
-    }, 400);
+function initRandomGlitchLines() {
+    setInterval(() => {
+        if (Math.random() > 0.85) {
+            const line = document.createElement('div');
+            line.className = 'glitch-line';
+            line.style.top = Math.random() * 100 + 'vh';
+            line.style.height = (Math.random() * 3 + 1) + 'px';
+            line.style.background = `linear-gradient(90deg, transparent ${Math.random() * 20}%, rgba(176, 176, 184, ${Math.random() * 0.15 + 0.05}) ${Math.random() * 30 + 30}%, transparent ${Math.random() * 30 + 70}%)`;
+            line.classList.add('active');
+            document.body.appendChild(line);
+            setTimeout(() => line.remove(), 200);
+        }
+    }, 800);
+
+    setInterval(() => {
+        if (Math.random() > 0.9) {
+            const elements = document.querySelectorAll('.name, .tagline, .skill-name, .category-title, .section-title');
+            const el = elements[Math.floor(Math.random() * elements.length)];
+            if (el) {
+                el.style.animation = 'random-skew 0.3s step-end';
+                setTimeout(() => { el.style.animation = ''; }, 300);
+            }
+        }
+    }, 3000);
+
+    setInterval(() => {
+        if (Math.random() > 0.88) {
+            const card = document.getElementById('profileCard');
+            if (card) {
+                card.style.transform = `perspective(1000px) translateX(${(Math.random() - 0.5) * 6}px) translateY(${(Math.random() - 0.5) * 3}px) skewX(${(Math.random() - 0.5) * 1.5}deg)`;
+                setTimeout(() => {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+                }, 150);
+            }
+        }
+    }, 2500);
+}
+
+function initScreenTears() {
+    setInterval(() => {
+        if (Math.random() > 0.92) {
+            const tear = document.createElement('div');
+            tear.className = 'screen-tear';
+            tear.style.top = Math.random() * 80 + 10 + 'vh';
+            tear.style.height = (Math.random() * 8 + 2) + 'px';
+            tear.classList.add('active');
+            document.body.appendChild(tear);
+            setTimeout(() => tear.remove(), 250);
+        }
+    }, 2000);
+
+    setInterval(() => {
+        if (Math.random() > 0.9) {
+            document.body.style.filter = `hue-rotate(${Math.random() * 15}deg) brightness(${1 + Math.random() * 0.15})`;
+            setTimeout(() => {
+                document.body.style.filter = '';
+            }, 80);
+        }
+    }, 4000);
 }
 
 function initCRTFlicker() {
     setInterval(() => {
-        if (Math.random() > 0.92) {
+        if (Math.random() > 0.85) {
             const flicker = document.createElement('div');
             flicker.className = 'crt-flicker';
             document.body.appendChild(flicker);
             setTimeout(() => flicker.remove(), 150);
 
-            if (Math.random() > 0.5) {
+            if (Math.random() > 0.4) {
                 setTimeout(() => {
                     const flicker2 = document.createElement('div');
                     flicker2.className = 'crt-flicker-2';
                     document.body.appendChild(flicker2);
                     setTimeout(() => flicker2.remove(), 200);
-                }, 50);
+                }, 30);
             }
         }
-    }, 2000);
+    }, 1500);
 }
 
 function initFooterTyping() {
