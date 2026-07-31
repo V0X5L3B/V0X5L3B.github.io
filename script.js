@@ -692,14 +692,18 @@ function initViewsCounter() {
         : `${API_BASE}/hit/${NAMESPACE}/${KEY}`;
 
     fetch(endpoint)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        })
         .then(data => {
             countEl.textContent = data.value.toLocaleString();
             if (!hasVisited) {
                 localStorage.setItem(STORAGE_KEY, '1');
             }
         })
-        .catch(() => {
+        .catch(err => {
+            console.warn('Views counter API failed:', err);
             countEl.textContent = '—';
         });
 }
