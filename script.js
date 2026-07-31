@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDiscordPulse();
     initBootSequence();
     initSplashCanvas();
+    initViewsCounter();
 });
 
 function initAvatar() {
@@ -680,6 +681,33 @@ function initDiscordPulse() {
             label.textContent = originalText;
         });
     }
+}
+
+function initViewsCounter() {
+    const countEl = document.getElementById('viewsCount');
+    if (!countEl) return;
+
+    const NAMESPACE = 'v0x5l3b';
+    const KEY = 'views';
+    const STORAGE_KEY = 'v0x5l3b_has_visited';
+    const API_BASE = 'https://api.countapi.xyz';
+
+    const hasVisited = localStorage.getItem(STORAGE_KEY);
+    const endpoint = hasVisited
+        ? `${API_BASE}/get/${NAMESPACE}/${KEY}`
+        : `${API_BASE}/hit/${NAMESPACE}/${KEY}`;
+
+    fetch(endpoint)
+        .then(res => res.json())
+        .then(data => {
+            countEl.textContent = data.value.toLocaleString();
+            if (!hasVisited) {
+                localStorage.setItem(STORAGE_KEY, '1');
+            }
+        })
+        .catch(() => {
+            countEl.textContent = '—';
+        });
 }
 
 function initBootSequence() {
