@@ -1168,7 +1168,7 @@ body {
     perspective: 600px;
     perspective-origin: 50% 50%;
     position: relative;
-    animation: splash-ring-in 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+    animation: splash-ring-in 1s cubic-bezier(0.23, 1, 0.32, 1) both, cube-move 12s ease-in-out infinite;
 }
 
 .cube {
@@ -1176,12 +1176,12 @@ body {
     height: 110px;
     position: relative;
     transform-style: preserve-3d;
-    transform: rotateX(-20deg) rotateY(0deg);
-    animation: cube-spin 10s linear infinite, cube-move 8s ease-in-out infinite;
+    transform: rotateX(-20deg) rotateY(0deg) rotateZ(0deg);
+    animation: cube-spin 10s linear infinite;
 }
 
 .cube.glitching {
-    animation: cube-spin 10s linear infinite, cube-move 8s ease-in-out infinite, cube-glitch 0.3s step-end;
+    animation: cube-spin 10s linear infinite, cube-glitch 0.3s step-end;
 }
 
 .cube-face {
@@ -1270,20 +1270,23 @@ body {
 
 @keyframes cube-spin {
     0% { transform: rotateX(-20deg) rotateY(0deg) rotateZ(0deg); }
-    100% { transform: rotateX(-20deg) rotateY(360deg) rotateZ(5deg); }
+    25% { transform: rotateX(-30deg) rotateY(90deg) rotateZ(5deg); }
+    50% { transform: rotateX(-15deg) rotateY(180deg) rotateZ(-3deg); }
+    75% { transform: rotateX(-35deg) rotateY(270deg) rotateZ(4deg); }
+    100% { transform: rotateX(-20deg) rotateY(360deg) rotateZ(0deg); }
 }
 
 @keyframes cube-move {
     0%, 100% { translate: 0px 0px 0px; }
-    10% { translate: -30px -15px 20px; }
-    20% { translate: 25px 18px -15px; }
-    30% { translate: -18px 25px 30px; }
-    40% { translate: 30px -20px -25px; }
-    50% { translate: -25px -12px 18px; }
-    60% { translate: 15px 30px -30px; }
-    70% { translate: -30px 15px 25px; }
-    80% { translate: 20px -28px -18px; }
-    90% { translate: -12px 20px 15px; }
+    10% { translate: -40px -20px 30px; }
+    20% { translate: 35px 25px -20px; }
+    30% { translate: -25px 35px 40px; }
+    40% { translate: 45px -30px -35px; }
+    50% { translate: -35px -15px 25px; }
+    60% { translate: 20px 40px -45px; }
+    70% { translate: -45px 20px 35px; }
+    80% { translate: 30px -40px -25px; }
+    90% { translate: -15px 30px 20px; }
 }
 
 @keyframes cube-glitch {
