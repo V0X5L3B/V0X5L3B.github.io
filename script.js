@@ -277,8 +277,8 @@ function initRandomGlitchLines() {
         if (Math.random() > 0.88) {
             const card = document.getElementById('profileCard');
             if (card) {
-                card.classList.add('card-glitch');
-                setTimeout(() => { card.classList.remove('card-glitch'); }, 150);
+                // card.classList.add('card-glitch');
+                // setTimeout(() => { card.classList.remove('card-glitch'); }, 150);
             }
         }
     }, 2500);
