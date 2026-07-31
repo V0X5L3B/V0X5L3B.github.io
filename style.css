@@ -876,6 +876,34 @@ body {
     animation: footer-fly-in 0.7s cubic-bezier(0.23, 1, 0.32, 1) 2.0s forwards;
 }
 
+.views-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.views-counter:hover {
+    opacity: 1;
+}
+
+.views-icon {
+    width: 14px;
+    height: 14px;
+    background: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center/contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+.views-count {
+    font-variant-numeric: tabular-nums;
+}
+
 @keyframes footer-fly-in {
     0% { opacity: 0; transform: translateY(20px); filter: blur(3px); }
     100% { opacity: 1; transform: translateY(0); filter: blur(0); }
