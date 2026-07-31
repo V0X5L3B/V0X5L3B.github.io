@@ -653,40 +653,48 @@ function initCubeGlitch() {
     if (!cube) return;
 
     setInterval(() => {
-        if (Math.random() > 0.7) {
-            const duration = 100 + Math.random() * 200;
-            const glitchType = Math.floor(Math.random() * 5);
+        if (Math.random() > 0.5) {
+            const duration = 50 + Math.random() * 250;
+            const glitchType = Math.floor(Math.random() * 7);
 
             switch (glitchType) {
                 case 0:
-                    cube.style.filter = `hue-rotate(${Math.random() * 180}deg) brightness(${1.5 + Math.random()})`;
+                    cube.style.filter = `hue-rotate(${Math.random() * 360}deg) brightness(${1.5 + Math.random() * 1.5})`;
                     break;
                 case 1:
-                    cube.style.filter = `saturate(${3 + Math.random() * 5}) contrast(${1.5 + Math.random()})`;
+                    cube.style.filter = `saturate(${3 + Math.random() * 8}) contrast(${1.5 + Math.random() * 1.5})`;
                     break;
                 case 2:
-                    cube.style.filter = `invert(${0.1 + Math.random() * 0.2}) brightness(2)`;
+                    cube.style.filter = `invert(${0.1 + Math.random() * 0.3}) brightness(2.5)`;
                     break;
                 case 3:
-                    cube.style.filter = `blur(${1 + Math.random() * 2}px) brightness(2)`;
+                    cube.style.filter = `blur(${1 + Math.random() * 3}px) brightness(2)`;
                     break;
                 case 4:
-                    cube.style.filter = `hue-rotate(90deg) saturate(4) brightness(1.8)`;
+                    cube.style.filter = `hue-rotate(90deg) saturate(6) brightness(2)`;
+                    break;
+                case 5:
+                    cube.style.filter = `brightness(4) contrast(3) saturate(0)`;
+                    break;
+                case 6:
+                    cube.style.filter = `hue-rotate(270deg) saturate(10) brightness(3)`;
                     break;
             }
 
+            cube.style.transformOrigin = 'center center';
+
             if (glow) {
-                glow.style.background = `radial-gradient(circle, rgba(176, 176, 184, ${0.2 + Math.random() * 0.3}) 0%, transparent 70%)`;
-                glow.style.transform = `translate(-50%, -50%) scale(${1.5 + Math.random() * 0.8})`;
+                glow.style.background = `radial-gradient(circle, rgba(176, 176, 184, ${0.3 + Math.random() * 0.5}) 0%, transparent 70%)`;
+                glow.style.transform = `translate(-50%, -50%) scale(${1.5 + Math.random() * 1.2})`;
             }
 
             if (shadow) {
-                shadow.style.opacity = 0.6;
-                shadow.style.transform = `translateX(${(Math.random() - 0.5) * 20}px) translateY(${(Math.random() - 0.5) * 15}px)`;
+                shadow.style.opacity = 0.8;
+                shadow.style.transform = `translateX(${(Math.random() - 0.5) * 40}px) translateY(${(Math.random() - 0.5) * 30}px) skewX(${(Math.random() - 0.5) * 20}deg)`;
             }
 
             if (container) {
-                container.style.filter = `drop-shadow(${(Math.random() - 0.5) * 8}px ${(Math.random() - 0.5) * 5}px 6px rgba(176, 176, 184, 0.3))`;
+                container.style.filter = `drop-shadow(${(Math.random() - 0.5) * 15}px ${(Math.random() - 0.5) * 10}px 10px rgba(176, 176, 184, 0.5))`;
             }
 
             setTimeout(() => {
@@ -704,31 +712,48 @@ function initCubeGlitch() {
                 }
             }, duration);
         }
+    }, 800);
+
+    setInterval(() => {
+        if (Math.random() > 0.6) {
+            const faces = cube.querySelectorAll('.cube-face');
+            const count = 1 + Math.floor(Math.random() * 3);
+            for (let n = 0; n < count; n++) {
+                const randomFace = faces[Math.floor(Math.random() * faces.length)];
+                if (randomFace) {
+                    randomFace.style.background = `rgba(176, 176, 184, ${0.2 + Math.random() * 0.5})`;
+                    randomFace.style.borderColor = `rgba(176, 176, 184, ${0.6 + Math.random() * 0.4})`;
+                    randomFace.style.boxShadow = `inset 0 0 ${20 + Math.random() * 40}px rgba(176, 176, 184, ${0.1 + Math.random() * 0.3})`;
+                }
+            }
+            setTimeout(() => {
+                faces.forEach(f => {
+                    f.style.background = '';
+                    f.style.borderColor = '';
+                    f.style.boxShadow = '';
+                });
+            }, 60 + Math.random() * 100);
+        }
+    }, 1200);
+
+    setInterval(() => {
+        if (Math.random() > 0.7 && container) {
+            const jitterX = (Math.random() - 0.5) * 20;
+            const jitterY = (Math.random() - 0.5) * 16;
+            const jitterSkew = (Math.random() - 0.5) * 6;
+            container.style.transform = `translateX(${jitterX}px) translateY(${jitterY}px) skewX(${jitterSkew}deg)`;
+            setTimeout(() => {
+                container.style.transform = '';
+            }, 40 + Math.random() * 60);
+        }
     }, 1500);
 
     setInterval(() => {
-        if (Math.random() > 0.8) {
-            const faces = cube.querySelectorAll('.cube-face');
-            const randomFace = faces[Math.floor(Math.random() * faces.length)];
-            if (randomFace) {
-                randomFace.style.background = `rgba(176, 176, 184, ${0.2 + Math.random() * 0.3})`;
-                randomFace.style.borderColor = `rgba(176, 176, 184, ${0.6 + Math.random() * 0.4})`;
-                randomFace.style.boxShadow = `inset 0 0 ${20 + Math.random() * 30}px rgba(176, 176, 184, ${0.1 + Math.random() * 0.2})`;
-                setTimeout(() => {
-                    randomFace.style.background = '';
-                    randomFace.style.borderColor = '';
-                    randomFace.style.boxShadow = '';
-                }, 80 + Math.random() * 120);
-            }
+        if (Math.random() > 0.75) {
+            cube.style.opacity = 0.3 + Math.random() * 0.7;
+            setTimeout(() => {
+                cube.style.opacity = '';
+            }, 50 + Math.random() * 80);
         }
     }, 2000);
-
-    setInterval(() => {
-        if (Math.random() > 0.85 && container) {
-            container.style.transform = `translateX(${(Math.random() - 0.5) * 10}px) translateY(${(Math.random() - 0.5) * 8}px)`;
-            setTimeout(() => {
-                container.style.transform = '';
-            }, 60);
-        }
-    }, 3000);
 }
