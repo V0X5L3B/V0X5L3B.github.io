@@ -78,33 +78,13 @@ body {
     z-index: 2;
 }
 
-/* ==================== FOREST BACKGROUND ==================== */
-.forest-bg {
-    position: fixed;
-    bottom: 0; left: 0;
-    width: 100%; height: 55%;
-    pointer-events: none;
-    z-index: 0;
-    background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 400'%3E%3Cpath d='M0,400 L0,280 Q40,250 80,280 Q100,170 140,280 Q160,220 200,280 Q220,140 260,280 Q290,210 320,280 Q340,120 380,280 Q410,190 440,280 Q460,100 500,280 Q530,170 560,280 Q590,90 630,280 Q660,200 690,280 Q720,130 760,280 Q790,180 820,280 Q850,110 890,280 Q920,190 950,280 Q980,150 1020,280 Q1050,200 1080,280 Q1110,140 1150,280 Q1180,170 1200,280 L1200,400 Z' fill='rgba(15,22,15,1)'/%3E%3Cpath d='M0,400 L0,310 Q60,290 120,310 Q150,250 200,310 Q240,270 280,310 Q320,230 370,310 Q410,260 450,310 Q490,220 540,310 Q580,250 620,310 Q660,200 710,310 Q750,240 790,310 Q830,210 880,310 Q920,250 960,310 Q1000,230 1050,310 Q1090,260 1130,310 Q1170,240 1200,310 L1200,400 Z' fill='rgba(10,16,10,1)'/%3E%3C/svg%3E") bottom center / 100% auto no-repeat;
-}
-
-.fireflies-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 1;
-}
-
 /* ==================== COOL PANEL ==================== */
 .profile-card {
     background: linear-gradient(145deg, rgba(21, 21, 24, 0.95), rgba(15, 15, 18, 0.98));
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 36px 48px;
-    max-width: 520px;
+    padding: 32px 40px;
+    max-width: 420px;
     width: 100%;
     position: relative;
     overflow: hidden;
@@ -177,7 +157,7 @@ body {
 .card-vertical {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 28px;
     position: relative;
     z-index: 1;
 }
@@ -762,7 +742,7 @@ body {
 .skills-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 20px;
 }
 
 .skill-category {
