@@ -681,20 +681,40 @@ function initViewsCounter() {
     const countEl = document.getElementById('viewsCount');
     if (!countEl) return;
 
-    const STORAGE_KEY = 'v0x5l3b_has_visited';
-    const LOCAL_KEY = 'v0x5l3b_local_views';
+    // TODO: Replace with your Supabase credentials
+    const SUPABASE_URL = 'https://your-project.supabase.co';
+    const SUPABASE_KEY = 'your-anon-key-here';
+    const NAMESPACE = 'v0x5l3b';
+    const KEY = 'views';
 
-    // Reliable localStorage counter (works offline, no CORS issues)
-    let localCount = parseInt(localStorage.getItem('v0x5l3b_local_views') || '0', 10);
-    const hasVisited = localStorage.getItem('v0x5l3b_has_visited');
-
-    if (!hasVisited) {
-        localCount++;
-        localStorage.setItem('v0x5l3b_has_visited', '1');
-        localStorage.setItem('v0x5l3b_local_views', localCount.toString());
+    // Load Supabase client from CDN if not already loaded
+    if (!window.supabase) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+        script.onload = initSupabaseClient;
+        document.head.appendChild(script);
+    } else {
+        initSupabaseClient();
     }
 
-    countEl.textContent = localCount.toLocaleString();
+    function initSupabaseClient() {
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function updateCount() {
+            try {
+                const { data, error } = await supabase
+                    .rpc('increment_visitor', { p_namespace: 'v0x5l3b', p_key: 'views' });
+
+                if (error) throw error;
+                countEl.textContent = data.toLocaleString();
+            } catch (err) {
+                console.warn('Views counter failed:', err);
+                countEl.textContent = '—';
+            }
+        }
+
+        updateCount();
+    }
 }
 
 function initBootSequence() {
