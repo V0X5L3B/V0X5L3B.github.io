@@ -684,28 +684,33 @@ function initViewsCounter() {
     const NAMESPACE = 'v0x5l3b';
     const KEY = 'views';
     const STORAGE_KEY = 'v0x5l3b_has_visited';
-    const API_BASE = 'https://api.countapi.xyz';
+    const API_URL = 'https://api.countapi.xyz';
 
-    const hasVisited = localStorage.getItem(STORAGE_KEY);
-    const endpoint = hasVisited
-        ? `${API_BASE}/get/${NAMESPACE}/${KEY}`
-        : `${API_BASE}/hit/${NAMESPACE}/${KEY}`;
+    async function updateCount() {
+        const hasVisited = localStorage.getItem(STORAGE_KEY);
+        const method = hasVisited ? 'get' : 'hit';
+        const url = `${API_URL}/${method}/${NAMESPACE}/${KEY}`;
 
-    fetch(endpoint)
-        .then(res => {
+        try {
+            const res = await fetch(url);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res.json();
-        })
-        .then(data => {
+            const data = await res.json();
             countEl.textContent = data.value.toLocaleString();
+            if (!hasVisited) localStorage.setItem(STORAGE_KEY, '1');
+        } catch (err) {
+            console.warn('Views counter failed, using fallback:', err);
+            // Fallback: localStorage-only persistent counter
+            let localCount = parseInt(localStorage.getItem('v0x5l3b_local_views') || '0', 10);
             if (!hasVisited) {
+                localCount++;
                 localStorage.setItem(STORAGE_KEY, '1');
+                localStorage.setItem('v0x5l3b_local_views', localCount.toString());
             }
-        })
-        .catch(err => {
-            console.warn('Views counter API failed:', err);
-            countEl.textContent = '—';
-        });
+            countEl.textContent = localCount.toLocaleString();
+        }
+    }
+
+    updateCount();
 }
 
 function initBootSequence() {
