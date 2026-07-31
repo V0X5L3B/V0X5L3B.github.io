@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initRandomGlitchLines();
     initScreenTears();
     initCubeGlitch();
+    initTextScramble();
+    initHexDataStream();
+    initHolographicCard();
+    initDiscordPulse();
 });
 
 function initAvatar() {
@@ -636,4 +640,220 @@ function initCubeGlitch() {
             }, 50 + Math.random() * 80);
         }
     }, 2000);
+}
+
+function initTextScramble() {
+    const chars = '!<>-_\\/[]{}—=+*^?#_abcdef0123456789';
+    const nameEl = document.querySelector('.name');
+    const splashName = document.querySelector('.splash-title');
+
+    function scramble(el, finalText, duration = 1500) {
+        if (!el) return;
+        const length = finalText.length;
+        let frame = 0;
+        const totalFrames = Math.floor(duration / 30);
+
+        function update() {
+            let output = '';
+            const progress = frame / totalFrames;
+            const charsToReveal = Math.floor(progress * length);
+
+            for (let i = 0; i < length; i++) {
+                if (i < charsToReveal) {
+                    output += finalText[i];
+                } else {
+                    output += chars[Math.floor(Math.random() * chars.length)];
+                }
+            }
+
+            el.textContent = output;
+            frame++;
+
+            if (frame <= totalFrames) {
+                requestAnimationFrame(() => setTimeout(update, 30));
+            } else {
+                el.textContent = finalText;
+            }
+        }
+
+        update();
+    }
+
+    if (splashName) {
+        setTimeout(() => scramble(splashName, 'V0X5L.3B', 1200), 300);
+    }
+
+    const nameObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                scramble(nameEl, 'V0X5L.3B', 1000);
+                nameObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    if (nameEl) {
+        nameObserver.observe(nameEl);
+    }
+
+    const taglineEl = document.querySelector('.tagline');
+    const taglineText = 'modder // developer';
+    if (taglineEl) {
+        const tagObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    scramble(taglineEl, taglineText, 800);
+                    tagObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        tagObserver.observe(taglineEl);
+    }
+}
+
+function initHexDataStream() {
+    const container = document.querySelector('.left-column');
+    if (!container) return;
+
+    const hexChars = '0123456789ABCDEF';
+    const binChars = '01';
+    const stream = document.createElement('div');
+    stream.className = 'hex-stream';
+    stream.setAttribute('aria-hidden', 'true');
+    container.appendChild(stream);
+
+    const columns = 12;
+    const lines = 40;
+    let html = '';
+
+    for (let c = 0; c < columns; c++) {
+        const col = document.createElement('div');
+        col.className = 'hex-col';
+        col.style.left = (c / columns * 100) + '%';
+        col.style.animationDuration = (8 + Math.random() * 12) + 's';
+        col.style.animationDelay = (Math.random() * 5) + 's';
+
+        let colText = '';
+        for (let l = 0; l < lines; l++) {
+            if (Math.random() > 0.6) {
+                let hexWord = '';
+                for (let h = 0; h < 4; h++) {
+                    hexWord += hexChars[Math.floor(Math.random() * hexChars.length)];
+                }
+                colText += `<div class="hex-line">${hexWord}</div>`;
+            } else if (Math.random() > 0.4) {
+                let binWord = '';
+                for (let b = 0; b < 8; b++) {
+                    binWord += binChars[Math.floor(Math.random() * binChars.length)];
+                }
+                colText += `<div class="hex-line bin">${binWord}</div>`;
+            } else {
+                const symbols = ['░', '▒', '▓', '█', '▄', '▀', '◆', '◇', '▪', '▫'];
+                let symWord = '';
+                for (let s = 0; s < 2; s++) {
+                    symWord += symbols[Math.floor(Math.random() * symbols.length)];
+                }
+                colText += `<div class="hex-line sym">${symWord}</div>`;
+            }
+        }
+        col.innerHTML = colText;
+        stream.appendChild(col);
+    }
+
+    setInterval(() => {
+        const allCols = stream.querySelectorAll('.hex-col');
+        allCols.forEach(col => {
+            if (Math.random() > 0.7) {
+                const lines = col.querySelectorAll('.hex-line');
+                const target = lines[Math.floor(Math.random() * lines.length)];
+                if (target) {
+                    const isHex = Math.random() > 0.5;
+                    let newText = '';
+                    const len = isHex ? 4 : 8;
+                    const charSet = isHex ? hexChars : binChars;
+                    for (let i = 0; i < len; i++) {
+                        newText += charSet[Math.floor(Math.random() * charSet.length)];
+                    }
+                    target.textContent = newText;
+                    target.style.color = `rgba(176, 176, 184, ${0.15 + Math.random() * 0.35})`;
+                    target.style.textShadow = `0 0 ${3 + Math.random() * 6}px rgba(176, 176, 184, ${0.2 + Math.random() * 0.3})`;
+
+                    setTimeout(() => {
+                        target.style.color = '';
+                        target.style.textShadow = '';
+                    }, 200 + Math.random() * 400);
+                }
+            }
+        });
+    }, 150);
+}
+
+function initHolographicCard() {
+    const card = document.getElementById('profileCard');
+    if (!card) return;
+
+    const holo = document.createElement('div');
+    holo.className = 'holo-effect';
+    card.appendChild(holo);
+
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+
+        const hue = Math.floor(x * 360);
+        const lightness = 40 + y * 20;
+
+        holo.style.background = `
+            radial-gradient(
+                circle at ${x * 100}% ${y * 100}%,
+                hsla(${hue}, 0%, ${lightness}%, 0.06) 0%,
+                transparent 50%
+            )
+        `;
+        holo.style.opacity = '1';
+
+        card.style.setProperty('--holo-x', `${x * 100}%`);
+        card.style.setProperty('--holo-y', `${y * 100}%`);
+    });
+
+    card.addEventListener('mouseleave', () => {
+        holo.style.opacity = '0';
+    });
+}
+
+function initDiscordPulse() {
+    const discordBtn = document.querySelector('.social-btn.discord');
+    if (!discordBtn) return;
+
+    setInterval(() => {
+        discordBtn.classList.add('pulse-active');
+        setTimeout(() => {
+            discordBtn.classList.remove('pulse-active');
+        }, 600);
+    }, 4000);
+
+    const label = discordBtn.querySelector('.social-label');
+    if (label) {
+        const originalText = label.textContent;
+        const glitchTexts = ['D1sc0rd', 'Disc0rd', 'Discord', 'd!scord', 'D1sord'];
+        let glitchInterval;
+
+        discordBtn.addEventListener('mouseenter', () => {
+            let count = 0;
+            glitchInterval = setInterval(() => {
+                label.textContent = glitchTexts[Math.floor(Math.random() * glitchTexts.length)];
+                count++;
+                if (count > 6) {
+                    clearInterval(glitchInterval);
+                    label.textContent = originalText;
+                }
+            }, 50);
+        });
+
+        discordBtn.addEventListener('mouseleave', () => {
+            if (glitchInterval) clearInterval(glitchInterval);
+            label.textContent = originalText;
+        });
+    }
 }
