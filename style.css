@@ -25,11 +25,6 @@ html { scroll-behavior: smooth; }
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg-primary);
-    background-image: url('troll.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
@@ -73,99 +68,21 @@ body {
     z-index: 0;
 }
 
-/* ==================== ANIMATED GRADIENT ==================== */
-.bg-gradient {
+/* ==================== TROLL IMAGE ==================== */
+.troll-img {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    background: 
-        radial-gradient(ellipse at 20% 50%, rgba(35, 35, 50, 0.6) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(30, 30, 45, 0.5) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(25, 25, 40, 0.5) 0%, transparent 50%);
-    animation: gradient-shift 20s ease-in-out infinite alternate;
-}
-
-@keyframes gradient-shift {
-    0% { 
-        background: 
-            radial-gradient(ellipse at 20% 50%, rgba(35, 35, 50, 0.6) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 20%, rgba(30, 30, 45, 0.5) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 80%, rgba(25, 25, 40, 0.5) 0%, transparent 50%);
-    }
-    100% { 
-        background: 
-            radial-gradient(ellipse at 70% 30%, rgba(35, 35, 50, 0.6) 0%, transparent 50%),
-            radial-gradient(ellipse at 30% 70%, rgba(30, 30, 45, 0.5) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(25, 25, 40, 0.5) 0%, transparent 50%);
-    }
-}
-
-/* ==================== SMOKE / FOG ==================== */
-.bg-fog {
-    position: fixed;
-    top: 0; left: -100%;
-    width: 300%; height: 100%;
-    pointer-events: none;
-    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: auto;
+    z-index: 3;
     opacity: 1;
+    pointer-events: none;
 }
 
-.bg-fog::before,
-.bg-fog::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-}
 
-.bg-fog::before {
-    width: 600px; height: 400px;
-    top: 10%; left: 10%;
-    background: radial-gradient(ellipse, rgba(184, 184, 192, 0.04) 0%, transparent 70%);
-    animation: fog-float-1 18s ease-in-out infinite alternate;
-}
-
-.bg-fog::after {
-    width: 500px; height: 350px;
-    top: 50%; left: 40%;
-    background: radial-gradient(ellipse, rgba(184, 184, 192, 0.03) 0%, transparent 70%);
-    animation: fog-float-2 22s ease-in-out infinite alternate;
-}
-
-.bg-fog.fog-2::before {
-    width: 550px; height: 380px;
-    top: 30%; left: 50%;
-    background: radial-gradient(ellipse, rgba(184, 184, 192, 0.035) 0%, transparent 70%);
-    animation: fog-float-3 25s ease-in-out infinite alternate;
-}
-
-.bg-fog.fog-2::after {
-    width: 450px; height: 300px;
-    top: 60%; left: 20%;
-    background: radial-gradient(ellipse, rgba(184, 184, 192, 0.025) 0%, transparent 70%);
-    animation: fog-float-4 20s ease-in-out infinite alternate;
-}
-
-@keyframes fog-float-1 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(100px, 40px) scale(1.2); }
-}
-
-@keyframes fog-float-2 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-80px, -30px) scale(1.15); }
-}
-
-@keyframes fog-float-3 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(60px, -50px) scale(1.3); }
-}
-
-@keyframes fog-float-4 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-120px, 20px) scale(1.1); }
+    display: none;
 }
 
 .container {
