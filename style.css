@@ -124,6 +124,14 @@ body {
     opacity: 0.6;
 }
 
+.clanker-arrow {
+    font-size: 10px;
+    color: var(--accent-dim);
+    text-align: center;
+    margin-bottom: 6px;
+    opacity: 0.8;
+}
+
 .container {
     display: block;
     min-height: 100vh;
