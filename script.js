@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     initSplash();
     initAvatar();
-    initTypewriter();
     initSkillBars();
     initGlitchEffect();
     initAudio();
@@ -23,25 +22,6 @@ function initAvatar() {
             placeholder.classList.remove('visible');
         };
     }
-}
-
-function initTypewriter() {
-    const el = document.getElementById('aboutText');
-    if (!el) return;
-
-    const text = "Modder focused on game hacking, reverse engineering, and building tools. I hook into processes, analyze binaries, and write injection scripts.";
-    const cursor = el.querySelector('.typewriter-cursor');
-    let i = 0;
-
-    function type() {
-        if (i < text.length) {
-            el.insertBefore(document.createTextNode(text.charAt(i)), cursor);
-            i++;
-            setTimeout(type, 25 + Math.random() * 15);
-        }
-    }
-
-    type();
 }
 
 function initSkillBars() {
