@@ -407,7 +407,7 @@ body {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 14px;
+    padding: 10px 14px;
 }
 
 .about-text {
@@ -415,7 +415,7 @@ body {
     line-height: 1.5;
     color: var(--text-primary);
     margin-bottom: 10px;
-    min-height: 80px;
+    min-height: auto;
 }
 
 .typewriter {
