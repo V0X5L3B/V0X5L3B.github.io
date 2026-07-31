@@ -88,10 +88,23 @@ body {
     z-index: 3;
 }
 
+.clanker-box {
+    background: linear-gradient(145deg, rgba(21, 21, 24, 0.9), rgba(15, 15, 18, 0.95));
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px 20px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.clanker-box:hover {
+    border-color: rgba(184, 184, 192, 0.3);
+    box-shadow: 0 0 20px rgba(184, 184, 192, 0.05), inset 0 0 20px rgba(184, 184, 192, 0.02);
+}
+
 .clanker-link {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
+    font-size: 12px;
+    color: var(--accent);
     text-decoration: none;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
@@ -99,7 +112,7 @@ body {
 }
 
 .clanker-link:hover {
-    color: var(--accent);
+    color: #fff;
 }
 
 .clanker-text {
