@@ -16,8 +16,8 @@
     --text-secondary: #8888a0;
     --text-muted: #4a4a5a;
     --danger: #ff4466;
-    --security-accent: #ff6b35;
-    --security-glow: rgba(255, 107, 53, 0.12);
+    --security-accent: #909098;
+    --security-glow: rgba(144, 144, 152, 0.12);
 }
 
 html {
@@ -925,7 +925,7 @@ body {
 }
 
 .skill-fill.security {
-    background: linear-gradient(90deg, #cc5522, var(--security-accent));
+    background: linear-gradient(90deg, #606068, var(--security-accent));
     box-shadow: 0 0 8px var(--security-glow);
 }
 
@@ -1381,7 +1381,7 @@ body {
     pointer-events: none;
     z-index: 9998;
     opacity: 0;
-    background: rgba(255, 107, 53, 0.015);
+    background: rgba(144, 144, 152, 0.015);
     animation: crt-flicker-2 0.15s linear;
 }
 

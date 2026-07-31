@@ -400,7 +400,7 @@ function triggerMegaGlitch() {
     });
 
     document.querySelectorAll('.name, .tagline, .section-title, .footer-text').forEach(el => {
-        el.style.textShadow = `0 0 20px rgba(176, 176, 184, 0.8), ${(Math.random()-0.5)*10}px ${(Math.random()-0.5)*5}px 0 rgba(255, 107, 53, 0.5)`;
+        el.style.textShadow = `0 0 20px rgba(176, 176, 184, 0.8), ${(Math.random()-0.5)*10}px ${(Math.random()-0.5)*5}px 0 rgba(144, 144, 152, 0.5)`;
         setTimeout(() => {
             el.style.textShadow = '';
         }, 300);
