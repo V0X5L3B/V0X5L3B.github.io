@@ -222,7 +222,7 @@ function initMainGrid() {
 function initCardTilt() {
     const card = document.getElementById('profileCard');
     if (!card) return;
-    const tracker = document.getElementById('cardGlowTracker');
+
     card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -232,13 +232,10 @@ function initCardTilt() {
         const rotateX = ((y - centerY) / centerY) * -2;
         const rotateY = ((x - centerX) / centerX) * 2;
         card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        if (tracker) {
-            tracker.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(176, 176, 184, 0.08) 0%, transparent 60%)`;
-        }
     });
+
     card.addEventListener('mouseleave', () => {
         card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-        if (tracker) tracker.style.background = 'none';
     });
 }
 
