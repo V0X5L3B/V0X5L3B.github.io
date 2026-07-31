@@ -6,12 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initAudio();
     initSplashGrid();
     initMainGrid();
-    initParticles();
-    initSplashParticles();
+    initMatrixRain();
+    initSplashMatrix();
     initCardTilt();
-    initMouseGlow();
     initCRTFlicker();
     initFooterTyping();
+    initKeyboardGlitch();
 });
 
 function initAvatar() {
@@ -227,8 +227,8 @@ function initMainGrid() {
     animate();
 }
 
-function initParticles() {
-    const canvas = document.getElementById('particleCanvas');
+function initMatrixRain() {
+    const canvas = document.getElementById('matrixCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
@@ -239,53 +239,26 @@ function initParticles() {
     resize();
     window.addEventListener('resize', resize);
 
-    const particles = [];
-    const count = 60;
-
-    for (let i = 0; i < count; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
-            size: Math.random() * 2 + 0.5,
-            alpha: Math.random() * 0.4 + 0.1,
-        });
-    }
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~`アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = new Array(columns).fill(1);
 
     function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
+        ctx.fillStyle = '#00ff88';
+        ctx.font = `${fontSize}px monospace`;
 
-            if (p.x < 0) p.x = canvas.width;
-            if (p.x > canvas.width) p.x = 0;
-            if (p.y < 0) p.y = canvas.height;
-            if (p.y > canvas.height) p.y = 0;
+        for (let i = 0; i < drops.length; i++) {
+            const char = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
 
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 255, 136, ${p.alpha})`;
-            ctx.fill();
-        });
-
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 120) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(0, 255, 136, ${0.06 * (1 - dist / 120)})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
             }
+            drops[i]++;
         }
 
         requestAnimationFrame(draw);
@@ -294,8 +267,8 @@ function initParticles() {
     draw();
 }
 
-function initSplashParticles() {
-    const canvas = document.getElementById('splashParticles');
+function initSplashMatrix() {
+    const canvas = document.getElementById('splashMatrix');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
@@ -306,62 +279,26 @@ function initSplashParticles() {
     resize();
     window.addEventListener('resize', resize);
 
-    const particles = [];
-    const count = 40;
-
-    for (let i = 0; i < count; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            vx: (Math.random() - 0.5) * 0.5,
-            vy: (Math.random() - 0.5) * 0.5,
-            size: Math.random() * 2 + 0.5,
-            alpha: Math.random() * 0.5 + 0.1,
-            pulse: Math.random() * Math.PI * 2,
-        });
-    }
+    const chars = 'V0X5L3Bアイウエオカキクケコ0123456789';
+    const fontSize = 16;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = new Array(columns).fill(1);
 
     function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(10, 10, 15, 0.04)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.pulse += 0.02;
+        ctx.fillStyle = '#00ff88';
+        ctx.font = `${fontSize}px monospace`;
 
-            if (p.x < 0) p.x = canvas.width;
-            if (p.x > canvas.width) p.x = 0;
-            if (p.y < 0) p.y = canvas.height;
-            if (p.y > canvas.height) p.y = 0;
+        for (let i = 0; i < drops.length; i++) {
+            const char = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
 
-            const flicker = 0.5 + Math.sin(p.pulse) * 0.5;
-
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 255, 136, ${p.alpha * flicker})`;
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 255, 136, ${p.alpha * flicker * 0.15})`;
-            ctx.fill();
-        });
-
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 150) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(0, 255, 136, ${0.08 * (1 - dist / 150)})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
             }
+            drops[i]++;
         }
 
         requestAnimationFrame(draw);
@@ -401,27 +338,53 @@ function initCardTilt() {
     });
 }
 
-function initMouseGlow() {
-    const glow = document.getElementById('mouseGlow');
-    if (!glow) return;
-
-    let targetX = 0, targetY = 0;
-    let currentX = 0, currentY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        targetX = e.clientX;
-        targetY = e.clientY;
+function initKeyboardGlitch() {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'g' || e.key === 'G') {
+            triggerMegaGlitch();
+        }
     });
+}
 
-    function animate() {
-        currentX += (targetX - currentX) * 0.08;
-        currentY += (targetY - currentY) * 0.08;
-        glow.style.left = currentX + 'px';
-        glow.style.top = currentY + 'px';
-        requestAnimationFrame(animate);
+function triggerMegaGlitch() {
+    const card = document.getElementById('profileCard');
+    if (!card) return;
+
+    card.style.animation = 'none';
+    card.offsetHeight;
+    card.style.filter = 'hue-rotate(90deg) saturate(2) brightness(1.3)';
+    card.style.transform = `skewX(${(Math.random() - 0.5) * 5}deg)`;
+
+    for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+            const flicker = document.createElement('div');
+            flicker.className = Math.random() > 0.5 ? 'crt-flicker' : 'crt-flicker-2';
+            document.body.appendChild(flicker);
+            setTimeout(() => flicker.remove(), 150);
+        }, i * 50);
     }
 
-    animate();
+    document.querySelectorAll('.skill-fill').forEach(fill => {
+        const original = fill.style.width;
+        fill.style.transition = 'none';
+        fill.style.width = Math.random() * 100 + '%';
+        setTimeout(() => {
+            fill.style.transition = 'width 0.3s ease';
+            fill.style.width = original;
+        }, 200);
+    });
+
+    document.querySelectorAll('.name, .tagline, .section-title, .footer-text').forEach(el => {
+        el.style.textShadow = `0 0 20px rgba(0, 255, 136, 0.8), ${(Math.random()-0.5)*10}px ${(Math.random()-0.5)*5}px 0 rgba(255, 107, 53, 0.5)`;
+        setTimeout(() => {
+            el.style.textShadow = '';
+        }, 300);
+    });
+
+    setTimeout(() => {
+        card.style.filter = '';
+        card.style.transform = '';
+    }, 400);
 }
 
 function initCRTFlicker() {
