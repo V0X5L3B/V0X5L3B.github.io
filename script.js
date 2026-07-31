@@ -301,10 +301,10 @@ function initTerrain() {
                 const py = wy + elevation;
 
                 const brightness = 0.3 + (elevation + 18) / 36 * 0.7;
-                const alpha = 0.15 + (dist < 10 ? (10 - dist) / 10 * 0.4 : 0);
+                const alpha = 0.08 + (dist < 10 ? (10 - dist) / 10 * 0.15 : 0);
 
                 ctx.fillStyle = `rgba(176, 176, 184, ${alpha * brightness})`;
-                ctx.fillRect(px - 1, py - 1, 2, 2);
+                ctx.fillRect(px - 0.5, py - 0.5, 1, 1);
 
                 if (x < cols - 1) {
                     const nx = (x + 1) * gridSize + offsetX;
@@ -317,12 +317,12 @@ function initTerrain() {
                     const npx = nx;
                     const npy = wy + nElevation;
 
-                    const lineAlpha = alpha * 0.4 * Math.min(brightness, (0.3 + (nElevation + 18) / 36 * 0.7));
+                    const lineAlpha = alpha * 0.25 * Math.min(brightness, (0.3 + (nElevation + 18) / 36 * 0.7));
                     ctx.beginPath();
                     ctx.moveTo(px, py);
                     ctx.lineTo(npx, npy);
                     ctx.strokeStyle = `rgba(176, 176, 184, ${lineAlpha})`;
-                    ctx.lineWidth = 0.5;
+                    ctx.lineWidth = 0.3;
                     ctx.stroke();
                 }
 
@@ -337,12 +337,12 @@ function initTerrain() {
                     const bpx = bx;
                     const bpy = wy + gridSize + bElevation;
 
-                    const lineAlpha = alpha * 0.4 * Math.min(brightness, (0.3 + (bElevation + 18) / 36 * 0.7));
+                    const lineAlpha = alpha * 0.25 * Math.min(brightness, (0.3 + (bElevation + 18) / 36 * 0.7));
                     ctx.beginPath();
                     ctx.moveTo(px, py);
                     ctx.lineTo(bpx, bpy);
                     ctx.strokeStyle = `rgba(176, 176, 184, ${lineAlpha})`;
-                    ctx.lineWidth = 0.5;
+                    ctx.lineWidth = 0.3;
                     ctx.stroke();
                 }
             }
@@ -351,13 +351,13 @@ function initTerrain() {
         for (let i = 0; i < 3; i++) {
             const sparkleX = (Math.sin(time * 3.7 + i * 2.1) * 0.5 + 0.5) * canvas.width;
             const sparkleY = (Math.cos(time * 2.3 + i * 1.7) * 0.5 + 0.5) * canvas.height;
-            const sparkleAlpha = Math.sin(time * 5 + i) * 0.3 + 0.3;
+            const sparkleAlpha = Math.sin(time * 5 + i) * 0.15 + 0.15;
 
             ctx.beginPath();
-            ctx.arc(sparkleX, sparkleY, 1.5, 0, Math.PI * 2);
+            ctx.arc(sparkleX, sparkleY, 1, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(176, 176, 184, ${sparkleAlpha})`;
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = `rgba(176, 176, 184, ${sparkleAlpha * 0.5})`;
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = `rgba(176, 176, 184, ${sparkleAlpha * 0.3})`;
             ctx.fill();
             ctx.shadowBlur = 0;
         }
