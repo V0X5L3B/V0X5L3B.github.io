@@ -547,7 +547,7 @@ body {
 }
 
 .entered .social-btn {
-    animation: discord-fly-in 0.8s cubic-bezier(0.23, 1, 0.32, 1) 1.9s forwards;
+    animation: discord-fly-in 0.8s cubic-bezier(0.23, 1, 0.32, 1) 2.1s forwards;
 }
 
 @keyframes discord-fly-in {
@@ -599,6 +599,75 @@ body {
     flex-wrap: wrap;
     gap: 6px;
     justify-content: center;
+}
+
+/* ==================== PROMO BANNER ==================== */
+.promo-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    position: relative;
+    opacity: 0;
+}
+
+.entered .promo-banner {
+    animation: promo-in 0.8s cubic-bezier(0.23, 1, 0.32, 1) 1.9s forwards;
+}
+
+@keyframes promo-in {
+    0% { opacity: 0; transform: translateY(15px); filter: blur(4px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.promo-border {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(184, 184, 192, 0.3), transparent);
+}
+
+.promo-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    position: relative;
+    padding: 6px 16px;
+    border: 1px solid rgba(184, 184, 192, 0.15);
+    border-radius: 4px;
+    background: rgba(184, 184, 192, 0.04);
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+.promo-text:hover {
+    border-color: rgba(184, 184, 192, 0.4);
+    box-shadow: 0 0 20px rgba(184, 184, 192, 0.08);
+    background: rgba(184, 184, 192, 0.08);
+}
+
+.promo-text::before, .promo-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+}
+
+.promo-text::before {
+    color: var(--accent);
+    animation: glitch-1 5s infinite linear;
+    clip-path: inset(0 0 50% 0);
+}
+
+.promo-text::after {
+    color: var(--security-accent);
+    animation: glitch-2 5s infinite linear;
+    clip-path: inset(50% 0 0 0);
 }
 
 .about-tag {
