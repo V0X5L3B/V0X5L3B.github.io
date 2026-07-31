@@ -682,8 +682,8 @@ function initViewsCounter() {
     if (!countEl) return;
 
     // TODO: Replace with your Supabase credentials
-    const SUPABASE_URL = 'https://your-project.supabase.co';
-    const SUPABASE_KEY = 'your-anon-key-here';
+const SUPABASE_URL = 'https://REMOVED.supabase.co';
+const SUPABASE_KEY = 'REMOVED_SUPABASE_KEY';
     const NAMESPACE = 'v0x5l3b';
     const KEY = 'views';
 
