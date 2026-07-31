@@ -19,27 +19,78 @@
     </audio>
 
     <div id="splashScreen" class="splash-screen">
-        <div class="splash-bg-grid"></div>
-        <div class="splash-content">
-            <div class="cube-container" id="cubeContainer">
-                <div class="cube-glow"></div>
-                <div class="cube">
-                    <div class="cube-face front"></div>
-                    <div class="cube-face back"></div>
-                    <div class="cube-face left"></div>
-                    <div class="cube-face right"></div>
-                    <div class="cube-face top"></div>
-                    <div class="cube-face bottom"></div>
-                </div>
-                <div class="cube-glitch-shadow"></div>
+        <div class="splash-grid-bg"></div>
+        <canvas id="splashCanvas" class="splash-canvas"></canvas>
+        <div class="boot-scanline"></div>
+
+        <div class="boot-sequence" id="bootSequence">
+            <div class="boot-line" data-delay="0">
+                <span class="boot-prefix">[</span>
+                <span class="boot-tag">SYS</span>
+                <span class="boot-prefix">]</span>
+                <span class="boot-text">initializing neural interface...</span>
             </div>
-            <h1 class="splash-title" data-text="V0X5L.3B">V0X5L.3B</h1>
-            <p class="splash-subtitle" data-text="// click anywhere to enter //">// click anywhere to enter //</p>
-            <div class="splash-loader">
-                <span>initializing</span>
-                <span class="splash-dots">...</span>
+            <div class="boot-line" data-delay="400">
+                <span class="boot-prefix">[</span>
+                <span class="boot-tag ok">OK</span>
+                <span class="boot-prefix">]</span>
+                <span class="boot-text">loading memory modules</span>
+            </div>
+            <div class="boot-line" data-delay="800">
+                <span class="boot-prefix">[</span>
+                <span class="boot-tag">NET</span>
+                <span class="boot-prefix">]</span>
+                <span class="boot-text">establishing secure tunnel...</span>
+            </div>
+            <div class="boot-line" data-delay="1200">
+                <span class="boot-prefix">[</span>
+                <span class="boot-tag ok">OK</span>
+                <span class="boot-prefix">]</span>
+                <span class="boot-text">encryption: AES-256-GCM</span>
+            </div>
+            <div class="boot-line" data-delay="1600">
+                <span class="boot-prefix">[</span>
+                <span class="boot-tag warn">SEC</span>
+                <span class="boot-prefix">]</span>
+                <span class="boot-text">bypass loaded successfully</span>
+            </div>
+            <div class="boot-line" data-delay="2000">
+                <span class="boot-prefix">[</span>
+                <span class="boot-tag">GPU</span>
+                <span class="boot-prefix">]</span>
+                <span class="boot-text">rendering profile matrix...</span>
+            </div>
+            <div class="boot-line" data-delay="2400">
+                <span class="boot-prefix">[</span>
+                <span class="boot-tag ok">OK</span>
+                <span class="boot-prefix">]</span>
+                <span class="boot-text">all systems operational</span>
             </div>
         </div>
+
+        <div class="splash-center" id="splashCenter">
+            <div class="hex-ring" id="hexRing">
+                <div class="hex-ring-segment"></div>
+                <div class="hex-ring-segment"></div>
+                <div class="hex-ring-segment"></div>
+                <div class="hex-ring-segment"></div>
+            </div>
+            <div class="splash-title-wrapper">
+                <h1 class="splash-title" data-text="V0X5L.3B">V0X5L.3B</h1>
+                <div class="title-line-left"></div>
+                <div class="title-line-right"></div>
+            </div>
+            <p class="splash-subtitle" data-text="// click anywhere to enter //">// click anywhere to enter //</p>
+            <div class="splash-status">
+                <span class="status-blink"></span>
+                <span class="status-text">SYSTEM ONLINE</span>
+            </div>
+        </div>
+
+        <div class="corner-bracket top-left"></div>
+        <div class="corner-bracket top-right"></div>
+        <div class="corner-bracket bottom-left"></div>
+        <div class="corner-bracket bottom-right"></div>
     </div>
 
     <div class="audio-controls" id="audioControls">
@@ -61,7 +112,7 @@
             <div class="card-glow-tracker" id="cardGlowTracker"></div>
 
             <div class="card-layout">
-                <div class="left-column">
+                <div class="left-column" id="leftCol">
                     <div class="left-column-bg">
                         <img src="cat.gif" alt="" class="left-column-gif">
                     </div>
@@ -103,7 +154,7 @@
                     </div>
                 </div>
 
-                <div class="right-column">
+                <div class="right-column" id="rightCol">
                     <h2 class="section-title">
                         <span class="bracket">[</span> Skills <span class="bracket">]</span>
                     </h2>

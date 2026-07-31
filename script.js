@@ -17,18 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initHexDataStream();
     initHolographicCard();
     initDiscordPulse();
+    initBootSequence();
+    initSplashCanvas();
 });
 
 function initAvatar() {
     const avatar = document.getElementById('avatar');
     const placeholder = document.getElementById('avatarPlaceholder');
-
     if (avatar) {
         avatar.onerror = () => {
             avatar.style.display = 'none';
             placeholder.classList.add('visible');
         };
-
         avatar.onload = () => {
             placeholder.classList.remove('visible');
         };
@@ -37,7 +37,6 @@ function initAvatar() {
 
 function initSkillBars() {
     const skillFills = document.querySelectorAll('.skill-fill');
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -50,14 +49,12 @@ function initSkillBars() {
             }
         });
     }, { threshold: 0.5 });
-
     skillFills.forEach(fill => observer.observe(fill));
 }
 
 function initGlitchEffect() {
     const name = document.querySelector('.name');
     if (!name) return;
-
     setInterval(() => {
         if (Math.random() > 0.85) {
             name.style.animation = 'none';
@@ -82,12 +79,10 @@ function createParticle(x, y) {
         animation: particle-fade 0.8s forwards;
     `;
     document.body.appendChild(particle);
-
     const angle = Math.random() * Math.PI * 2;
     const velocity = 50 + Math.random() * 50;
     const dx = Math.cos(angle) * velocity;
     const dy = Math.sin(angle) * velocity;
-
     particle.animate([
         { transform: 'translate(0, 0) scale(1)', opacity: 1 },
         { transform: `translate(${dx}px, ${dy}px) scale(0)`, opacity: 0 }
@@ -111,18 +106,13 @@ function initAudio() {
     const pauseIcon = document.getElementById('pauseIcon');
     const volumeSlider = document.getElementById('volumeSlider');
     const volumeLabel = document.getElementById('volumeLabel');
-
     if (!audio || !playPauseBtn) return;
 
-    const tracks = ['audio/track3.mp3'];
-
-    function pickRandomTrack() {
-        audioSource.src = tracks[0];
+    function loadTrack() {
+        audioSource.src = 'audio/track1.mp3';
         audio.load();
     }
-
-    pickRandomTrack();
-
+    loadTrack();
     audio.volume = 0.3;
 
     const savedVolume = localStorage.getItem('audioVolume');
@@ -133,12 +123,9 @@ function initAudio() {
     }
 
     let isPlaying = false;
-
     audio.addEventListener('ended', () => {
-        pickRandomTrack();
-        if (isPlaying) {
-            audio.play().catch(() => {});
-        }
+        loadTrack();
+        if (isPlaying) audio.play().catch(() => {});
     });
 
     playPauseBtn.addEventListener('click', (e) => {
@@ -165,7 +152,7 @@ function initAudio() {
 
     window.startAudio = () => {
         if (!isPlaying) {
-            pickRandomTrack();
+            loadTrack();
             audio.play().then(() => {
                 isPlaying = true;
                 playIcon.style.display = 'none';
@@ -179,107 +166,79 @@ function initSplash() {
     const splash = document.getElementById('splashScreen');
     if (!splash) return;
 
-    splash.addEventListener('click', () => {
+    let dismissed = false;
+    function dismiss() {
+        if (dismissed) return;
+        dismissed = true;
         splash.classList.add('hidden');
         if (window.startAudio) window.startAudio();
-        setTimeout(() => { splash.remove(); }, 900);
-    });
+        setTimeout(() => { splash.remove(); }, 2200);
+    }
 
+    splash.addEventListener('click', dismiss);
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            splash.classList.add('hidden');
-            if (window.startAudio) window.startAudio();
-            setTimeout(() => { splash.remove(); }, 900);
-        }
+        if (e.key === 'Enter' || e.key === ' ') dismiss();
     });
 }
 
 function initSplashGrid() {
-    const grid = document.querySelector('.splash-bg-grid');
+    const grid = document.querySelector('.splash-grid-bg');
     if (!grid) return;
-
-    let mouseX = 0;
-    let mouseY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let targetScale = 1.1;
-    let currentScale = 1.1;
-
+    let mouseX = 0, mouseY = 0, currentX = 0, currentY = 0, targetScale = 1.1, currentScale = 1.1;
     document.addEventListener('mousemove', (e) => {
         mouseX = (e.clientX / window.innerWidth - 0.5) * 120;
         mouseY = (e.clientY / window.innerHeight - 0.5) * 120;
         targetScale = 1.1 + Math.abs(e.clientX - window.innerWidth/2) / window.innerWidth * 0.1;
     });
-
     function animate() {
         currentX += (mouseX - currentX) * 0.1;
         currentY += (mouseY - currentY) * 0.1;
         currentScale += (targetScale - currentScale) * 0.05;
-
         grid.style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
         requestAnimationFrame(animate);
     }
-
     animate();
 }
 
 function initMainGrid() {
     const grid = document.getElementById('mainGrid');
     if (!grid) return;
-
-    let mouseX = 0;
-    let mouseY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let targetScale = 1;
-    let currentScale = 1;
-
+    let mouseX = 0, mouseY = 0, currentX = 0, currentY = 0, targetScale = 1, currentScale = 1;
     document.addEventListener('mousemove', (e) => {
         mouseX = (e.clientX / window.innerWidth - 0.5) * 100;
         mouseY = (e.clientY / window.innerHeight - 0.5) * 100;
         targetScale = 1 + Math.abs(e.clientX - window.innerWidth/2) / window.innerWidth * 0.15;
     });
-
     function animate() {
         currentX += (mouseX - currentX) * 0.08;
         currentY += (mouseY - currentY) * 0.08;
         currentScale += (targetScale - currentScale) * 0.04;
-
         grid.style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
         requestAnimationFrame(animate);
     }
-
     animate();
 }
 
 function initCardTilt() {
     const card = document.getElementById('profileCard');
     if (!card) return;
-
     const tracker = document.getElementById('cardGlowTracker');
-
     card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-
         const rotateX = ((y - centerY) / centerY) * -2;
         const rotateY = ((x - centerX) / centerX) * 2;
-
         card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
         if (tracker) {
             tracker.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(176, 176, 184, 0.08) 0%, transparent 60%)`;
         }
     });
-
     card.addEventListener('mouseleave', () => {
         card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-        if (tracker) {
-            tracker.style.background = 'none';
-        }
+        if (tracker) tracker.style.background = 'none';
     });
 }
 
@@ -333,13 +292,10 @@ function initScreenTears() {
             setTimeout(() => tear.remove(), 250);
         }
     }, 2000);
-
     setInterval(() => {
         if (Math.random() > 0.9) {
             document.body.style.filter = `hue-rotate(${Math.random() * 15}deg) brightness(${1 + Math.random() * 0.15})`;
-            setTimeout(() => {
-                document.body.style.filter = '';
-            }, 80);
+            setTimeout(() => { document.body.style.filter = ''; }, 80);
         }
     }, 4000);
 }
@@ -351,7 +307,6 @@ function initCRTFlicker() {
             flicker.className = 'crt-flicker';
             document.body.appendChild(flicker);
             setTimeout(() => flicker.remove(), 150);
-
             if (Math.random() > 0.4) {
                 setTimeout(() => {
                     const flicker2 = document.createElement('div');
@@ -367,18 +322,14 @@ function initCRTFlicker() {
 function initFooterTyping() {
     const footerText = document.querySelector('.footer-text');
     if (!footerText) return;
-
     const text = '> built with caffeine and bad decisions';
     footerText.innerHTML = '';
-
     const span = document.createElement('span');
     span.className = 'footer-type';
     footerText.appendChild(span);
-
     const cursor = document.createElement('span');
     cursor.className = 'footer-cursor';
     footerText.appendChild(cursor);
-
     let i = 0;
     function type() {
         if (i < text.length) {
@@ -386,12 +337,9 @@ function initFooterTyping() {
             i++;
             setTimeout(type, 40 + Math.random() * 30);
         } else {
-            setTimeout(() => {
-                cursor.style.display = 'none';
-            }, 2000);
+            setTimeout(() => { cursor.style.display = 'none'; }, 2000);
         }
     }
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -400,7 +348,6 @@ function initFooterTyping() {
             }
         });
     }, { threshold: 0.5 });
-
     observer.observe(footerText);
 }
 
@@ -409,7 +356,6 @@ function initLeftColumnDots() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const column = canvas.parentElement;
-
     function resize() {
         canvas.width = column.offsetWidth;
         canvas.height = column.offsetHeight;
@@ -417,33 +363,25 @@ function initLeftColumnDots() {
     resize();
     window.addEventListener('resize', resize);
 
-    let mouseX = -9999;
-    let mouseY = -9999;
-
+    let mouseX = -9999, mouseY = -9999;
     column.addEventListener('mousemove', (e) => {
         const rect = column.getBoundingClientRect();
         mouseX = e.clientX - rect.left;
         mouseY = e.clientY - rect.top;
     });
-
-    column.addEventListener('mouseleave', () => {
-        mouseX = -9999;
-        mouseY = -9999;
-    });
+    column.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
 
     const dots = [];
     const dotCount = 50;
     const fleeRadius = 80;
     const fleeForce = 2.5;
-
     for (let i = 0; i < dotCount; i++) {
         dots.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             baseX: Math.random() * canvas.width,
             baseY: Math.random() * canvas.height,
-            vx: 0,
-            vy: 0,
+            vx: 0, vy: 0,
             size: Math.random() * 2 + 0.8,
             alpha: Math.random() * 0.5 + 0.15,
             pulse: Math.random() * Math.PI * 2,
@@ -452,34 +390,27 @@ function initLeftColumnDots() {
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         dots.forEach(dot => {
             dot.pulse += 0.02;
-
             const dx = dot.x - mouseX;
             const dy = dot.y - mouseY;
             const dist = Math.sqrt(dx * dx + dy * dy);
-
             if (dist < fleeRadius && dist > 0) {
                 const force = (fleeRadius - dist) / fleeRadius;
                 dot.vx += (dx / dist) * fleeForce * force;
                 dot.vy += (dy / dist) * fleeForce * force;
             }
-
             dot.vx += (dot.baseX - dot.x) * 0.015;
             dot.vy += (dot.baseY - dot.y) * 0.015;
             dot.vx *= 0.9;
             dot.vy *= 0.9;
-
             dot.x += dot.vx;
             dot.y += dot.vy;
 
             const flicker = 0.6 + Math.sin(dot.pulse) * 0.4;
             const isFleeing = dist < fleeRadius;
-
             ctx.beginPath();
             ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
-
             if (isFleeing) {
                 const intensity = 1 - dist / fleeRadius;
                 ctx.fillStyle = `rgba(176, 176, 184, ${Math.min(dot.alpha * flicker + intensity * 0.5, 1)})`;
@@ -490,7 +421,6 @@ function initLeftColumnDots() {
                 ctx.shadowBlur = 4;
                 ctx.shadowColor = `rgba(176, 176, 184, 0.2)`;
             }
-
             ctx.fill();
             ctx.shadowBlur = 0;
         });
@@ -500,16 +430,13 @@ function initLeftColumnDots() {
                 const ddx = dots[i].x - dots[j].x;
                 const ddy = dots[i].y - dots[j].y;
                 const ddist = Math.sqrt(ddx * ddx + ddy * ddy);
-
                 if (ddist < 80) {
                     const opacity = (1 - ddist / 80) * 0.12;
                     const mi1 = mouseX !== -9999 ? Math.sqrt((dots[i].x - mouseX) ** 2 + (dots[i].y - mouseY) ** 2) < fleeRadius : false;
                     const mi2 = mouseX !== -9999 ? Math.sqrt((dots[j].x - mouseX) ** 2 + (dots[j].y - mouseY) ** 2) < fleeRadius : false;
-
                     ctx.beginPath();
                     ctx.moveTo(dots[i].x, dots[i].y);
                     ctx.lineTo(dots[j].x, dots[j].y);
-
                     if (mi1 || mi2) {
                         ctx.strokeStyle = `rgba(176, 176, 184, ${opacity * 3})`;
                         ctx.lineWidth = 0.8;
@@ -517,15 +444,12 @@ function initLeftColumnDots() {
                         ctx.strokeStyle = `rgba(176, 176, 184, ${opacity})`;
                         ctx.lineWidth = 0.4;
                     }
-
                     ctx.stroke();
                 }
             }
         }
-
         requestAnimationFrame(draw);
     }
-
     draw();
 }
 
@@ -540,60 +464,32 @@ function initCubeGlitch() {
         if (Math.random() > 0.5) {
             const duration = 50 + Math.random() * 250;
             const glitchType = Math.floor(Math.random() * 7);
-
             switch (glitchType) {
-                case 0:
-                    cube.style.filter = `hue-rotate(${Math.random() * 360}deg) brightness(${1.5 + Math.random() * 1.5})`;
-                    break;
-                case 1:
-                    cube.style.filter = `saturate(${3 + Math.random() * 8}) contrast(${1.5 + Math.random() * 1.5})`;
-                    break;
-                case 2:
-                    cube.style.filter = `invert(${0.1 + Math.random() * 0.3}) brightness(2.5)`;
-                    break;
-                case 3:
-                    cube.style.filter = `blur(${1 + Math.random() * 3}px) brightness(2)`;
-                    break;
-                case 4:
-                    cube.style.filter = `hue-rotate(90deg) saturate(6) brightness(2)`;
-                    break;
-                case 5:
-                    cube.style.filter = `brightness(4) contrast(3) saturate(0)`;
-                    break;
-                case 6:
-                    cube.style.filter = `hue-rotate(270deg) saturate(10) brightness(3)`;
-                    break;
+                case 0: cube.style.filter = `hue-rotate(${Math.random() * 360}deg) brightness(${1.5 + Math.random() * 1.5})`; break;
+                case 1: cube.style.filter = `saturate(${3 + Math.random() * 8}) contrast(${1.5 + Math.random() * 1.5})`; break;
+                case 2: cube.style.filter = `invert(${0.1 + Math.random() * 0.3}) brightness(2.5)`; break;
+                case 3: cube.style.filter = `blur(${1 + Math.random() * 3}px) brightness(2)`; break;
+                case 4: cube.style.filter = `hue-rotate(90deg) saturate(6) brightness(2)`; break;
+                case 5: cube.style.filter = `brightness(4) contrast(3) saturate(0)`; break;
+                case 6: cube.style.filter = `hue-rotate(270deg) saturate(10) brightness(3)`; break;
             }
-
             cube.style.transformOrigin = 'center center';
-
             if (glow) {
                 glow.style.background = `radial-gradient(circle, rgba(176, 176, 184, ${0.3 + Math.random() * 0.5}) 0%, transparent 70%)`;
                 glow.style.transform = `translate(-50%, -50%) scale(${1.5 + Math.random() * 1.2})`;
             }
-
             if (shadow) {
                 shadow.style.opacity = 0.8;
                 shadow.style.transform = `translateX(${(Math.random() - 0.5) * 40}px) translateY(${(Math.random() - 0.5) * 30}px) skewX(${(Math.random() - 0.5) * 20}deg)`;
             }
-
             if (container) {
                 container.style.filter = `drop-shadow(${(Math.random() - 0.5) * 15}px ${(Math.random() - 0.5) * 10}px 10px rgba(176, 176, 184, 0.5))`;
             }
-
             setTimeout(() => {
                 cube.style.filter = '';
-                if (glow) {
-                    glow.style.background = '';
-                    glow.style.transform = '';
-                }
-                if (shadow) {
-                    shadow.style.opacity = '';
-                    shadow.style.transform = '';
-                }
-                if (container) {
-                    container.style.filter = '';
-                }
+                if (glow) { glow.style.background = ''; glow.style.transform = ''; }
+                if (shadow) { shadow.style.opacity = ''; shadow.style.transform = ''; }
+                if (container) { container.style.filter = ''; }
             }, duration);
         }
     }, 800);
@@ -611,33 +507,22 @@ function initCubeGlitch() {
                 }
             }
             setTimeout(() => {
-                faces.forEach(f => {
-                    f.style.background = '';
-                    f.style.borderColor = '';
-                    f.style.boxShadow = '';
-                });
+                faces.forEach(f => { f.style.background = ''; f.style.borderColor = ''; f.style.boxShadow = ''; });
             }, 60 + Math.random() * 100);
         }
     }, 1200);
 
     setInterval(() => {
         if (Math.random() > 0.7 && container) {
-            const jitterX = (Math.random() - 0.5) * 20;
-            const jitterY = (Math.random() - 0.5) * 16;
-            const jitterSkew = (Math.random() - 0.5) * 6;
-            container.style.transform = `translateX(${jitterX}px) translateY(${jitterY}px) skewX(${jitterSkew}deg)`;
-            setTimeout(() => {
-                container.style.transform = '';
-            }, 40 + Math.random() * 60);
+            container.style.transform = `translateX(${(Math.random() - 0.5) * 20}px) translateY(${(Math.random() - 0.5) * 16}px) skewX(${(Math.random() - 0.5) * 6}deg)`;
+            setTimeout(() => { container.style.transform = ''; }, 40 + Math.random() * 60);
         }
     }, 1500);
 
     setInterval(() => {
         if (Math.random() > 0.75) {
             cube.style.opacity = 0.3 + Math.random() * 0.7;
-            setTimeout(() => {
-                cube.style.opacity = '';
-            }, 50 + Math.random() * 80);
+            setTimeout(() => { cube.style.opacity = ''; }, 50 + Math.random() * 80);
         }
     }, 2000);
 }
@@ -647,17 +532,15 @@ function initTextScramble() {
     const nameEl = document.querySelector('.name');
     const splashName = document.querySelector('.splash-title');
 
-    function scramble(el, finalText, duration = 1500) {
+    function scramble(el, finalText, duration) {
         if (!el) return;
         const length = finalText.length;
         let frame = 0;
         const totalFrames = Math.floor(duration / 30);
-
         function update() {
             let output = '';
             const progress = frame / totalFrames;
             const charsToReveal = Math.floor(progress * length);
-
             for (let i = 0; i < length; i++) {
                 if (i < charsToReveal) {
                     output += finalText[i];
@@ -665,22 +548,19 @@ function initTextScramble() {
                     output += chars[Math.floor(Math.random() * chars.length)];
                 }
             }
-
             el.textContent = output;
             frame++;
-
             if (frame <= totalFrames) {
                 requestAnimationFrame(() => setTimeout(update, 30));
             } else {
                 el.textContent = finalText;
             }
         }
-
         update();
     }
 
     if (splashName) {
-        setTimeout(() => scramble(splashName, 'V0X5L.3B', 1200), 300);
+        setTimeout(() => scramble(splashName, 'V0X5L.3B', 2000), 2800);
     }
 
     const nameObserver = new IntersectionObserver((entries) => {
@@ -691,18 +571,14 @@ function initTextScramble() {
             }
         });
     }, { threshold: 0.5 });
-
-    if (nameEl) {
-        nameObserver.observe(nameEl);
-    }
+    if (nameEl) nameObserver.observe(nameEl);
 
     const taglineEl = document.querySelector('.tagline');
-    const taglineText = 'modder // developer';
     if (taglineEl) {
         const tagObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    scramble(taglineEl, taglineText, 800);
+                    scramble(taglineEl, 'modder // developer', 800);
                     tagObserver.unobserve(entry.target);
                 }
             });
@@ -714,7 +590,6 @@ function initTextScramble() {
 function initHexDataStream() {
     const container = document.querySelector('.left-column');
     if (!container) return;
-
     const hexChars = '0123456789ABCDEF';
     const binChars = '01';
     const stream = document.createElement('div');
@@ -724,35 +599,26 @@ function initHexDataStream() {
 
     const columns = 12;
     const lines = 40;
-    let html = '';
-
     for (let c = 0; c < columns; c++) {
         const col = document.createElement('div');
         col.className = 'hex-col';
         col.style.left = (c / columns * 100) + '%';
         col.style.animationDuration = (8 + Math.random() * 12) + 's';
         col.style.animationDelay = (Math.random() * 5) + 's';
-
         let colText = '';
         for (let l = 0; l < lines; l++) {
             if (Math.random() > 0.6) {
                 let hexWord = '';
-                for (let h = 0; h < 4; h++) {
-                    hexWord += hexChars[Math.floor(Math.random() * hexChars.length)];
-                }
+                for (let h = 0; h < 4; h++) hexWord += hexChars[Math.floor(Math.random() * hexChars.length)];
                 colText += `<div class="hex-line">${hexWord}</div>`;
             } else if (Math.random() > 0.4) {
                 let binWord = '';
-                for (let b = 0; b < 8; b++) {
-                    binWord += binChars[Math.floor(Math.random() * binChars.length)];
-                }
+                for (let b = 0; b < 8; b++) binWord += binChars[Math.floor(Math.random() * binChars.length)];
                 colText += `<div class="hex-line bin">${binWord}</div>`;
             } else {
                 const symbols = ['░', '▒', '▓', '█', '▄', '▀', '◆', '◇', '▪', '▫'];
                 let symWord = '';
-                for (let s = 0; s < 2; s++) {
-                    symWord += symbols[Math.floor(Math.random() * symbols.length)];
-                }
+                for (let s = 0; s < 2; s++) symWord += symbols[Math.floor(Math.random() * symbols.length)];
                 colText += `<div class="hex-line sym">${symWord}</div>`;
             }
         }
@@ -771,58 +637,160 @@ function initHexDataStream() {
                     let newText = '';
                     const len = isHex ? 4 : 8;
                     const charSet = isHex ? hexChars : binChars;
-                    for (let i = 0; i < len; i++) {
-                        newText += charSet[Math.floor(Math.random() * charSet.length)];
-                    }
+                    for (let i = 0; i < len; i++) newText += charSet[Math.floor(Math.random() * charSet.length)];
                     target.textContent = newText;
                     target.style.color = `rgba(176, 176, 184, ${0.15 + Math.random() * 0.35})`;
                     target.style.textShadow = `0 0 ${3 + Math.random() * 6}px rgba(176, 176, 184, ${0.2 + Math.random() * 0.3})`;
-
-                    setTimeout(() => {
-                        target.style.color = '';
-                        target.style.textShadow = '';
-                    }, 200 + Math.random() * 400);
+                    setTimeout(() => { target.style.color = ''; target.style.textShadow = ''; }, 200 + Math.random() * 400);
                 }
             }
         });
     }, 150);
 }
 
-function initHolographicCard() {
-}
+function initHolographicCard() {}
 
 function initDiscordPulse() {
     const discordBtn = document.querySelector('.social-btn.discord');
     if (!discordBtn) return;
-
     setInterval(() => {
         discordBtn.classList.add('pulse-active');
-        setTimeout(() => {
-            discordBtn.classList.remove('pulse-active');
-        }, 600);
+        setTimeout(() => { discordBtn.classList.remove('pulse-active'); }, 600);
     }, 4000);
-
     const label = discordBtn.querySelector('.social-label');
     if (label) {
         const originalText = label.textContent;
         const glitchTexts = ['D1sc0rd', 'Disc0rd', 'Discord', 'd!scord', 'D1sord'];
         let glitchInterval;
-
         discordBtn.addEventListener('mouseenter', () => {
             let count = 0;
             glitchInterval = setInterval(() => {
                 label.textContent = glitchTexts[Math.floor(Math.random() * glitchTexts.length)];
                 count++;
-                if (count > 6) {
-                    clearInterval(glitchInterval);
-                    label.textContent = originalText;
-                }
+                if (count > 6) { clearInterval(glitchInterval); label.textContent = originalText; }
             }, 50);
         });
-
         discordBtn.addEventListener('mouseleave', () => {
             if (glitchInterval) clearInterval(glitchInterval);
             label.textContent = originalText;
         });
     }
+}
+
+function initBootSequence() {
+    const bootLines = document.querySelectorAll('.boot-line');
+    bootLines.forEach((line) => {
+        const delay = parseInt(line.getAttribute('data-delay')) || 0;
+        setTimeout(() => {
+            line.classList.add('visible');
+        }, delay + 200);
+    });
+}
+
+function initSplashCanvas() {
+    const canvas = document.getElementById('splashCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const lines = [];
+    const hexChars = '0123456789ABCDEF';
+
+    for (let i = 0; i < 60; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.3 + 0.05,
+        });
+    }
+
+    for (let i = 0; i < 8; i++) {
+        lines.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            length: Math.random() * 150 + 50,
+            speed: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.15 + 0.02,
+        });
+    }
+
+    let frame = 0;
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(176, 176, 184, ${p.alpha})`;
+            ctx.fill();
+        });
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(176, 176, 184, ${(1 - dist / 120) * 0.06})`;
+                    ctx.lineWidth = 0.4;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        lines.forEach(l => {
+            l.y += l.speed;
+            if (l.y > canvas.height + 200) {
+                l.y = -200;
+                l.x = Math.random() * canvas.width;
+            }
+
+            const charSize = 9;
+            const charCount = Math.floor(l.length / charSize);
+            for (let c = 0; c < charCount; c++) {
+                const charY = l.y - c * charSize;
+                if (charY < 0 || charY > canvas.height) continue;
+                const charAlpha = l.alpha * (1 - c / charCount);
+                const char = hexChars[Math.floor(Math.random() * hexChars.length)];
+                ctx.font = '8px JetBrains Mono';
+                ctx.fillStyle = `rgba(176, 176, 184, ${charAlpha})`;
+                ctx.fillText(char, l.x, charY);
+            }
+        });
+
+        if (frame % 10 === 0) {
+            const glitchCount = Math.floor(Math.random() * 3);
+            for (let g = 0; g < glitchCount; g++) {
+                const gy = Math.random() * canvas.height;
+                const gw = Math.random() * 200 + 50;
+                const gx = Math.random() * canvas.width;
+                ctx.fillStyle = `rgba(176, 176, 184, ${Math.random() * 0.03})`;
+                ctx.fillRect(gx, gy, gw, 1);
+            }
+        }
+
+        frame++;
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
 }
