@@ -154,12 +154,12 @@ body {
 }
 
 @keyframes card-glitch-flash {
-    0% { transform: perspective(1000px) translateX(0) translateY(0) skewX(0); }
-    20% { transform: perspective(1000px) translateX(-4px) translateY(-2px) skewX(2deg); }
-    40% { transform: perspective(1000px) translateX(3px) translateY(1px) skewX(-1deg); }
-    60% { transform: perspective(1000px) translateX(-2px) translateY(2px) skewX(1deg); }
-    80% { transform: perspective(1000px) translateX(1px) translateY(-1px) skewX(-2deg); }
-    100% { transform: perspective(1000px) translateX(0) translateY(0) skewX(0); }
+    0% { transform: translateX(0) translateY(0) skewX(0); }
+    20% { transform: translateX(-4px) translateY(-2px) skewX(2deg); }
+    40% { transform: translateX(3px) translateY(1px) skewX(-1deg); }
+    60% { transform: translateX(-2px) translateY(2px) skewX(1deg); }
+    80% { transform: translateX(1px) translateY(-1px) skewX(-2deg); }
+    100% { transform: translateX(0) translateY(0) skewX(0); }
 }
 
 .card-layout {
