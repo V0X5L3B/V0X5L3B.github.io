@@ -29,7 +29,7 @@ function initTypewriter() {
     const el = document.getElementById('aboutText');
     if (!el) return;
 
-    const text = "Modder and developer who mostly lives in Frida scripts, IL2CPP dumps, and whatever game I've broken this week. I build mod menus, tear them apart, and rebuild them better (or at least try to). I spend a lot of time experimenting with hooks, patches, and random ideas that usually start as 'what if…' and end in a working exploit or something actually useful. Debugging is basically part of the hobby at this point. I like understanding how things work under the hood — APIs, anti-cheat, game logic, all of it. Outside of modding, I'm usually still thinking about code, or gaming, or tweaking projects that probably didn't need more tweaking. Just building, breaking, and shipping things when they're ready.";
+    const text = "I'm a modder who spends too much time hooking into games, dumping IL2CPP metadata, and writing Frida scripts at 3am. I build mod menus, tear apart anti-cheat, and ship tools that actually work. Most of my projects start with 'what if I could…' and end with something that either breaks the game or fixes it (no in-between). I like understanding how things work under the hood — game logic, APIs, security, all of it. I don't really stick to one language or framework; I just use whatever gets the job done. Outside of modding, I'm usually still at my PC — gaming, tweaking projects, or starting something new I don't need. Cold coffee, warm LO. Just building, breaking, and shipping things when they're ready.";
     const cursor = el.querySelector('.typewriter-cursor');
     let i = 0;
 
