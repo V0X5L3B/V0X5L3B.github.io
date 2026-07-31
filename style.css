@@ -71,18 +71,31 @@ body {
 /* ==================== TROLL IMAGE ==================== */
 .troll-img {
     position: fixed;
-    top: 55%;
-    left: 48%;
-    transform: translate(-50%, -50%);
-    width: 900px;
+    top: 50px;
+    right: 50px;
+    transform: none;
+    width: 300px;
     height: auto;
     z-index: 3;
     opacity: 1;
     pointer-events: none;
 }
 
+.clanker-link {
+    position: fixed;
+    top: 360px;
+    right: 50px;
+    z-index: 3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
 
-    display: none;
+.clanker-link:hover {
+    color: var(--accent);
 }
 
 .container {
