@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSplashCanvas();
     initViewsCounter();
     initCardScanline();
+    initFireflies();
 });
 
 function initAvatar() {
@@ -855,4 +856,59 @@ function initCardScanline() {
             setTimeout(() => scanline.remove(), 1300);
         }
     }, 4000);
+}
+
+function initFireflies() {
+    const canvas = document.getElementById('fireflies');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const count = 40;
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2.5 + 0.5,
+            speedX: (Math.random() - 0.5) * 0.3,
+            speedY: (Math.random() - 0.5) * 0.3,
+            opacity: Math.random() * 0.5 + 0.1,
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpeed: Math.random() * 0.02 + 0.005,
+            hue: Math.random() * 40 + 80,
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.x += p.speedX;
+            p.y += p.speedY;
+            p.pulse += p.pulseSpeed;
+
+            if (p.x < -10) p.x = canvas.width + 10;
+            if (p.x > canvas.width + 10) p.x = -10;
+            if (p.y < -10) p.y = canvas.height + 10;
+            if (p.y > canvas.height + 10) p.y = -10;
+
+            const flicker = 0.5 + Math.sin(p.pulse) * 0.5;
+            const alpha = p.opacity * flicker;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${p.hue}, 30%, 70%, ${alpha})`;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = `hsla(${p.hue}, 40%, 60%, ${alpha * 0.5})`;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
 }
