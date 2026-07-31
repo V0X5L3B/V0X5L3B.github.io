@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCRTFlicker();
     initFooterTyping();
     initKeyboardGlitch();
+    initInteractiveDots();
 });
 
 function initAvatar() {
@@ -445,4 +446,143 @@ function initFooterTyping() {
     }, { threshold: 0.5 });
 
     observer.observe(footerText);
+}
+
+function initInteractiveDots() {
+    const canvas = document.getElementById('dotCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let mouseX = -9999;
+    let mouseY = -9999;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    document.addEventListener('mouseleave', () => {
+        mouseX = -9999;
+        mouseY = -9999;
+    });
+
+    const dots = [];
+    const dotCount = 120;
+    const fleeRadius = 150;
+    const fleeForce = 3;
+
+    for (let i = 0; i < dotCount; i++) {
+        dots.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            baseX: Math.random() * canvas.width,
+            baseY: Math.random() * canvas.height,
+            vx: 0,
+            vy: 0,
+            size: Math.random() * 2.5 + 1,
+            alpha: Math.random() * 0.6 + 0.2,
+            pulse: Math.random() * Math.PI * 2,
+            hue: Math.random() > 0.85 ? 160 : 140,
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        dots.forEach(dot => {
+            dot.pulse += 0.015;
+
+            const dx = dot.x - mouseX;
+            const dy = dot.y - mouseY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < fleeRadius && dist > 0) {
+                const force = (fleeRadius - dist) / fleeRadius;
+                dot.vx += (dx / dist) * fleeForce * force;
+                dot.vy += (dy / dist) * fleeForce * force;
+            }
+
+            dot.vx += (dot.baseX - dot.x) * 0.01;
+            dot.vy += (dot.baseY - dot.y) * 0.01;
+
+            dot.vx *= 0.92;
+            dot.vy *= 0.92;
+
+            dot.x += dot.vx;
+            dot.y += dot.vy;
+
+            const flicker = 0.7 + Math.sin(dot.pulse) * 0.3;
+            const isFleeing = dist < fleeRadius;
+
+            ctx.beginPath();
+            ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+
+            if (isFleeing) {
+                const intensity = 1 - dist / fleeRadius;
+                ctx.fillStyle = `rgba(0, 255, 136, ${Math.min(dot.alpha * flicker + intensity * 0.5, 1)})`;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = `rgba(0, 255, 136, ${intensity * 0.8})`;
+            } else {
+                ctx.fillStyle = `rgba(0, 255, 136, ${dot.alpha * flicker * 0.6})`;
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = `rgba(0, 255, 136, 0.3)`;
+            }
+
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        });
+
+        for (let i = 0; i < dots.length; i++) {
+            for (let j = i + 1; j < dots.length; j++) {
+                const ddx = dots[i].x - dots[j].x;
+                const ddy = dots[i].y - dots[j].y;
+                const ddist = Math.sqrt(ddx * ddx + ddy * ddy);
+
+                if (ddist < 100) {
+                    const opacity = (1 - ddist / 100) * 0.15;
+
+                    const mi1 = mouseX !== -9999 ? Math.sqrt((dots[i].x - mouseX) ** 2 + (dots[i].y - mouseY) ** 2) < fleeRadius : false;
+                    const mi2 = mouseX !== -9999 ? Math.sqrt((dots[j].x - mouseX) ** 2 + (dots[j].y - mouseY) ** 2) < fleeRadius : false;
+
+                    ctx.beginPath();
+                    ctx.moveTo(dots[i].x, dots[i].y);
+                    ctx.lineTo(dots[j].x, dots[j].y);
+
+                    if (mi1 || mi2) {
+                        ctx.strokeStyle = `rgba(0, 255, 136, ${opacity * 3})`;
+                        ctx.lineWidth = 1;
+                    } else {
+                        ctx.strokeStyle = `rgba(0, 255, 136, ${opacity})`;
+                        ctx.lineWidth = 0.5;
+                    }
+
+                    ctx.stroke();
+                }
+            }
+        }
+
+        if (mouseX !== -9999) {
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 255, 136, 0.4)';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, fleeRadius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.05)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
 }
