@@ -389,12 +389,11 @@ body {
     width: 20px;
     height: 20px;
     z-index: 4;
-    opacity: 0;
-    transition: opacity 0.3s;
+    display: none;
 }
 
 .left-column:hover .corner {
-    opacity: 1;
+    display: block;
 }
 
 .left-column .corner-tl {
