@@ -10,12 +10,18 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <canvas id="particleCanvas"></canvas>
+    <div class="spotlight-container" id="spotlights">
+        <div class="spotlight s1"></div>
+        <div class="spotlight s2"></div>
+        <div class="spotlight s3"></div>
+        <div class="spotlight s4"></div>
+        <div class="spotlight s5"></div>
+    </div>
+    <canvas id="matrixCanvas"></canvas>
     <div class="scanline"></div>
     <div class="scan-sweep"></div>
     <div class="noise"></div>
     <div class="main-bg-grid" id="mainGrid"></div>
-    <div class="mouse-glow" id="mouseGlow"></div>
 
     <audio id="bgMusic" loop>
         <source src="audio/track1.mp3" type="audio/mpeg">
@@ -23,7 +29,7 @@
 
     <div id="splashScreen" class="splash-screen">
         <div class="splash-bg-grid"></div>
-        <canvas id="splashParticles"></canvas>
+        <canvas id="splashMatrix"></canvas>
         <div class="splash-content">
             <div class="splash-logo-ring">
                 <div class="splash-logo-ring-inner"></div>
