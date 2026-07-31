@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initGlitchEffect();
     initAudio();
     initSplashGrid();
+    initMainGrid();
 });
 
 function initAvatar() {
@@ -213,13 +214,38 @@ function initSplashGrid() {
     let currentY = 0;
 
     document.addEventListener('mousemove', (e) => {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 30;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 30;
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 80;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 80;
     });
 
     function animate() {
-        currentX += (mouseX - currentX) * 0.05;
-        currentY += (mouseY - currentY) * 0.05;
+        currentX += (mouseX - currentX) * 0.08;
+        currentY += (mouseY - currentY) * 0.08;
+
+        grid.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.1)`;
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+}
+
+function initMainGrid() {
+    const grid = document.getElementById('mainGrid');
+    if (!grid) return;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 60;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 60;
+    });
+
+    function animate() {
+        currentX += (mouseX - currentX) * 0.06;
+        currentY += (mouseY - currentY) * 0.06;
 
         grid.style.transform = `translate(${currentX}px, ${currentY}px)`;
         requestAnimationFrame(animate);
