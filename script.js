@@ -29,7 +29,7 @@ function initTypewriter() {
     const el = document.getElementById('aboutText');
     if (!el) return;
 
-    const text = "I'm a modder who spends too much time hooking into games, dumping IL2CPP metadata, and writing Frida scripts at 3am. I build mod menus, tear apart anti-cheat, and ship tools that actually work. Most of my projects start with 'what if I could…' and end with something that either breaks the game or fixes it (no in-between). I like understanding how things work under the hood — game logic, APIs, security, all of it. I don't really stick to one language or framework; I just use whatever gets the job done. Outside of modding, I'm usually still at my PC — gaming, tweaking projects, or starting something new I don't need. Cold coffee, warm LO. Just building, breaking, and shipping things when they're ready.";
+    const text = "Developer focused on game hacking, reverse engineering, and building tools. I spend most of my time hooking into processes, analyzing binaries, and writing injection scripts. I build mod menus, custom frameworks, and anything else that pushes systems past their limits. I like understanding how things work — the deeper, the better. Debugging, patching, and recompiling is just part of the routine at this point. I don't stick to one stack; I use whatever works. Outside of work, I'm usually still at my desk — gaming, tweaking side projects, or starting something new. Just building and breaking things until they ship.";
     const cursor = el.querySelector('.typewriter-cursor');
     let i = 0;
 
