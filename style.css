@@ -237,8 +237,8 @@ body {
 }
 
 .avatar-ring {
-    width: 120px;
-    height: 120px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     position: relative;
 }
@@ -246,42 +246,61 @@ body {
 .avatar-ring::before {
     content: '';
     position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
     border-radius: 50%;
     border: 2px solid var(--accent);
-    animation: glitch-ring 3s infinite;
-    box-shadow: 
-        0 0 8px var(--accent),
-        inset 0 0 8px rgba(0, 255, 136, 0.1);
+    animation: glitch-ring 2s infinite;
+    clip-path: polygon(
+        0% 10%, 10% 10%, 10% 0%,
+        90% 0%, 90% 10%, 100% 10%,
+        100% 90%, 90% 90%, 90% 100%,
+        10% 100%, 10% 90%, 0% 90%
+    );
+}
+
+.avatar-ring::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    opacity: 0.4;
+    animation: glitch-ring-outer 3s infinite;
 }
 
 @keyframes glitch-ring {
     0%, 100% { 
         border-color: var(--accent);
-        box-shadow: 0 0 8px var(--accent), inset 0 0 8px rgba(0, 255, 136, 0.1);
+        box-shadow: 0 0 10px var(--accent), inset 0 0 10px rgba(0, 255, 136, 0.1);
+        transform: rotate(0deg);
     }
-    10% { 
+    15% { 
         border-color: transparent;
         box-shadow: none;
     }
-    11% { 
+    16% { 
         border-color: var(--accent);
-        box-shadow: 0 0 8px var(--accent), inset 0 0 8px rgba(0, 255, 136, 0.1);
+        box-shadow: 0 0 10px var(--accent), inset 0 0 10px rgba(0, 255, 136, 0.1);
     }
-    20% { 
+    30% { 
         border-color: var(--security-accent);
-        box-shadow: 0 0 12px var(--security-accent), inset 0 0 8px rgba(255, 107, 53, 0.1);
+        box-shadow: 0 0 15px var(--security-accent);
+        transform: rotate(2deg);
     }
-    21% { 
+    31% { 
         border-color: var(--accent);
-        box-shadow: 0 0 8px var(--accent), inset 0 0 8px rgba(0, 255, 136, 0.1);
+        box-shadow: 0 0 10px var(--accent), inset 0 0 10px rgba(0, 255, 136, 0.1);
+        transform: rotate(0deg);
     }
     50% { 
         border-color: var(--accent);
-        box-shadow: 0 0 12px var(--accent), inset 0 0 8px rgba(0, 255, 136, 0.15);
+        box-shadow: 0 0 15px var(--accent), inset 0 0 10px rgba(0, 255, 136, 0.15);
     }
     51% { 
         border-color: transparent;
@@ -289,16 +308,25 @@ body {
     }
     52% { 
         border-color: var(--accent);
-        box-shadow: 0 0 8px var(--accent), inset 0 0 8px rgba(0, 255, 136, 0.1);
+        box-shadow: 0 0 10px var(--accent), inset 0 0 10px rgba(0, 255, 136, 0.1);
     }
     70% { 
         border-color: var(--security-accent);
-        box-shadow: 0 0 10px var(--security-accent);
+        box-shadow: 0 0 12px var(--security-accent);
+        transform: rotate(-2deg);
     }
     71% { 
         border-color: var(--accent);
-        box-shadow: 0 0 8px var(--accent), inset 0 0 8px rgba(0, 255, 136, 0.1);
+        box-shadow: 0 0 10px var(--accent), inset 0 0 10px rgba(0, 255, 136, 0.1);
+        transform: rotate(0deg);
     }
+}
+
+@keyframes glitch-ring-outer {
+    0%, 100% { opacity: 0.4; transform: rotate(0deg); }
+    25% { opacity: 0.1; transform: rotate(1deg); }
+    50% { opacity: 0.5; transform: rotate(0deg); }
+    75% { opacity: 0.2; transform: rotate(-1deg); }
 }
 
 @keyframes ring-rotate {
@@ -341,10 +369,10 @@ body {
 
 .status-dot {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
-    width: 16px;
-    height: 16px;
+    bottom: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     border: 3px solid var(--bg-card);
 }
