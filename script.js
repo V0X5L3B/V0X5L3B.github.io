@@ -870,18 +870,18 @@ function initFireflies() {
     });
 
     const particles = [];
-    const count = 40;
+    const count = 50;
     for (let i = 0; i < count; i++) {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 2.5 + 0.5,
-            speedX: (Math.random() - 0.5) * 0.3,
-            speedY: (Math.random() - 0.5) * 0.3,
-            opacity: Math.random() * 0.5 + 0.1,
+            size: Math.random() * 4 + 1.5,
+            speedX: (Math.random() - 0.5) * 0.4,
+            speedY: (Math.random() - 0.5) * 0.4,
+            opacity: Math.random() * 0.7 + 0.3,
             pulse: Math.random() * Math.PI * 2,
-            pulseSpeed: Math.random() * 0.02 + 0.005,
-            hue: Math.random() * 40 + 80,
+            pulseSpeed: Math.random() * 0.03 + 0.01,
+            hue: Math.random() * 50 + 80,
         });
     }
 
@@ -892,19 +892,19 @@ function initFireflies() {
             p.y += p.speedY;
             p.pulse += p.pulseSpeed;
 
-            if (p.x < -10) p.x = canvas.width + 10;
-            if (p.x > canvas.width + 10) p.x = -10;
-            if (p.y < -10) p.y = canvas.height + 10;
-            if (p.y > canvas.height + 10) p.y = -10;
+            if (p.x < -20) p.x = canvas.width + 20;
+            if (p.x > canvas.width + 20) p.x = -20;
+            if (p.y < -20) p.y = canvas.height + 20;
+            if (p.y > canvas.height + 20) p.y = -20;
 
-            const flicker = 0.5 + Math.sin(p.pulse) * 0.5;
+            const flicker = 0.4 + Math.sin(p.pulse) * 0.6;
             const alpha = p.opacity * flicker;
 
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = `hsla(${p.hue}, 30%, 70%, ${alpha})`;
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = `hsla(${p.hue}, 40%, 60%, ${alpha * 0.5})`;
+            ctx.fillStyle = `hsla(${p.hue}, 40%, 75%, ${alpha})`;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = `hsla(${p.hue}, 50%, 65%, ${alpha * 0.6})`;
             ctx.fill();
             ctx.shadowBlur = 0;
         });
