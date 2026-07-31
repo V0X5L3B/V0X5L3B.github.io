@@ -1495,13 +1495,6 @@ body {
     100% { transform: translateY(50%); }
 }
 
-/* ==================== DISCORD PULSE ==================== */
-.entered .social-btn.discord.pulse-active {
-    border-color: #5865F2;
-    color: #5865F2;
-    transition: border-color 0.15s, color 0.15s;
-}
-
 /* ==================== SKILL HOVER HIGHLIGHT ==================== */
 .skill-item::before {
     content: '';
