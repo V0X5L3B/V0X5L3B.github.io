@@ -684,10 +684,27 @@ function initViewsCounter() {
     const NAMESPACE = 'v0x5l3b';
     const KEY = 'views';
     const STORAGE_KEY = 'v0x5l3b_has_visited';
+    const LOCAL_KEY = 'v0x5l3b_local_views';
     const API_URL = 'https://api.countapi.xyz';
+
+    // Sync local count with API on load
+    async function syncLocalToApi() {
+        const localCount = parseInt(localStorage.getItem(LOCAL_KEY) || '0', 10);
+        if (localCount > 0) {
+            try {
+                const res = await fetch(`${API_URL}/set/${NAMESPACE}/${KEY}?value=${localCount}`);
+                if (res.ok) {
+                    localStorage.removeItem(LOCAL_KEY);
+                }
+            } catch {
+                // Ignore sync errors
+            }
+        }
+    }
 
     async function updateCount() {
         const hasVisited = localStorage.getItem(STORAGE_KEY);
+        const isNewVisit = !hasVisited;
         const method = hasVisited ? 'get' : 'hit';
         const url = `${API_URL}/${method}/${NAMESPACE}/${KEY}`;
 
@@ -696,20 +713,21 @@ function initViewsCounter() {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             countEl.textContent = data.value.toLocaleString();
-            if (!hasVisited) localStorage.setItem(STORAGE_KEY, '1');
-        } catch (err) {
-            console.warn('Views counter failed, using fallback:', err);
+            if (isNewVisit) localStorage.setItem(STORAGE_KEY, '1');
+        } catch {
             // Fallback: localStorage-only persistent counter
-            let localCount = parseInt(localStorage.getItem('v0x5l3b_local_views') || '0', 10);
-            if (!hasVisited) {
+            let localCount = parseInt(localStorage.getItem(LOCAL_KEY) || '0', 10);
+            if (isNewVisit) {
                 localCount++;
                 localStorage.setItem(STORAGE_KEY, '1');
-                localStorage.setItem('v0x5l3b_local_views', localCount.toString());
+                localStorage.setItem(LOCAL_KEY, localCount.toString());
             }
             countEl.textContent = localCount.toLocaleString();
         }
     }
 
+    // Try to sync any stale local counts to API
+    syncLocalToApi();
     updateCount();
 }
 
