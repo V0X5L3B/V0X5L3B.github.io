@@ -417,6 +417,26 @@ body {
     line-height: 1.5;
     color: var(--text-primary);
     margin-bottom: 10px;
+    min-height: 54px;
+}
+
+.typewriter {
+    position: relative;
+}
+
+.typewriter-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 12px;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: cursor-blink 0.7s step-end infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 .about-tags {
