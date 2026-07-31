@@ -57,9 +57,8 @@ function initGlitchEffect() {
     if (!name) return;
     setInterval(() => {
         if (Math.random() > 0.85) {
-            name.style.animation = 'none';
-            name.offsetHeight;
-            name.style.animation = null;
+            name.classList.add('name-glitch');
+            setTimeout(() => name.classList.remove('name-glitch'), 150);
         }
     }, 2000);
 }
@@ -163,8 +162,12 @@ function initAudio() {
 }
 
 function initSplash() {
+    document.body.classList.remove('entered');
     const splash = document.getElementById('splashScreen');
-    if (!splash) return;
+    if (!splash) {
+        document.body.classList.add('entered');
+        return;
+    }
 
     let dismissed = false;
     function dismiss() {
@@ -172,6 +175,9 @@ function initSplash() {
         dismissed = true;
         splash.classList.add('hidden');
         if (window.startAudio) window.startAudio();
+        setTimeout(() => {
+            document.body.classList.add('entered');
+        }, 1600);
         setTimeout(() => { splash.remove(); }, 2200);
     }
 
@@ -231,11 +237,13 @@ function initCardTilt() {
         const centerY = rect.height / 2;
         const rotateX = ((y - centerY) / centerY) * -2;
         const rotateY = ((x - centerX) / centerX) * 2;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.setProperty('--tilt-x', `${rotateX}deg`);
+        card.style.setProperty('--tilt-y', `${rotateY}deg`);
+        card.classList.add('card-tilt-active');
     });
 
     card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        card.classList.remove('card-tilt-active');
     });
 }
 
@@ -255,11 +263,11 @@ function initRandomGlitchLines() {
 
     setInterval(() => {
         if (Math.random() > 0.9) {
-            const elements = document.querySelectorAll('.name, .tagline, .skill-name, .category-title, .section-title');
+            const elements = document.querySelectorAll('.skill-name, .category-title, .section-title');
             const el = elements[Math.floor(Math.random() * elements.length)];
             if (el) {
-                el.style.animation = 'random-skew 0.3s step-end';
-                setTimeout(() => { el.style.animation = ''; }, 300);
+                el.classList.add('random-skew');
+                setTimeout(() => { el.classList.remove('random-skew'); }, 300);
             }
         }
     }, 3000);
@@ -268,10 +276,8 @@ function initRandomGlitchLines() {
         if (Math.random() > 0.88) {
             const card = document.getElementById('profileCard');
             if (card) {
-                card.style.transform = `perspective(1000px) translateX(${(Math.random() - 0.5) * 6}px) translateY(${(Math.random() - 0.5) * 3}px) skewX(${(Math.random() - 0.5) * 1.5}deg)`;
-                setTimeout(() => {
-                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-                }, 150);
+                card.classList.add('card-glitch');
+                setTimeout(() => { card.classList.remove('card-glitch'); }, 150);
             }
         }
     }, 2500);
@@ -650,10 +656,12 @@ function initHolographicCard() {}
 function initDiscordPulse() {
     const discordBtn = document.querySelector('.social-btn.discord');
     if (!discordBtn) return;
-    setInterval(() => {
-        discordBtn.classList.add('pulse-active');
-        setTimeout(() => { discordBtn.classList.remove('pulse-active'); }, 600);
-    }, 4000);
+    setTimeout(() => {
+        setInterval(() => {
+            discordBtn.classList.add('pulse-active');
+            setTimeout(() => { discordBtn.classList.remove('pulse-active'); }, 600);
+        }, 4000);
+    }, 3000);
     const label = discordBtn.querySelector('.social-label');
     if (label) {
         const originalText = label.textContent;
