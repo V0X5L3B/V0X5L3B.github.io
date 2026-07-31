@@ -68,69 +68,6 @@ body {
     z-index: 0;
 }
 
-/* ==================== TROLL IMAGE ==================== */
-.troll-img {
-    position: fixed;
-    top: 50px;
-    right: 250px;
-    transform: none;
-    width: 300px;
-    height: auto;
-    z-index: 3;
-    opacity: 1;
-    pointer-events: none;
-}
-
-.clanker-section {
-    position: fixed;
-    top: 170px;
-    right: 250px;
-    z-index: 3;
-}
-
-.clanker-box {
-    background: linear-gradient(145deg, rgba(21, 21, 24, 0.9), rgba(15, 15, 18, 0.95));
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 16px 20px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.clanker-box:hover {
-    border-color: rgba(184, 184, 192, 0.3);
-    box-shadow: 0 0 20px rgba(184, 184, 192, 0.05), inset 0 0 20px rgba(184, 184, 192, 0.02);
-}
-
-.clanker-link {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--accent);
-    text-decoration: none;
-    letter-spacing: 0.5px;
-    transition: color 0.3s ease;
-    display: block;
-}
-
-.clanker-link:hover {
-    color: #fff;
-}
-
-.clanker-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-    margin-top: 4px;
-    opacity: 0.6;
-}
-
-.clanker-arrow {
-    font-size: 10px;
-    color: var(--accent-dim);
-    text-align: center;
-    margin-bottom: 6px;
-    opacity: 0.8;
-}
 
 .container {
     display: block;
@@ -2167,25 +2104,6 @@ body {
 @keyframes status-glow {
     0%, 100% { box-shadow: 0 0 8px rgba(74, 222, 128, 0.5), 0 0 16px rgba(74, 222, 128, 0.2); }
     50% { box-shadow: 0 0 12px rgba(74, 222, 128, 0.7), 0 0 24px rgba(74, 222, 128, 0.3); }
-}
-
-/* ==================== ENHANCED CLANKER BOX ==================== */
-.clanker-box {
-    transition: all 0.4s ease;
-}
-
-.clanker-box:hover {
-    border-color: rgba(180, 120, 255, 0.3);
-    box-shadow: 0 0 20px rgba(180, 120, 255, 0.08), inset 0 0 20px rgba(120, 120, 255, 0.03);
-}
-
-.clanker-link {
-    transition: all 0.3s ease;
-}
-
-.clanker-box:hover .clanker-link {
-    color: #c8c8ff;
-    text-shadow: 0 0 8px rgba(120, 120, 255, 0.3);
 }
 
 /* ==================== AMBIENT FLOAT ==================== */
