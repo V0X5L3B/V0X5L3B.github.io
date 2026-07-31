@@ -162,6 +162,7 @@ body {
 .left-column {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -398,6 +399,7 @@ body {
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 16px;
+    margin-top: auto;
 }
 
 .social-btn {
@@ -467,6 +469,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 10px 14px;
+    margin-top: auto;
 }
 
 .about-text {
