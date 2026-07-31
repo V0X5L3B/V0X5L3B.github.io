@@ -702,27 +702,12 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function updateCount() {
-            if (sessionStorage.getItem('v_counted')) {
-                try {
-                    const { data, error } = await supabase.rpc('get_visitor_count', { p_namespace: 'v0x5l3b', p_key: 'views' });
-                    console.log('get_visitor_count response:', { data, error });
-                    if (error) throw error;
-                    countEl.textContent = data.toLocaleString();
-                } catch (err) {
-                    console.error('Views read failed:', err.message || err);
-                    countEl.textContent = '—';
-                }
-                return;
-            }
-
             try {
                 const { data, error } = await supabase
                     .rpc('increment_visitor', { p_namespace: 'v0x5l3b', p_key: 'views' });
 
-                console.log('increment_visitor response:', { data, error });
                 if (error) throw error;
                 countEl.textContent = data.toLocaleString();
-                sessionStorage.setItem('v_counted', '1');
             } catch (err) {
                 console.error('Views counter failed:', err.message || err);
                 countEl.textContent = '—';
