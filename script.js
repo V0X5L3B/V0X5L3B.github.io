@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCRTFlicker();
     initFooterTyping();
     initKeyboardGlitch();
+    initLeftColumnDots();
 });
 
 function initAvatar() {
@@ -466,14 +467,15 @@ function initFooterTyping() {
     observer.observe(footerText);
 }
 
-function initInteractiveDots() {
-    const canvas = document.getElementById('dotCanvas');
+function initLeftColumnDots() {
+    const canvas = document.getElementById('leftDotCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    const column = canvas.parentElement;
 
     function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = column.offsetWidth;
+        canvas.height = column.offsetHeight;
     }
     resize();
     window.addEventListener('resize', resize);
@@ -481,20 +483,21 @@ function initInteractiveDots() {
     let mouseX = -9999;
     let mouseY = -9999;
 
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
+    column.addEventListener('mousemove', (e) => {
+        const rect = column.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
     });
 
-    document.addEventListener('mouseleave', () => {
+    column.addEventListener('mouseleave', () => {
         mouseX = -9999;
         mouseY = -9999;
     });
 
     const dots = [];
-    const dotCount = 120;
-    const fleeRadius = 150;
-    const fleeForce = 3;
+    const dotCount = 50;
+    const fleeRadius = 80;
+    const fleeForce = 2.5;
 
     for (let i = 0; i < dotCount; i++) {
         dots.push({
@@ -504,10 +507,9 @@ function initInteractiveDots() {
             baseY: Math.random() * canvas.height,
             vx: 0,
             vy: 0,
-            size: Math.random() * 2.5 + 1,
-            alpha: Math.random() * 0.6 + 0.2,
+            size: Math.random() * 2 + 0.8,
+            alpha: Math.random() * 0.5 + 0.15,
             pulse: Math.random() * Math.PI * 2,
-            hue: Math.random() > 0.85 ? 160 : 140,
         });
     }
 
@@ -515,7 +517,7 @@ function initInteractiveDots() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         dots.forEach(dot => {
-            dot.pulse += 0.015;
+            dot.pulse += 0.02;
 
             const dx = dot.x - mouseX;
             const dy = dot.y - mouseY;
@@ -527,16 +529,15 @@ function initInteractiveDots() {
                 dot.vy += (dy / dist) * fleeForce * force;
             }
 
-            dot.vx += (dot.baseX - dot.x) * 0.01;
-            dot.vy += (dot.baseY - dot.y) * 0.01;
-
-            dot.vx *= 0.92;
-            dot.vy *= 0.92;
+            dot.vx += (dot.baseX - dot.x) * 0.015;
+            dot.vy += (dot.baseY - dot.y) * 0.015;
+            dot.vx *= 0.9;
+            dot.vy *= 0.9;
 
             dot.x += dot.vx;
             dot.y += dot.vy;
 
-            const flicker = 0.7 + Math.sin(dot.pulse) * 0.3;
+            const flicker = 0.6 + Math.sin(dot.pulse) * 0.4;
             const isFleeing = dist < fleeRadius;
 
             ctx.beginPath();
@@ -545,12 +546,12 @@ function initInteractiveDots() {
             if (isFleeing) {
                 const intensity = 1 - dist / fleeRadius;
                 ctx.fillStyle = `rgba(176, 176, 184, ${Math.min(dot.alpha * flicker + intensity * 0.5, 1)})`;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = `rgba(176, 176, 184, ${intensity * 0.8})`;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = `rgba(176, 176, 184, ${intensity * 0.7})`;
             } else {
-                ctx.fillStyle = `rgba(176, 176, 184, ${dot.alpha * flicker * 0.6})`;
-                ctx.shadowBlur = 5;
-                ctx.shadowColor = `rgba(176, 176, 184, 0.3)`;
+                ctx.fillStyle = `rgba(176, 176, 184, ${dot.alpha * flicker * 0.5})`;
+                ctx.shadowBlur = 4;
+                ctx.shadowColor = `rgba(176, 176, 184, 0.2)`;
             }
 
             ctx.fill();
@@ -563,9 +564,8 @@ function initInteractiveDots() {
                 const ddy = dots[i].y - dots[j].y;
                 const ddist = Math.sqrt(ddx * ddx + ddy * ddy);
 
-                if (ddist < 100) {
-                    const opacity = (1 - ddist / 100) * 0.15;
-
+                if (ddist < 80) {
+                    const opacity = (1 - ddist / 80) * 0.12;
                     const mi1 = mouseX !== -9999 ? Math.sqrt((dots[i].x - mouseX) ** 2 + (dots[i].y - mouseY) ** 2) < fleeRadius : false;
                     const mi2 = mouseX !== -9999 ? Math.sqrt((dots[j].x - mouseX) ** 2 + (dots[j].y - mouseY) ** 2) < fleeRadius : false;
 
@@ -575,28 +575,15 @@ function initInteractiveDots() {
 
                     if (mi1 || mi2) {
                         ctx.strokeStyle = `rgba(176, 176, 184, ${opacity * 3})`;
-                        ctx.lineWidth = 1;
+                        ctx.lineWidth = 0.8;
                     } else {
                         ctx.strokeStyle = `rgba(176, 176, 184, ${opacity})`;
-                        ctx.lineWidth = 0.5;
+                        ctx.lineWidth = 0.4;
                     }
 
                     ctx.stroke();
                 }
             }
-        }
-
-        if (mouseX !== -9999) {
-            ctx.beginPath();
-            ctx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(176, 176, 184, 0.4)';
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(mouseX, mouseY, fleeRadius, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(176, 176, 184, 0.05)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
         }
 
         requestAnimationFrame(draw);
