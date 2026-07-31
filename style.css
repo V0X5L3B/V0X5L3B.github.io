@@ -71,8 +71,8 @@ body {
 /* ==================== TROLL IMAGE ==================== */
 .troll-img {
     position: fixed;
-    top: 50%;
-    left: 45%;
+    top: 55%;
+    left: 48%;
     transform: translate(-50%, -50%);
     width: 900px;
     height: auto;
