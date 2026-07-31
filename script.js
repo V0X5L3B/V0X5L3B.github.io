@@ -270,10 +270,10 @@ function initMatrixRain() {
     const drops = new Array(columns).fill(1);
 
     function draw() {
-        ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+        ctx.fillStyle = 'rgba(10, 10, 12, 0.05)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = '#00ff88';
+        ctx.fillStyle = '#b0b0b8';
         ctx.font = `${fontSize}px monospace`;
 
         for (let i = 0; i < drops.length; i++) {
@@ -310,10 +310,10 @@ function initSplashMatrix() {
     const drops = new Array(columns).fill(1);
 
     function draw() {
-        ctx.fillStyle = 'rgba(10, 10, 15, 0.04)';
+        ctx.fillStyle = 'rgba(10, 10, 12, 0.04)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = '#00ff88';
+        ctx.fillStyle = '#b0b0b8';
         ctx.font = `${fontSize}px monospace`;
 
         for (let i = 0; i < drops.length; i++) {
@@ -351,7 +351,7 @@ function initCardTilt() {
         card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
         if (tracker) {
-            tracker.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0, 255, 136, 0.08) 0%, transparent 60%)`;
+            tracker.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(176, 176, 184, 0.08) 0%, transparent 60%)`;
         }
     });
 
@@ -400,7 +400,7 @@ function triggerMegaGlitch() {
     });
 
     document.querySelectorAll('.name, .tagline, .section-title, .footer-text').forEach(el => {
-        el.style.textShadow = `0 0 20px rgba(0, 255, 136, 0.8), ${(Math.random()-0.5)*10}px ${(Math.random()-0.5)*5}px 0 rgba(255, 107, 53, 0.5)`;
+        el.style.textShadow = `0 0 20px rgba(176, 176, 184, 0.8), ${(Math.random()-0.5)*10}px ${(Math.random()-0.5)*5}px 0 rgba(255, 107, 53, 0.5)`;
         setTimeout(() => {
             el.style.textShadow = '';
         }, 300);
@@ -550,13 +550,13 @@ function initInteractiveDots() {
 
             if (isFleeing) {
                 const intensity = 1 - dist / fleeRadius;
-                ctx.fillStyle = `rgba(0, 255, 136, ${Math.min(dot.alpha * flicker + intensity * 0.5, 1)})`;
+                ctx.fillStyle = `rgba(176, 176, 184, ${Math.min(dot.alpha * flicker + intensity * 0.5, 1)})`;
                 ctx.shadowBlur = 15;
-                ctx.shadowColor = `rgba(0, 255, 136, ${intensity * 0.8})`;
+                ctx.shadowColor = `rgba(176, 176, 184, ${intensity * 0.8})`;
             } else {
-                ctx.fillStyle = `rgba(0, 255, 136, ${dot.alpha * flicker * 0.6})`;
+                ctx.fillStyle = `rgba(176, 176, 184, ${dot.alpha * flicker * 0.6})`;
                 ctx.shadowBlur = 5;
-                ctx.shadowColor = `rgba(0, 255, 136, 0.3)`;
+                ctx.shadowColor = `rgba(176, 176, 184, 0.3)`;
             }
 
             ctx.fill();
@@ -580,10 +580,10 @@ function initInteractiveDots() {
                     ctx.lineTo(dots[j].x, dots[j].y);
 
                     if (mi1 || mi2) {
-                        ctx.strokeStyle = `rgba(0, 255, 136, ${opacity * 3})`;
+                        ctx.strokeStyle = `rgba(176, 176, 184, ${opacity * 3})`;
                         ctx.lineWidth = 1;
                     } else {
-                        ctx.strokeStyle = `rgba(0, 255, 136, ${opacity})`;
+                        ctx.strokeStyle = `rgba(176, 176, 184, ${opacity})`;
                         ctx.lineWidth = 0.5;
                     }
 
@@ -595,12 +595,12 @@ function initInteractiveDots() {
         if (mouseX !== -9999) {
             ctx.beginPath();
             ctx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(0, 255, 136, 0.4)';
+            ctx.fillStyle = 'rgba(176, 176, 184, 0.4)';
             ctx.fill();
 
             ctx.beginPath();
             ctx.arc(mouseX, mouseY, fleeRadius, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(0, 255, 136, 0.05)';
+            ctx.strokeStyle = 'rgba(176, 176, 184, 0.05)';
             ctx.lineWidth = 1;
             ctx.stroke();
         }
