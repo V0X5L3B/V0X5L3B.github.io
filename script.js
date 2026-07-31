@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initFloatingCode();
     initViewsCounter();
     initCardScanline();
+    initParticleCanvas();
+    initAmbientDots();
 });
 
 function initAvatar() {
@@ -922,4 +924,118 @@ function initCardScanline() {
             setTimeout(() => scanline.remove(), 1300);
         }
     }, 4000);
+}
+
+function initParticleCanvas() {
+    const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = [
+        'rgba(120, 120, 255, ',
+        'rgba(200, 80, 192, ',
+        'rgba(79, 195, 247, ',
+        'rgba(200, 200, 212, ',
+    ];
+
+    for (let i = 0; i < 50; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            size: Math.random() * 1.5 + 0.2,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            alpha: Math.random() * 0.15 + 0.02,
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpeed: Math.random() * 0.01 + 0.005,
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.pulse += p.pulseSpeed;
+
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+
+            const pulseAlpha = p.alpha + Math.sin(p.pulse) * 0.03;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = p.color + pulseAlpha + ')';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+            ctx.fillStyle = p.color + (pulseAlpha * 0.15) + ')';
+            ctx.fill();
+        });
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 150) {
+                    const lineAlpha = (1 - dist / 150) * 0.03;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(120, 120, 255, ${lineAlpha})`;
+                    ctx.lineWidth = 0.3;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+}
+
+function initAmbientDots() {
+    const colors = [
+        'rgba(120, 120, 255, 0.15)',
+        'rgba(200, 80, 192, 0.12)',
+        'rgba(79, 195, 247, 0.12)',
+    ];
+
+    function spawnDot() {
+        const dot = document.createElement('div');
+        dot.className = 'ambient-dot';
+        const size = Math.random() * 4 + 1;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const duration = Math.random() * 15 + 10;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        dot.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}%;
+            top: ${y}%;
+            background: ${color};
+            box-shadow: 0 0 ${size * 4}px ${color};
+            animation: ambient-float ${duration}s ease-in-out infinite alternate;
+            animation-delay: ${Math.random() * -duration}s;
+        `;
+        document.body.appendChild(dot);
+    }
+
+    for (let i = 0; i < 12; i++) spawnDot();
 }
