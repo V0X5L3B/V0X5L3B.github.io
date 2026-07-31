@@ -362,12 +362,13 @@ body {
 
 .name {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     position: relative;
     display: inline-block;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
 }
 
 .name::before {
@@ -378,20 +379,22 @@ body {
     color: var(--accent);
     opacity: 0;
     animation: glitch 3s infinite;
+    text-shadow: 0 0 10px var(--accent);
 }
 
 @keyframes glitch {
     0%, 90%, 100% { opacity: 0; transform: translate(0); }
-    92% { opacity: 0.5; transform: translate(-2px, 1px); }
-    94% { opacity: 0.5; transform: translate(2px, -1px); }
+    92% { opacity: 0.6; transform: translate(-3px, 1px); }
+    94% { opacity: 0.6; transform: translate(3px, -1px); }
     96% { opacity: 0; }
 }
 
 .tagline {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--text-secondary);
-    letter-spacing: 2px;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: lowercase;
 }
 
 .social-links {
@@ -502,17 +505,26 @@ body {
 .about-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
+    margin-top: auto;
 }
 
 .about-tag {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 9px;
     color: var(--accent);
-    background: rgba(0, 255, 136, 0.1);
-    padding: 3px 8px;
+    background: rgba(0, 255, 136, 0.08);
+    padding: 4px 10px;
     border-radius: 4px;
-    border: 1px solid rgba(0, 255, 136, 0.2);
+    border: 1px solid rgba(0, 255, 136, 0.15);
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.about-tag:hover {
+    background: rgba(0, 255, 136, 0.15);
+    border-color: rgba(0, 255, 136, 0.4);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
 }
 
 .skills-section {
