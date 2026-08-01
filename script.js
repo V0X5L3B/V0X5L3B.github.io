@@ -947,7 +947,7 @@ function initParticleCanvas() {
     const colors = [
         'rgba(120, 120, 255, ',
         'rgba(200, 80, 192, ',
-        'rgba(79, 195, 247, ',
+        'rgba(155, 48, 255, ',
         'rgba(200, 200, 212, ',
     ];
 
@@ -1022,7 +1022,7 @@ function initAmbientDots() {
     const colors = [
         'rgba(120, 120, 255, 0.15)',
         'rgba(200, 80, 192, 0.12)',
-        'rgba(79, 195, 247, 0.12)',
+        'rgba(155, 48, 255, 0.12)',
     ];
 
     function spawnDot() {
@@ -1136,7 +1136,7 @@ function initMouseTrail() {
     const colors = [
         'rgba(120, 120, 255, ',
         'rgba(200, 80, 192, ',
-        'rgba(79, 195, 247, ',
+        'rgba(155, 48, 255, ',
         'rgba(118, 255, 3, ',
     ];
 
@@ -1187,7 +1187,7 @@ function initClickBursts() {
     const colors = [
         'rgba(120, 120, 255, 0.6)',
         'rgba(200, 80, 192, 0.6)',
-        'rgba(79, 195, 247, 0.6)',
+        'rgba(155, 48, 255, 0.6)',
     ];
 
     document.addEventListener('click', (e) => {

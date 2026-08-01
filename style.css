@@ -9,15 +9,15 @@
     --bg-secondary: #0e0e12;
     --bg-card: #121216;
     --border-color: #1a1a22;
-    --accent: #c8c8d4;
-    --accent-dim: #6a6a78;
-    --accent-glow: rgba(200, 200, 212, 0.15);
+    --accent: #c850c0;
+    --accent-dim: #7b2fbe;
+    --accent-glow: rgba(200, 80, 192, 0.15);
     --text-primary: #f0f0f8;
     --text-secondary: #8888a0;
     --text-muted: #4a4a5a;
     --danger: #ff4466;
-    --security-accent: #909098;
-    --security-glow: rgba(144, 144, 152, 0.12);
+    --security-accent: #9b30ff;
+    --security-glow: rgba(155, 48, 255, 0.12);
 }
 
 html { scroll-behavior: smooth; }
@@ -69,9 +69,9 @@ body::before {
     top: -50%; left: -50%;
     width: 200%; height: 200%;
     background:
-        radial-gradient(ellipse at 20% 50%, rgba(65, 88, 208, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 50%, rgba(123, 47, 190, 0.03) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 20%, rgba(200, 80, 192, 0.02) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(79, 195, 247, 0.02) 0%, transparent 50%);
+        radial-gradient(ellipse at 50% 80%, rgba(155, 48, 255, 0.02) 0%, transparent 50%);
     animation: bg-drift 25s ease-in-out infinite alternate;
     pointer-events: none;
     z-index: 0;
@@ -134,13 +134,13 @@ body::before {
     padding: 2px;
     background: conic-gradient(
         from var(--border-angle, 0deg),
-        transparent 20%,
-        rgba(120, 200, 255, 0.5) 30%,
-        rgba(180, 120, 255, 0.5) 40%,
-        rgba(200, 80, 192, 0.4) 50%,
-        rgba(79, 195, 247, 0.4) 60%,
-        rgba(120, 255, 200, 0.3) 70%,
-        transparent 80%
+        transparent 15%,
+        rgba(200, 80, 192, 0.6) 25%,
+        rgba(155, 48, 255, 0.5) 40%,
+        rgba(123, 47, 190, 0.4) 55%,
+        rgba(200, 80, 192, 0.5) 70%,
+        rgba(155, 48, 255, 0.6) 85%,
+        transparent 95%
     );
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -158,13 +158,13 @@ body::before {
     border-radius: 22px;
     background: conic-gradient(
         from var(--border-angle, 0deg),
-        transparent 20%,
-        rgba(120, 200, 255, 0.2) 30%,
-        rgba(180, 120, 255, 0.2) 40%,
-        rgba(200, 80, 192, 0.15) 50%,
-        rgba(79, 195, 247, 0.15) 60%,
-        rgba(120, 255, 200, 0.1) 70%,
-        transparent 80%
+        transparent 15%,
+        rgba(200, 80, 192, 0.25) 25%,
+        rgba(155, 48, 255, 0.2) 40%,
+        rgba(123, 47, 190, 0.15) 55%,
+        rgba(200, 80, 192, 0.2) 70%,
+        rgba(155, 48, 255, 0.25) 85%,
+        transparent 95%
     );
     filter: blur(20px);
     animation: border-rotate 4s linear infinite;
@@ -178,8 +178,8 @@ body::before {
     box-shadow:
         0 12px 40px rgba(0, 0, 0, 0.5),
         0 40px 100px rgba(0, 0, 0, 0.3),
-        0 0 60px rgba(120, 200, 255, 0.08),
-        0 0 120px rgba(180, 120, 255, 0.05);
+        0 0 60px rgba(200, 80, 192, 0.08),
+        0 0 120px rgba(155, 48, 255, 0.05);
 }
 
 .entered .profile-card {
@@ -726,14 +726,14 @@ body::before {
     position: absolute;
     bottom: 0; left: 0;
     width: 0; height: 2px;
-    background: linear-gradient(90deg, rgba(120, 200, 255, 0.6), rgba(180, 120, 255, 0.6), rgba(200, 80, 192, 0.6));
+    background: linear-gradient(90deg, rgba(200, 80, 192, 0.6), rgba(155, 48, 255, 0.6), rgba(123, 47, 190, 0.6));
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .promo-text:hover {
-    border-color: rgba(200, 200, 212, 0.3);
-    box-shadow: 0 0 30px rgba(120, 200, 255, 0.08), 0 0 60px rgba(180, 120, 255, 0.04);
-    background: rgba(200, 200, 212, 0.06);
+    border-color: rgba(200, 80, 192, 0.3);
+    box-shadow: 0 0 30px rgba(200, 80, 192, 0.08), 0 0 60px rgba(155, 48, 255, 0.04);
+    background: rgba(200, 80, 192, 0.06);
 }
 
 .promo-text:hover::before {
@@ -816,27 +816,27 @@ body::before {
 }
 
 .about-tag:nth-child(1):hover {
-    border-color: rgba(120, 200, 255, 0.5);
-    box-shadow: 0 0 20px rgba(120, 200, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
-    color: rgba(120, 200, 255, 0.9);
+    border-color: rgba(200, 80, 192, 0.5);
+    box-shadow: 0 0 20px rgba(200, 80, 192, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: rgba(200, 80, 192, 0.9);
 }
 
 .about-tag:nth-child(2):hover {
-    border-color: rgba(180, 120, 255, 0.5);
-    box-shadow: 0 0 20px rgba(180, 120, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
-    color: rgba(180, 120, 255, 0.9);
+    border-color: rgba(155, 48, 255, 0.5);
+    box-shadow: 0 0 20px rgba(155, 48, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: rgba(155, 48, 255, 0.9);
 }
 
 .about-tag:nth-child(3):hover {
-    border-color: rgba(65, 88, 208, 0.5);
-    box-shadow: 0 0 20px rgba(65, 88, 208, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
-    color: rgba(65, 88, 208, 0.9);
+    border-color: rgba(123, 47, 190, 0.5);
+    box-shadow: 0 0 20px rgba(123, 47, 190, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: rgba(123, 47, 190, 0.9);
 }
 
 .about-tag:nth-child(4):hover {
-    border-color: rgba(120, 255, 200, 0.4);
-    box-shadow: 0 0 20px rgba(120, 255, 200, 0.12), 0 4px 12px rgba(0, 0, 0, 0.2);
-    color: rgba(120, 255, 200, 0.8);
+    border-color: rgba(200, 80, 192, 0.4);
+    box-shadow: 0 0 20px rgba(200, 80, 192, 0.12), 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: rgba(200, 80, 192, 0.8);
 }
 
 .about-tag::before {
@@ -1931,7 +1931,7 @@ body::before {
         transparent 40%,
         rgba(120, 120, 255, 0.3) 45%,
         rgba(180, 120, 255, 0.4) 50%,
-        rgba(120, 200, 255, 0.3) 55%,
+        rgba(200, 80, 192, 0.3) 55%,
         transparent 60%
     );
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -1983,7 +1983,7 @@ body::before {
         from var(--border-angle2, 0deg),
         transparent 40%,
         rgba(180, 120, 255, 0.25) 48%,
-        rgba(120, 200, 255, 0.3) 52%,
+        rgba(200, 80, 192, 0.3) 52%,
         transparent 60%
     );
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -2010,7 +2010,7 @@ body::before {
         from var(--border-angle2, 0deg),
         transparent 35%,
         rgba(180, 120, 255, 0.4) 45%,
-        rgba(120, 200, 255, 0.5) 50%,
+        rgba(200, 80, 192, 0.5) 50%,
         rgba(200, 120, 255, 0.4) 55%,
         transparent 65%
     );
@@ -2027,19 +2027,18 @@ body::before {
 .avatar-ring {
     background: linear-gradient(135deg,
         #ff6b9d 0%,
-        #c850c0 20%,
-        #4158d0 40%,
-        #4fc3f7 60%,
-        #76ff03 80%,
-        #ff6b9d 100%
+        #c850c0 25%,
+        #9b30ff 50%,
+        #7b2fbe 75%,
+        #c850c0 100%
     );
     background-size: 300% 300%;
     animation: holo-shift 3s ease infinite;
     padding: 3px;
     box-shadow:
         0 0 20px rgba(200, 80, 192, 0.35),
-        0 0 40px rgba(65, 88, 208, 0.2),
-        0 0 80px rgba(79, 195, 247, 0.1);
+        0 0 40px rgba(155, 48, 255, 0.2),
+        0 0 80px rgba(200, 80, 192, 0.1);
 }
 
 @keyframes holo-shift {
@@ -2053,21 +2052,21 @@ body::before {
 }
 
 .avatar-ring::after {
-    border-color: rgba(65, 88, 208, 0.1);
+    border-color: rgba(123, 47, 190, 0.1);
     animation: ring-outer-spin 15s linear infinite reverse;
 }
 
 @keyframes holo-ring-pulse {
     0%, 100% { border-color: rgba(200, 80, 192, 0.15); }
-    33% { border-color: rgba(65, 88, 208, 0.2); }
-    66% { border-color: rgba(79, 195, 247, 0.15); }
+    33% { border-color: rgba(123, 47, 190, 0.2); }
+    66% { border-color: rgba(155, 48, 255, 0.15); }
 }
 
 .avatar-wrapper:hover .avatar-ring {
     box-shadow:
         0 0 20px rgba(200, 80, 192, 0.3),
-        0 0 40px rgba(65, 88, 208, 0.15),
-        0 0 60px rgba(79, 195, 247, 0.1);
+        0 0 40px rgba(123, 47, 190, 0.15),
+        0 0 60px rgba(155, 48, 255, 0.1);
 }
 
 /* ==================== COLORED NAME GLOW ==================== */
@@ -2106,10 +2105,10 @@ body::before {
 
 /* ==================== ENHANCED SKILL BARS ==================== */
 .skill-fill {
-    background: linear-gradient(90deg, #4158d0, #c850c0, #ffcc70);
+    background: linear-gradient(90deg, #7b2fbe, #c850c0, #ff6b9d);
     background-size: 200% 100%;
     animation: skill-gradient 4s ease-in-out infinite;
-    box-shadow: 0 0 12px rgba(200, 80, 192, 0.25), 0 0 24px rgba(65, 88, 208, 0.1);
+    box-shadow: 0 0 12px rgba(200, 80, 192, 0.25), 0 0 24px rgba(123, 47, 190, 0.1);
 }
 
 @keyframes skill-gradient {
@@ -2118,10 +2117,10 @@ body::before {
 }
 
 .skill-fill.security {
-    background: linear-gradient(90deg, #4fc3f7, #4158d0, #c850c0);
+    background: linear-gradient(90deg, #c850c0, #7b2fbe, #c850c0);
     background-size: 200% 100%;
     animation: skill-gradient 4s ease-in-out infinite;
-    box-shadow: 0 0 12px rgba(65, 88, 208, 0.25), 0 0 24px rgba(79, 195, 247, 0.1);
+    box-shadow: 0 0 12px rgba(123, 47, 190, 0.25), 0 0 24px rgba(155, 48, 255, 0.1);
 }
 
 .skill-bar {
@@ -2132,7 +2131,7 @@ body::before {
 
 /* ==================== ENHANCED DISCORD BUTTON ==================== */
 .social-btn.discord {
-    background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(200, 80, 192, 0.06));
+    background: linear-gradient(135deg, rgba(200, 80, 192, 0.1), rgba(155, 48, 255, 0.06));
     border: none;
     position: relative;
     overflow: visible;
@@ -2145,7 +2144,7 @@ body::before {
     top: 0; left: 0; right: 0; bottom: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(88, 101, 242, 0.5), rgba(200, 80, 192, 0.4), rgba(79, 195, 247, 0.3));
+    background: linear-gradient(135deg, rgba(200, 80, 192, 0.5), rgba(155, 48, 255, 0.4), rgba(123, 47, 190, 0.3));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -2158,7 +2157,7 @@ body::before {
     position: absolute;
     top: -1px; left: -1px; right: -1px; bottom: -1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(88, 101, 242, 0.2), rgba(200, 80, 192, 0.15));
+    background: linear-gradient(135deg, rgba(200, 80, 192, 0.2), rgba(155, 48, 255, 0.15));
     filter: blur(12px);
     opacity: 0;
     transition: opacity 0.4s ease;
@@ -2166,9 +2165,9 @@ body::before {
 }
 
 .social-btn.discord:hover {
-    background: linear-gradient(135deg, rgba(88, 101, 242, 0.18), rgba(200, 80, 192, 0.1));
+    background: linear-gradient(135deg, rgba(200, 80, 192, 0.18), rgba(155, 48, 255, 0.1));
     transform: translateY(-3px) !important;
-    box-shadow: 0 8px 30px rgba(88, 101, 242, 0.2), 0 0 60px rgba(88, 101, 242, 0.08);
+    box-shadow: 0 8px 30px rgba(200, 80, 192, 0.2), 0 0 60px rgba(155, 48, 255, 0.08);
 }
 
 .social-btn.discord:hover::after {
@@ -2189,9 +2188,9 @@ body::before {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.about-tag:nth-child(1):hover { border-color: rgba(120, 200, 255, 0.4); box-shadow: 0 0 15px rgba(120, 200, 255, 0.1); }
+.about-tag:nth-child(1):hover { border-color: rgba(200, 80, 192, 0.4); box-shadow: 0 0 15px rgba(200, 80, 192, 0.1); }
 .about-tag:nth-child(2):hover { border-color: rgba(200, 80, 192, 0.4); box-shadow: 0 0 15px rgba(200, 80, 192, 0.1); }
-.about-tag:nth-child(3):hover { border-color: rgba(65, 88, 208, 0.4); box-shadow: 0 0 15px rgba(65, 88, 208, 0.1); }
+.about-tag:nth-child(3):hover { border-color: rgba(123, 47, 190, 0.4); box-shadow: 0 0 15px rgba(123, 47, 190, 0.1); }
 .about-tag:nth-child(4):hover { border-color: rgba(118, 255, 3, 0.3); box-shadow: 0 0 15px rgba(118, 255, 3, 0.08); }
 
 /* ==================== PROMO BANNER GLOW ==================== */
@@ -2342,7 +2341,7 @@ body::before {
 
 .skill-item:hover .skill-fill {
     filter: brightness(1.2);
-    box-shadow: 0 0 16px rgba(200, 80, 192, 0.3), 0 0 32px rgba(65, 88, 208, 0.15);
+    box-shadow: 0 0 16px rgba(200, 80, 192, 0.3), 0 0 32px rgba(123, 47, 190, 0.15);
 }
 
 /* ==================== AVATAR HOLOGRAPHIC SHIMMER ==================== */
@@ -2363,7 +2362,7 @@ body::before {
         transparent 20%,
         rgba(200, 80, 192, 0.1) 30%,
         transparent 40%,
-        rgba(79, 195, 247, 0.08) 50%,
+        rgba(155, 48, 255, 0.08) 50%,
         transparent 60%,
         rgba(118, 255, 3, 0.06) 70%,
         transparent 80%,
@@ -2531,9 +2530,9 @@ body::before {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
-.project-item[data-color="blue"]:hover { border-color: rgba(120, 200, 255, 0.3); }
+.project-item[data-color="blue"]:hover { border-color: rgba(200, 80, 192, 0.3); }
 .project-item[data-color="purple"]:hover { border-color: rgba(200, 80, 192, 0.3); }
-.project-item[data-color="cyan"]:hover { border-color: rgba(79, 195, 247, 0.3); }
+.project-item[data-color="cyan"]:hover { border-color: rgba(155, 48, 255, 0.3); }
 .project-item[data-color="green"]:hover { border-color: rgba(118, 255, 3, 0.2); }
 
 .project-header {
@@ -2626,7 +2625,7 @@ body::before {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4158d0, #c850c0, #ffcc70);
+    background: linear-gradient(90deg, #7b2fbe, #c850c0, #ff6b9d);
     border-radius: 3px;
     transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -2686,8 +2685,8 @@ body::before {
 }
 
 .activity-dot.status {
-    background: #4fc3f7;
-    box-shadow: 0 0 8px rgba(79, 195, 247, 0.4);
+    background: #c850c0;
+    box-shadow: 0 0 8px rgba(155, 48, 255, 0.4);
 }
 
 .activity-content {
@@ -2777,9 +2776,9 @@ body::before {
     background: conic-gradient(
         from var(--border-angle, 0deg),
         transparent 30%,
-        rgba(88, 101, 242, 0.4) 45%,
-        rgba(200, 80, 192, 0.4) 50%,
-        rgba(79, 195, 247, 0.3) 55%,
+        rgba(200, 80, 192, 0.4) 45%,
+        rgba(155, 48, 255, 0.4) 50%,
+        rgba(123, 47, 190, 0.3) 55%,
         transparent 70%
     );
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -2803,9 +2802,9 @@ body::before {
     background: conic-gradient(
         from var(--border-angle, 0deg),
         transparent 30%,
-        rgba(88, 101, 242, 0.15) 45%,
-        rgba(200, 80, 192, 0.15) 50%,
-        rgba(79, 195, 247, 0.1) 55%,
+        rgba(200, 80, 192, 0.15) 45%,
+        rgba(155, 48, 255, 0.15) 50%,
+        rgba(123, 47, 190, 0.1) 55%,
         transparent 70%
     );
     filter: blur(12px);
@@ -2844,20 +2843,20 @@ body::before {
 }
 
 .contact-btn:hover {
-    border-color: rgba(88, 101, 242, 0.4);
-    background: rgba(88, 101, 242, 0.08);
+    border-color: rgba(200, 80, 192, 0.4);
+    background: rgba(200, 80, 192, 0.08);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(88, 101, 242, 0.15), 0 0 40px rgba(88, 101, 242, 0.08);
+    box-shadow: 0 8px 24px rgba(200, 80, 192, 0.15), 0 0 40px rgba(200, 80, 192, 0.08);
 }
 
 .contact-btn:first-child:hover {
-    border-color: rgba(88, 101, 242, 0.4);
-    box-shadow: 0 8px 24px rgba(88, 101, 242, 0.15), 0 0 40px rgba(88, 101, 242, 0.08);
+    border-color: rgba(200, 80, 192, 0.4);
+    box-shadow: 0 8px 24px rgba(200, 80, 192, 0.15), 0 0 40px rgba(200, 80, 192, 0.08);
 }
 
 .contact-btn:last-child:hover {
-    border-color: rgba(200, 200, 212, 0.15);
-    box-shadow: 0 8px 24px rgba(200, 200, 212, 0.08), 0 0 40px rgba(200, 200, 212, 0.04);
+    border-color: rgba(155, 48, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(155, 48, 255, 0.1), 0 0 40px rgba(155, 48, 255, 0.05);
 }
 
 .contact-icon {
@@ -3038,7 +3037,7 @@ body::before {
     width: 0; height: 0;
     border-left: 25px solid transparent;
     border-right: 25px solid transparent;
-    border-bottom: 43px solid rgba(79, 195, 247, 0.08);
+    border-bottom: 43px solid rgba(155, 48, 255, 0.08);
 }
 
 .floating-shape.circle {
@@ -3086,7 +3085,7 @@ body::before {
     left: 70%;
     transform: rotate(10deg);
     animation-delay: -10s;
-    background: linear-gradient(180deg, transparent, rgba(79, 195, 247, 0.05), rgba(200, 80, 192, 0.03), transparent);
+    background: linear-gradient(180deg, transparent, rgba(155, 48, 255, 0.05), rgba(200, 80, 192, 0.03), transparent);
 }
 
 @keyframes beam-sweep {
@@ -3105,7 +3104,7 @@ body::before {
     background: linear-gradient(45deg, 
         rgba(120, 120, 255, 0.3),
         rgba(200, 80, 192, 0.3),
-        rgba(79, 195, 247, 0.3),
+        rgba(155, 48, 255, 0.3),
         rgba(118, 255, 3, 0.2),
         rgba(120, 120, 255, 0.3)
     );
