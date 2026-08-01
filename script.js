@@ -945,7 +945,7 @@ function initParticleCanvas() {
 
     const particles = [];
     const colors = [
-        'rgba(120, 120, 255, ',
+        'rgba(200, 80, 192, ',
         'rgba(200, 80, 192, ',
         'rgba(155, 48, 255, ',
         'rgba(200, 200, 212, ',
@@ -1001,7 +1001,7 @@ function initParticleCanvas() {
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(120, 120, 255, ${lineAlpha})`;
+                    ctx.strokeStyle = `rgba(200, 80, 192, ${lineAlpha})`;
                     ctx.lineWidth = 0.3;
                     ctx.stroke();
                 }
@@ -1020,7 +1020,7 @@ function initParticleCanvas() {
 
 function initAmbientDots() {
     const colors = [
-        'rgba(120, 120, 255, 0.15)',
+        'rgba(200, 80, 192, 0.15)',
         'rgba(200, 80, 192, 0.12)',
         'rgba(155, 48, 255, 0.12)',
     ];
@@ -1060,7 +1060,7 @@ function initMouseGlow() {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            glow.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(120, 120, 255, 0.08), rgba(200, 80, 192, 0.03), transparent)`;
+            glow.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(200, 80, 192, 0.08), rgba(200, 80, 192, 0.03), transparent)`;
         });
 
         card.addEventListener('mouseleave', () => {
@@ -1134,10 +1134,10 @@ function initMouseTrail() {
     if (!container) return;
     let lastX = 0, lastY = 0;
     const colors = [
-        'rgba(120, 120, 255, ',
         'rgba(200, 80, 192, ',
+        'rgba(255, 120, 73, ',
         'rgba(155, 48, 255, ',
-        'rgba(118, 255, 3, ',
+        'rgba(255, 107, 157, ',
     ];
 
     document.addEventListener('mousemove', (e) => {
@@ -1185,7 +1185,7 @@ function initMouseTrail() {
 
 function initClickBursts() {
     const colors = [
-        'rgba(120, 120, 255, 0.6)',
+        'rgba(200, 80, 192, 0.6)',
         'rgba(200, 80, 192, 0.6)',
         'rgba(155, 48, 255, 0.6)',
     ];
