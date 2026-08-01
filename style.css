@@ -2450,7 +2450,7 @@ body::before {
 
 .layout-3col {
     display: grid;
-    grid-template-columns: 480px 1fr 320px;
+    grid-template-columns: 320px 1fr 480px;
     gap: 16px;
     max-width: 1600px;
     margin: 0 auto;
@@ -2464,6 +2464,7 @@ body::before {
     position: sticky;
     top: 20px;
     align-self: start;
+    order: 3;
 }
 
 .col-mid {
@@ -2471,6 +2472,7 @@ body::before {
     flex-direction: column;
     gap: 16px;
     min-height: 0;
+    order: 2;
 }
 
 .col-right {
@@ -2478,6 +2480,7 @@ body::before {
     flex-direction: column;
     gap: 16px;
     min-height: 0;
+    order: 1;
 }
 
 /* ==================== INFO CARD BASE ==================== */
@@ -2954,14 +2957,87 @@ body::before {
 
 /* ==================== SHOUTOUTS CARD ==================== */
 .shoutouts-card {
-    text-align: center;
+    text-align: left;
 }
 
-.shoutouts-text {
+.shoutouts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.shoutout-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 120, 73, 0.15);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 120, 73, 0.03));
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.shoutout-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 120, 73, 0.08), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.shoutout-item:hover::before { opacity: 1; }
+
+.shoutout-item:hover {
+    border-color: rgba(255, 120, 73, 0.35);
+    box-shadow: 0 0 20px rgba(255, 120, 73, 0.08), inset 0 0 20px rgba(255, 120, 73, 0.03);
+    transform: translateX(4px);
+}
+
+.shoutout-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.shoutout-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.shoutout-name {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.shoutout-desc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
     color: var(--text-muted);
-    opacity: 0.5;
+    opacity: 0.7;
+}
+
+.shoutout-arrow {
+    font-size: 14px;
+    color: var(--text-muted);
+    opacity: 0.4;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.shoutout-item:hover .shoutout-arrow {
+    opacity: 1;
+    color: #ff7849;
+    transform: translateX(3px);
 }
 
 /* ==================== HEX GRID CANVAS ==================== */
