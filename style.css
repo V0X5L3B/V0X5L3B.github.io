@@ -101,7 +101,6 @@ body::before {
 .container {
     display: block;
     min-height: 100vh;
-    padding: 40px 0 40px 5vw;
     position: relative;
     z-index: 2;
 }
@@ -1749,9 +1748,7 @@ body::before {
 
 /* ==================== SKILLS CARD ==================== */
 .skills-card {
-    position: fixed;
-    bottom: 40px;
-    right: 5vw;
+    position: relative;
     background: rgba(14, 14, 18, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -1802,8 +1799,7 @@ body::before {
         margin: 0 auto;
     }
     .container {
-        flex-direction: column;
-        align-items: center;
+        display: block;
     }
 }
 
@@ -2315,13 +2311,437 @@ body::before {
 
 /* ==================== RESPONSIVE ENHANCEMENTS ==================== */
 @media (max-width: 900px) {
-    .skills-card {
-        position: relative;
-        bottom: auto;
-        right: auto;
-        max-width: 420px;
-        margin: 20px auto 0;
+    .layout-grid {
+        grid-template-columns: 1fr !important;
     }
+    .left-column-layout {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* ==================== LAYOUT GRID ==================== */
+
+.layout-grid {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 5vw;
+    min-height: 100vh;
+    align-items: start;
+}
+
+.left-column-layout {
+    position: sticky;
+    top: 40px;
+}
+
+.right-column-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ==================== INFO CARD BASE ==================== */
+.info-card {
+    background: rgba(14, 14, 18, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(200, 200, 212, 0.06);
+    border-radius: 20px;
+    padding: 24px 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.entered .info-card {
+    animation: card-appear 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.entered .info-card:nth-child(1) { animation-delay: 0.4s; }
+.entered .info-card:nth-child(2) { animation-delay: 0.6s; }
+.entered .info-card:nth-child(3) { animation-delay: 0.8s; }
+.entered .info-card:nth-child(4) { animation-delay: 1.0s; }
+
+.info-card:hover {
+    border-color: rgba(200, 200, 212, 0.12);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+}
+
+/* ==================== PROJECTS CARD ==================== */
+.projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.project-item {
+    background: rgba(10, 10, 14, 0.5);
+    border: 1px solid rgba(200, 200, 212, 0.04);
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-item:hover {
+    border-color: rgba(120, 120, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.project-item[data-color="blue"]:hover { border-color: rgba(120, 200, 255, 0.3); }
+.project-item[data-color="purple"]:hover { border-color: rgba(200, 80, 192, 0.3); }
+.project-item[data-color="cyan"]:hover { border-color: rgba(79, 195, 247, 0.3); }
+.project-item[data-color="green"]:hover { border-color: rgba(118, 255, 3, 0.2); }
+
+.project-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.project-icon {
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(120, 120, 255, 0.08);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.project-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.status-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.status-badge.active {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.status-badge.beta {
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.status-badge.archived {
+    color: var(--text-muted);
+    background: rgba(100, 100, 120, 0.1);
+    border: 1px solid rgba(100, 100, 120, 0.2);
+}
+
+.project-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.tech-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.tech-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(180, 120, 255, 0.7);
+    background: rgba(180, 120, 255, 0.06);
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(180, 120, 255, 0.1);
+}
+
+.progress-bar {
+    height: 3px;
+    background: rgba(200, 200, 212, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4158d0, #c850c0, #ffcc70);
+    border-radius: 3px;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    position: absolute;
+    right: 0;
+    top: -14px;
+}
+
+/* ==================== ACTIVITY CARD ==================== */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.activity-item:hover {
+    background: rgba(200, 200, 212, 0.03);
+}
+
+.activity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.activity-dot.working {
+    background: #4ade80;
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+    animation: pulse 2s infinite;
+}
+
+.activity-dot.coding {
+    background: #5865F2;
+    box-shadow: 0 0 8px rgba(88, 101, 242, 0.4);
+}
+
+.activity-dot.listening {
+    background: #c850c0;
+    box-shadow: 0 0 8px rgba(200, 80, 192, 0.4);
+}
+
+.activity-dot.status {
+    background: #4fc3f7;
+    box-shadow: 0 0 8px rgba(79, 195, 247, 0.4);
+}
+
+.activity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.activity-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.activity-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* ==================== TERMINAL WIDGET ==================== */
+.terminal-widget {
+    background: rgba(8, 8, 12, 0.8);
+    border: 1px solid rgba(200, 200, 212, 0.06);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.terminal-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(20, 20, 28, 0.8);
+    border-bottom: 1px solid rgba(200, 200, 212, 0.04);
+}
+
+.terminal-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.terminal-dot.red { background: #ff5f57; }
+.terminal-dot.yellow { background: #febc2e; }
+.terminal-dot.green { background: #28c840; }
+
+.terminal-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-left: 8px;
+}
+
+.terminal-body {
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+}
+
+.terminal-line {
+    display: flex;
+    gap: 8px;
+}
+
+.terminal-prompt {
+    color: #4ade80;
+}
+
+.terminal-text {
+    color: var(--text-primary);
+}
+
+/* ==================== CONTACT CARD ==================== */
+.contact-grid {
+    display: flex;
+    gap: 10px;
+}
+
+.contact-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: rgba(10, 10, 14, 0.5);
+    border: 1px solid rgba(200, 200, 212, 0.06);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-btn:hover {
+    border-color: rgba(88, 101, 242, 0.3);
+    background: rgba(88, 101, 242, 0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.contact-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.discord-icon {
+    background: rgba(88, 101, 242, 0.1);
+    color: #5865F2;
+}
+
+.github-icon {
+    background: rgba(200, 200, 212, 0.06);
+    color: var(--accent);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+.contact-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.contact-hint {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.contact-done {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #4ade80;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.contact-btn:hover .contact-hint { opacity: 1; }
+
+.contact-btn.copied .contact-hint { opacity: 0; }
+.contact-btn.copied .contact-done { opacity: 1; }
+.contact-btn.copied {
+    border-color: rgba(74, 222, 128, 0.3);
+    background: rgba(74, 222, 128, 0.06);
+}
+
+/* ==================== SKILLS CARD (in layout) ==================== */
+.info-card.skills-card {
+    position: relative;
+    opacity: 0;
+}
+
+/* ==================== SECTION TITLE FOR INFO CARDS ==================== */
+.info-card .section-title {
+    animation: none;
+    opacity: 1;
+    margin-bottom: 16px;
 }
 
 /* ==================== HEX GRID CANVAS ==================== */

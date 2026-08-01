@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initFloatingShapes();
     initOrbitRings();
     initNameGlitch();
+    initTerminalTyping();
+    initCopyToClipboard();
+    initProjectProgress();
 });
 
 function initAvatar() {
@@ -1321,4 +1324,81 @@ function initNameGlitch() {
         name.classList.add('name-glitch-active');
         setTimeout(() => name.classList.remove('name-glitch-active'), 300);
     });
+}
+
+function initTerminalTyping() {
+    const termText = document.querySelector('.terminal-text');
+    if (!termText) return;
+
+    const commands = [
+        'grep -r "v0x" --color=auto',
+        'python3 hook_engine.py --scan',
+        'nmap -sV target.local',
+        'ghidra-cli analyze binary.exe',
+        'git log --oneline -5',
+        'cargo build --release',
+        'frida -U -f com.target.app'
+    ];
+
+    let cmdIdx = 0;
+
+    function typeCommand() {
+        const cmd = commands[cmdIdx];
+        termText.textContent = '';
+
+        let i = 0;
+        const typeInterval = setInterval(() => {
+            termText.textContent = cmd.substring(0, i + 1);
+            i++;
+            if (i >= cmd.length) {
+                clearInterval(typeInterval);
+                setTimeout(() => {
+                    cmdIdx = (cmdIdx + 1) % commands.length;
+                    typeCommand();
+                }, 2500);
+            }
+        }, 55);
+    }
+
+    typeCommand();
+}
+
+function initCopyToClipboard() {
+    const copyDiscord = document.getElementById('copyDiscord');
+    if (copyDiscord) {
+        copyDiscord.addEventListener('click', () => {
+            const text = copyDiscord.getAttribute('data-copy');
+            navigator.clipboard.writeText(text).then(() => {
+                copyDiscord.classList.add('copied');
+                setTimeout(() => copyDiscord.classList.remove('copied'), 2000);
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                copyDiscord.classList.add('copied');
+                setTimeout(() => copyDiscord.classList.remove('copied'), 2000);
+            });
+        });
+    }
+}
+
+function initProjectProgress() {
+    const bars = document.querySelectorAll('.project-progress-bar');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const bar = entry.target;
+                const progress = bar.getAttribute('data-progress');
+                setTimeout(() => {
+                    bar.style.width = progress + '%';
+                }, 500);
+                observer.unobserve(bar);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    bars.forEach(bar => observer.observe(bar));
 }
