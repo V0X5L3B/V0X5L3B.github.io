@@ -2467,6 +2467,9 @@ body::before {
     top: 20px;
     align-self: start;
     order: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .col-mid {
@@ -2960,6 +2963,7 @@ body::before {
 /* ==================== SHOUTOUTS CARD ==================== */
 .shoutouts-card {
     text-align: left;
+    margin-top: 16px;
 }
 
 .shoutouts-list {
