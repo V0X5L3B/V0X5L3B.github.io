@@ -2696,7 +2696,8 @@ body::before {
 
 .contact-grid {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .contact-btn {
