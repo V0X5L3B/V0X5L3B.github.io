@@ -2029,7 +2029,7 @@ body::before {
 /* ==================== HOLOGRAPHIC AVATAR ==================== */
 .avatar-ring {
     background: linear-gradient(135deg,
-        #ff6b9d 0%,
+        #ff7849 0%,
         #c850c0 25%,
         #9b30ff 50%,
         #7b2fbe 75%,
@@ -2108,7 +2108,7 @@ body::before {
 
 /* ==================== ENHANCED SKILL BARS ==================== */
 .skill-fill {
-    background: linear-gradient(90deg, #7b2fbe, #c850c0, #ff6b9d);
+    background: linear-gradient(90deg, #7b2fbe, #c850c0, #ff7849);
     background-size: 200% 100%;
     animation: skill-gradient 4s ease-in-out infinite;
     box-shadow: 0 0 12px rgba(200, 80, 192, 0.25), 0 0 24px rgba(123, 47, 190, 0.1);
@@ -2628,7 +2628,7 @@ body::before {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #7b2fbe, #c850c0, #ff6b9d);
+    background: linear-gradient(90deg, #7b2fbe, #c850c0, #ff7849);
     border-radius: 3px;
     transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
