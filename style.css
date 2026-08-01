@@ -2333,12 +2333,12 @@ body::before {
     align-items: start;
 }
 
-.left-column-layout {
+.right-column-layout {
     position: sticky;
     top: 40px;
 }
 
-.right-column-layout {
+.left-column-layout {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -2363,10 +2363,10 @@ body::before {
     animation: card-appear 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-.entered .info-card:nth-child(1) { animation-delay: 0.4s; }
-.entered .info-card:nth-child(2) { animation-delay: 0.6s; }
-.entered .info-card:nth-child(3) { animation-delay: 0.8s; }
-.entered .info-card:nth-child(4) { animation-delay: 1.0s; }
+.entered .info-card:nth-child(1) { animation-delay: 1.4s; }
+.entered .info-card:nth-child(2) { animation-delay: 1.6s; }
+.entered .info-card:nth-child(3) { animation-delay: 1.8s; }
+.entered .info-card:nth-child(4) { animation-delay: 2.0s; }
 
 .info-card:hover {
     border-color: rgba(200, 200, 212, 0.12);
