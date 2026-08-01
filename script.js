@@ -1137,7 +1137,7 @@ function initMouseTrail() {
         'rgba(200, 80, 192, ',
         'rgba(255, 120, 73, ',
         'rgba(155, 48, 255, ',
-        'rgba(255, 107, 157, ',
+        'rgba(255, 120, 73, ',
     ];
 
     document.addEventListener('mousemove', (e) => {
