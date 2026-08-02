@@ -1887,17 +1887,20 @@ body::before {
 
 /* ==================== TOOLS CARD ==================== */
 .tools-card {
-    position: relative;
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     background: rgba(14, 14, 18, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(200, 200, 212, 0.06);
     border-radius: 20px;
     padding: 24px 16px;
-    width: 100%;
+    width: 200px;
     opacity: 0;
     visibility: hidden;
-    z-index: 2;
+    z-index: 100;
     box-shadow:
         0 0 0 1px rgba(200, 200, 212, 0.04),
         0 8px 32px rgba(0, 0, 0, 0.4),
