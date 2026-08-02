@@ -1134,10 +1134,10 @@ function initMouseTrail() {
     if (!container) return;
     let lastX = 0, lastY = 0;
     const colors = [
-        'rgba(200, 80, 192, ',
-        'rgba(255, 120, 73, ',
-        'rgba(155, 48, 255, ',
-        'rgba(255, 120, 73, ',
+        'rgba(168, 50, 50, ',
+        'rgba(153, 51, 51, ',
+        'rgba(138, 32, 32, ',
+        'rgba(168, 50, 50, ',
     ];
 
     document.addEventListener('mousemove', (e) => {
