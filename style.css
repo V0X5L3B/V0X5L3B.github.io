@@ -1885,6 +1885,108 @@ body::before {
     padding-top: 12px;
 }
 
+/* ==================== TOOLS CARD ==================== */
+.tools-card {
+    position: relative;
+    background: rgba(14, 14, 18, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(200, 200, 212, 0.06);
+    border-radius: 20px;
+    padding: 24px 28px;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 2;
+    box-shadow:
+        0 0 0 1px rgba(200, 200, 212, 0.04),
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 32px 80px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.5s ease;
+}
+
+.entered .tools-card {
+    animation: card-appear 1s cubic-bezier(0.23, 1, 0.32, 1) 0.8s forwards;
+    visibility: visible;
+}
+
+.tools-card .section-title {
+    margin-bottom: 16px;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.tool-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(10, 10, 14, 0.5);
+    border: 1px solid rgba(200, 200, 212, 0.04);
+    transition: border-color 0.3s, background 0.3s, transform 0.2s;
+    opacity: 0;
+    cursor: default;
+}
+
+.entered .tool-item {
+    animation: skill-item-fly 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.entered .tool-item:nth-child(1) { animation-delay: 1.0s; }
+.entered .tool-item:nth-child(2) { animation-delay: 1.1s; }
+.entered .tool-item:nth-child(3) { animation-delay: 1.2s; }
+.entered .tool-item:nth-child(4) { animation-delay: 1.3s; }
+.entered .tool-item:nth-child(5) { animation-delay: 1.4s; }
+.entered .tool-item:nth-child(6) { animation-delay: 1.5s; }
+.entered .tool-item:nth-child(7) { animation-delay: 1.6s; }
+.entered .tool-item:nth-child(8) { animation-delay: 1.7s; }
+
+.tool-item:hover {
+    border-color: rgba(200, 200, 212, 0.12);
+    background: rgba(15, 15, 20, 0.6);
+    transform: translateY(-1px);
+}
+
+.tool-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(200, 200, 212, 0.04);
+    border-radius: 8px;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.tool-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.tool-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: 0.3px;
+}
+
+.tool-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media (max-width: 900px) {
     .skills-card {
         position: relative;
