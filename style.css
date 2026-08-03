@@ -1905,8 +1905,10 @@ body::before {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(200, 200, 212, 0.06);
     border-radius: 16px;
-    padding: 16px 12px;
+    padding: 14px 10px;
     width: 180px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
     opacity: 0;
     visibility: hidden;
     z-index: 100;
@@ -1923,13 +1925,14 @@ body::before {
 }
 
 .tools-card .section-title {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
+    font-size: 11px;
 }
 
 .tools-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 4px;
+    gap: 3px;
     width: 100%;
 }
 
@@ -1937,7 +1940,7 @@ body::before {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 10px;
+    padding: 5px 8px;
     border-radius: 8px;
     background: rgba(10, 10, 14, 0.5);
     border: 1px solid rgba(200, 200, 212, 0.04);
@@ -1966,8 +1969,8 @@ body::before {
 }
 
 .tool-icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
