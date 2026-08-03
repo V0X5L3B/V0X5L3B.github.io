@@ -1938,8 +1938,9 @@ body::before {
 .tool-item {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 7px;
-    padding: 4px 7px;
+    padding: 5px 8px;
     border-radius: 7px;
     background: rgba(10, 10, 14, 0.5);
     border: 1px solid rgba(200, 200, 212, 0.04);
@@ -1977,13 +1978,20 @@ body::before {
     border-radius: 5px;
     color: var(--accent);
     flex-shrink: 0;
+    overflow: visible;
+}
+
+.tool-icon svg {
+    width: 14px;
+    height: 14px;
 }
 
 .tool-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0;
     min-width: 0;
+    justify-content: center;
 }
 
 .tool-name {
