@@ -1933,6 +1933,7 @@ body::before {
     grid-template-columns: 1fr;
     gap: 3px;
     width: 100%;
+    justify-items: center;
 }
 
 .tool-item {
@@ -1948,6 +1949,7 @@ body::before {
     opacity: 0;
     cursor: default;
     overflow: visible;
+    width: fit-content;
 }
 
 .entered .tool-item {
