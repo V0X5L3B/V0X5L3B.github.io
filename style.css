@@ -2573,6 +2573,7 @@ audio { display: none; }
 .layout-3col {
     display: grid;
     grid-template-columns: 480px 1fr 320px;
+    grid-template-rows: auto;
     gap: 16px;
     max-width: 1600px;
     margin: 0 auto 0 auto;
@@ -2582,6 +2583,7 @@ audio { display: none; }
     align-content: start;
     place-content: start;
     height: fit-content;
+    align-self: start;
 }
 
 .col-profile {
