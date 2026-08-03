@@ -2566,7 +2566,6 @@ body::before {
     margin: 0 auto 0 auto;
     margin-left: auto;
     padding: 20px 3vw 20px 3vw;
-    height: 100vh;
     align-items: start;
     overflow: hidden;
 }
