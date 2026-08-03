@@ -30,9 +30,8 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    margin: 0;
+    padding: 0;
 }
 
 .scanline {
@@ -109,6 +108,8 @@ body::before {
     pointer-events: none;
     z-index: 0;
 }
+
+audio { display: none; }
 
 .container {
     display: block;
