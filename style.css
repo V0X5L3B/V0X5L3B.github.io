@@ -101,7 +101,6 @@ body::before {
 
 .container {
     display: block;
-    min-height: 100vh;
     position: relative;
     z-index: 2;
 }
