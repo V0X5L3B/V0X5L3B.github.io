@@ -1905,7 +1905,7 @@ body::before {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(200, 200, 212, 0.06);
     border-radius: 16px;
-    padding: 14px 12px;
+    padding: 14px 14px 14px 16px;
     width: 180px;
     overflow: visible !important;
     opacity: 0;
@@ -1947,6 +1947,7 @@ body::before {
     transition: border-color 0.3s, background 0.3s, transform 0.2s;
     opacity: 0;
     cursor: default;
+    overflow: visible;
 }
 
 .entered .tool-item {
