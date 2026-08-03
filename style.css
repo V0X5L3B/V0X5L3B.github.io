@@ -2566,7 +2566,9 @@ body::before {
     margin-left: auto;
     padding: 20px 3vw 20px 3vw;
     align-items: start;
-    overflow: hidden;
+    align-content: start;
+    place-content: start;
+    height: fit-content;
 }
 
 .col-profile {
