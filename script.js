@@ -596,7 +596,7 @@ function initTextScramble() {
         const tagObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    scramble(taglineEl, 'modder // developer', 800);
+                    scramble(taglineEl, 'developer // engineer', 800);
                     tagObserver.unobserve(entry.target);
                 }
             });
