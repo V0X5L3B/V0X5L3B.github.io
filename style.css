@@ -1489,7 +1489,7 @@ body::before {
     position: relative;
     text-shadow: 0 0 30px rgba(200, 200, 212, 0.2);
     opacity: 0;
-    animation: splash-title-reveal 2.2s cubic-bezier(0.23, 1, 0.32, 1) 2.8s both;
+    animation: splash-title-reveal 2.2s cubic-bezier(0.23, 1, 0.32, 1) 0.4s both;
 }
 
 @keyframes splash-title-reveal {
@@ -1559,7 +1559,7 @@ body::before {
     margin-bottom: 40px;
     position: relative;
     opacity: 0;
-    animation: splash-subtitle-in 2s ease-out 3.2s both;
+    animation: splash-subtitle-in 2s ease-out 0.8s both;
 }
 
 @keyframes splash-subtitle-in {
