@@ -1559,7 +1559,7 @@ body::before {
     margin-bottom: 40px;
     position: relative;
     opacity: 0;
-    animation: splash-subtitle-in 2s ease-out 0.8s both;
+    animation: splash-subtitle-in 3s ease-out 6s both;
 }
 
 @keyframes splash-subtitle-in {
@@ -1598,7 +1598,7 @@ body::before {
     color: var(--accent);
     letter-spacing: 3px;
     opacity: 0;
-    animation: status-in 2s ease-out 3.6s both;
+    animation: status-in 2s ease-out 6.5s both;
 }
 
 @keyframes status-in {
