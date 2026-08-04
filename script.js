@@ -578,7 +578,7 @@ function initTextScramble() {
     }
 
     if (splashName) {
-        setTimeout(() => scramble(splashName, 'V0X5L.3B', 2000), 2800);
+        setTimeout(() => scramble(splashName, 'V0X5L.3B', 2000), 400);
     }
 
     const nameObserver = new IntersectionObserver((entries) => {
@@ -855,44 +855,38 @@ function initFloatingCode() {
 
     const snippets = [
         'fn main() {',
-        'async fn exploit()',
+        'async fn handler()',
         'SELECT * FROM users',
-        'import frida',
-        'hook_function(0x7fff)',
-        'class Exploit:',
-        'ptr = ctypes.c_void_p',
-        'recv(sock, buf, len)',
-        'while True: inject()',
-        'git commit -m "hack"',
-        'chmod +x payload.sh',
-        'ssh root@target',
-        'nmap -sV -p-',
-        'msfconsole -q',
-        'payload.encode("hex")',
+        'import React from "react"',
+        'useEffect(() => {})',
+        'class Service:',
+        'axios.get("/api/v1/users")',
+        'Promise.all([...])',
+        'while (running) process()',
+        'git commit -m "feat: add module"',
+        'chmod +x deploy.sh',
+        'ssh deploy@server',
+        'npm run build',
+        'docker compose up',
+        'export default function()',
         'struct.unpack("<I")',
-        'mmap(PROT_READ|PROT_WRITE)',
-        'ioctl(fd, request, arg)',
-        'interceptTraffic()',
-        'bypass(DEP, ASLR)',
+        'read(fd, buffer, 4096)',
+        'write(1, data, len)',
         'const key = new Uint8Array',
-        'for (let i = 0; i < 256;)',
-        'process.memory.arread()',
-        'return shellcode[]',
-        'socket.connect((host,port))',
-        'decrypt(aes_key, data)',
-        'hashlib.sha256(salt+pw)',
+        'for (let i = 0; i < data.length)',
+        'return res.json()',
+        'socket.connect((host, port))',
+        'hashlib.sha256(salt + pw)',
         'import sys; sys.exit(0)',
         '#!/usr/bin/env python3',
-        'void* mmap(NULL, size, ...)',
+        'void* malloc(size_t size)',
         'dlopen("lib.so", RTLD_NOW)',
-        'ptrace(PTRACE_ATTACH, pid)',
         'read(fd, buffer, 4096)',
-        'write(1, "\x90", 1)',
-        'if (rc != SQLITE_OK)',
-        'curl -X POST /api/v2/',
-        'docker run -it --rm',
-        'kubectl apply -f pod.yaml',
-        'git push origin main --force',
+        'if (rc !== SQLITE_DONE)',
+        'curl -X GET /api/v1/status',
+        'docker build -t app .',
+        'kubectl apply -f deploy.yaml',
+        'git push origin main',
     ];
 
     function spawnSnippet() {
