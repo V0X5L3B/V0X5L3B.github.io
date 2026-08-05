@@ -1962,8 +1962,6 @@ body::before {
 .entered .tool-item:nth-child(4) { animation-delay: 1.3s; }
 .entered .tool-item:nth-child(5) { animation-delay: 1.4s; }
 .entered .tool-item:nth-child(6) { animation-delay: 1.5s; }
-.entered .tool-item:nth-child(7) { animation-delay: 1.6s; }
-.entered .tool-item:nth-child(8) { animation-delay: 1.7s; }
 
 .tool-item:hover {
     border-color: rgba(200, 200, 212, 0.12);
