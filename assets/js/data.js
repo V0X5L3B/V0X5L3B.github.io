@@ -12,7 +12,7 @@ export const PROFILE = {
   site: "https://v0x5l3b.is-a.dev/",
   headline: "I build things to find out how they work.",
   intro:
-    "Self-directed developer working in Python, Luau and the web. I take projects apart, rebuild them, break them again, and write down what the error was actually saying.",
+    "Self-directed developer working in Python and the web. I take projects apart, rebuild them, break them again, and write down what the error was actually saying.",
   status: "experiments in progress",
 };
 
@@ -47,100 +47,6 @@ export const SHOUTOUTS = [
  */
 export const PROJECTS = [
   {
-    id: "sleepless-simulator",
-    name: "Sleepless Simulator",
-    kicker: "Roblox · evolving",
-    summary:
-      "A Roblox simulation about sleeping and the strange places dreams go — sleep and wake interactions, dream mechanics, and astral-projection experiments.",
-    details: [
-      "Aims to work with both R6 and R15 characters.",
-      "Sleep and wake interactions, side-sleep poses, snoring, and the transitions between states.",
-      "Dream mechanics and astral-projection experiments, including character clones and how they move.",
-      "Still an evolving concept I keep iterating on — not a finished or published game.",
-    ],
-    status: "Evolving",
-    tags: ["Luau", "Roblox Studio", "R6 / R15", "Character systems"],
-    categories: ["roblox"],
-    accent: "crimson",
-    links: { github: null, live: null },
-    sketch: {
-      file: "SleepState.luau",
-      lang: "luau",
-      code: `-- sketch: sleep as a small state machine
-local transitions = {
-  awake    = { "lyingDown" },
-  lyingDown = { "asleep", "awake" },
-  asleep   = { "dreaming", "awake" },
-  dreaming = { "astral", "awake" },
-  astral   = { "dreaming", "awake" },
-}
-
-function canGo(from, to)
-  return table.find(transitions[from], to) ~= nil
-end`,
-    },
-  },
-  {
-    id: "agent-experiment",
-    name: "Experimental AI Agent",
-    kicker: "Python · experiment",
-    summary:
-      "A task-oriented agent that works inside a controlled environment through tools: it can look around, read and write files, run code and tests, and read its own errors.",
-    details: [
-      "Tools: list directories, create and read files, write files, create directories, run code, run tests, inspect errors.",
-      "Exploring training loops, checkpoints, exploration and task difficulty.",
-      "Learning reinforcement-learning ideas with Stable-Baselines3 and related tooling.",
-      "Future interest: agents that communicate with each other, and support for more programming languages. Neither exists yet.",
-      "This is experimental work — not a production coding agent.",
-    ],
-    status: "Experimental",
-    tags: ["Python", "Reinforcement learning", "Stable-Baselines3", "Tool use"],
-    categories: ["python", "ai"],
-    accent: "lime",
-    links: { github: null, live: null },
-    sketch: {
-      file: "loop.py",
-      lang: "python",
-      code: `# sketch: the loop I keep rebuilding
-while not task.done:
-    obs = env.observe()
-    action = policy(obs)          # a tool call
-    result = env.step(action)     # list_dir, read_file, run_tests ...
-    if result.error:
-        notes.add(inspect(result.error))
-    checkpoints.maybe_save()`,
-    },
-  },
-  {
-    id: "roblox-diagnostics",
-    name: "Character Diagnostics & UI",
-    kicker: "Roblox · local tools",
-    summary:
-      "Local Roblox utilities for poking at characters: root-part diagnostics, floor alignment tests, size and movement controls, and reset-and-recovery tools in a dark custom UI.",
-    details: [
-      "Checks character and root-part state, and tests floor alignment and position.",
-      "Controls for character size and movement.",
-      "Reset and recovery tools for when a character ends up somewhere it shouldn't.",
-      "Dark, custom-built interfaces for all of it. These are testing utilities I use while developing, not published products.",
-    ],
-    status: "Local utilities",
-    tags: ["Luau", "UI", "Diagnostics", "Physics"],
-    categories: ["roblox"],
-    accent: "crimson",
-    links: { github: null, live: null },
-    sketch: {
-      file: "Diagnose.client.luau",
-      lang: "luau",
-      code: `-- sketch: what a root-part check looks like
-local root = character:FindFirstChild("HumanoidRootPart")
-if not root then
-  return report("no HumanoidRootPart", character)
-end
-local hit = workspace:Raycast(root.Position, Vector3.new(0, -50, 0))
-report("floor offset", hit and (root.Position.Y - hit.Position.Y))`,
-    },
-  },
-  {
     id: "personal-site",
     name: "This Website",
     kicker: "Web · ongoing",
@@ -174,9 +80,6 @@ export const PROJECTS = [
 
 export const FILTERS = [
   { id: "all", label: "All" },
-  { id: "roblox", label: "Roblox" },
-  { id: "python", label: "Python" },
-  { id: "ai", label: "AI" },
   { id: "web", label: "Web" },
 ];
 
@@ -194,20 +97,6 @@ export const LAB = [
     note: "Sorting agent tasks from trivial to annoying so training has somewhere to climb.",
     status: "in progress",
     tags: ["Python", "Agents"],
-    url: null,
-  },
-  {
-    name: "Astral clone movement",
-    note: "How a detached character clone should follow, drift or ignore its sleeping body.",
-    status: "in progress",
-    tags: ["Luau", "Roblox"],
-    url: null,
-  },
-  {
-    name: "Character reset tools",
-    note: "Getting a stuck or mis-sized character back to a sane state without rejoining.",
-    status: "usable",
-    tags: ["Luau", "UI"],
     url: null,
   },
   {
@@ -232,7 +121,6 @@ export const SKILLS = [
     group: "Languages",
     items: [
       { name: "Python", stance: "Building with" },
-      { name: "Lua / Luau", stance: "Building with" },
       { name: "HTML & CSS", stance: "Building with" },
       { name: "JavaScript", stance: "Experimenting with" },
     ],
@@ -244,14 +132,6 @@ export const SKILLS = [
       { name: "Stable-Baselines3", stance: "Experimenting with" },
       { name: "Agent tool environments", stance: "Building with" },
       { name: "Training loops & checkpoints", stance: "Experimenting with" },
-    ],
-  },
-  {
-    group: "Game dev",
-    items: [
-      { name: "Roblox Studio", stance: "Building with" },
-      { name: "Character systems", stance: "Building with" },
-      { name: "Gameplay scripting & UI", stance: "Building with" },
     ],
   },
   {
@@ -269,7 +149,6 @@ export const SKILLS = [
 export const DIRECTION = [
   "Agents that talk to each other",
   "Agent support for more programming languages",
-  "Sleepless Simulator: deeper dream and astral mechanics",
   "More JavaScript, more of the web, built the hard way",
 ];
 
