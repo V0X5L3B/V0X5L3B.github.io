@@ -100,6 +100,7 @@ export const HOLIDAYS = {
   },
 };
 
+const known = (id) => typeof id === "string" && Object.hasOwn(HOLIDAYS, id);
 const byMonth = (m) => Object.entries(HOLIDAYS).find(([, h]) => h.month === m)?.[0] ?? null;
 
 let state = { id: null, override: null, none: false };
@@ -228,7 +229,7 @@ function paintNote() {
   const id = state.none ? null : state.override ?? byMonth(new Date().getMonth());
   const on = store.get(OFF_KEY) !== "off";
   if (!note) return;
-  if (!id || !HOLIDAYS[id]) { note.hidden = true; if (greet) greet.hidden = true; return; }
+  if (!known(id)) { note.hidden = true; if (greet) greet.hidden = true; return; }
   note.hidden = false;
   note.replaceChildren();
   const label = document.createElement("span");
@@ -250,11 +251,11 @@ export function apply() {
   const params = new URLSearchParams(location.search);
   const q = params.get("holiday");
   if (q === "none") { state.override = null; state.none = true; }
-  else if (q && HOLIDAYS[q]) { state.override = q; state.none = false; }
+  else if (known(q)) { state.override = q; state.none = false; }
   const id = state.none ? null : state.override ?? byMonth(new Date().getMonth());
   state.id = id;
   paintNote();
-  if (id && HOLIDAYS[id] && store.get(OFF_KEY) !== "off") build(id);
+  if (known(id) && store.get(OFF_KEY) !== "off") build(id);
 }
 
 export function setEnabled(on) {
@@ -264,7 +265,7 @@ export function setEnabled(on) {
 
 /** Console helper: preview a holiday without saving anything. */
 export function preview(id) {
-  if (id !== null && !HOLIDAYS[id]) return false;
+  if (id !== null && !known(id)) return false;
   state.override = id; state.none = id === null;
   clear();
   paintNote();
@@ -277,6 +278,6 @@ export const current = () => state.id;
 export function initHoliday() {
   const params = new URLSearchParams(location.search);
   const q = params.get("holiday");
-  if (q && HOLIDAYS[q]) state.override = q;
+  if (known(q)) state.override = q;
   apply();
 }
