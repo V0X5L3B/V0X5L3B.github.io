@@ -1,6 +1,7 @@
 import {
   PROFILE, LINKS, SHOUTOUTS, PROJECTS, FILTERS, LAB, SKILLS, DIRECTION, TRACKS,
 } from "./data.js";
+import { initHoliday, preview as previewHoliday, setEnabled as setHolidayEnabled, HOLIDAYS, current as currentHoliday } from "./holiday.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -241,6 +242,7 @@ const COMMANDS = {
     print("  skills            how I use what I use");
     print("  links             public links");
     print("  theme [dark|light] switch or toggle theme");
+    print("  holiday [id|on|off] preview or toggle seasonal themes");
     print("  clear             clear this screen");
   },
   whoami() { print(`${PROFILE.handle} (${PROFILE.tag}) — experimental developer`); },
@@ -269,6 +271,14 @@ const COMMANDS = {
     const t = arg === "light" || arg === "dark" ? arg : currentTheme() === "light" ? "dark" : "light";
     setTheme(t); print(`theme: ${t}`);
   },
+  holiday(arg) {
+    const ids = Object.keys(HOLIDAYS);
+    if (!arg || arg === "list") return print(`current: ${currentHoliday() ?? "none"} · usage: holiday <${ids.join("|")}|none|on|off>`);
+    if (arg === "on" || arg === "off") { setHolidayEnabled(arg === "on"); return print(`seasonal theme: ${arg}`); }
+    if (arg === "none") { previewHoliday(null); return print("holiday decor cleared (preview only)"); }
+    if (previewHoliday(arg)) print(`previewing ${arg} (not saved)`);
+    else print(h("span", { class: "err", text: `unknown holiday "${arg}". try: holiday list` }));
+  },
   clear() { out.replaceChildren(); },
 };
 function run(raw) {
@@ -288,6 +298,8 @@ input.addEventListener("keydown", (e) => {
 });
 $$(".console__chips .chip").forEach((c) => c.addEventListener("click", () => run(c.dataset.cmd)));
 print("v0x lab console — type `help` or tap a command below.");
+
+initHoliday();
 
 /* ---------------- ambient audio (autoplays; falls back to first interaction) ---------------- */
 (function player() {

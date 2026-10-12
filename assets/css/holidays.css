@@ -1,0 +1,151 @@
+/* Seasonal themes. Activated by JS via <html data-holiday="...">. See assets/js/holiday.js. */
+
+/* ---------- palettes ---------- */
+/* Halloween */
+:root[data-holiday="halloween"][data-theme="dark"] {
+  --crimson: #c4540a; --crimson-t: #ff8a2b; --crimson-bg: rgba(255,138,43,.14); --code-k: #ff8a2b;
+  --bg: #0d0a10; --bg-2: #120e16; --surface: #16111b; --surface-2: #1d1724; --line: #2a2133; --line-2: #3b2f48;
+  --fx1: #7b5a99; --fx2: #9a74bd; --fx3: #5e4378;
+}
+:root[data-holiday="halloween"][data-theme="light"] {
+  --crimson: #b34700; --crimson-t: #b34700; --crimson-bg: rgba(179,71,0,.1); --code-k: #b34700;
+  --fx1: #5a3d73; --fx2: #7a5599; --fx3: #3f2a52;
+}
+/* Thanksgiving season */
+:root[data-holiday="november"][data-theme="dark"] {
+  --crimson: #a8561a; --crimson-t: #e8a04a; --crimson-bg: rgba(232,160,74,.13); --code-k: #e8a04a;
+  --fx1: #d9822b; --fx2: #b5541c; --fx3: #e0b341;
+}
+:root[data-holiday="november"][data-theme="light"] {
+  --crimson: #8a4a12; --crimson-t: #8a4a12; --crimson-bg: rgba(138,74,18,.1); --code-k: #8a4a12;
+  --fx1: #b8651a; --fx2: #8f3f12; --fx3: #b08a1e;
+}
+/* Winter holidays */
+:root[data-holiday="december"][data-theme="dark"] {
+  --crimson: #1f7a4a; --crimson-t: #6fd69a; --crimson-bg: rgba(111,214,154,.13); --code-k: #6fd69a;
+  --fx1: #ffffff; --fx2: #dfe9f5; --fx3: #bcd0ea;
+}
+:root[data-holiday="december"][data-theme="light"] {
+  --crimson: #17603a; --crimson-t: #17603a; --crimson-bg: rgba(23,96,58,.1); --code-k: #17603a;
+  --fx1: #9fb8d6; --fx2: #7f9fc4; --fx3: #b7c9de;
+}
+/* New Year */
+:root[data-holiday="january"][data-theme="dark"] {
+  --crimson: #946b06; --crimson-t: #f0c24b; --crimson-bg: rgba(240,194,75,.13); --code-k: #f0c24b;
+  --fx1: #f0c24b; --fx2: #ff7aa2; --fx3: #7aa2ff;
+}
+:root[data-holiday="january"][data-theme="light"] {
+  --crimson: #7a5604; --crimson-t: #7a5604; --crimson-bg: rgba(122,86,4,.1); --code-k: #7a5604;
+  --fx1: #b58a0c; --fx2: #c2335f; --fx3: #244fa8;
+}
+/* Valentine's */
+:root[data-holiday="february"][data-theme="dark"] {
+  --crimson: #c2335f; --crimson-t: #ff7aa2; --crimson-bg: rgba(255,122,162,.13); --code-k: #ff7aa2;
+  --fx1: #ff7aa2; --fx2: #ff4d7d; --fx3: #ffb3c7;
+}
+:root[data-holiday="february"][data-theme="light"] {
+  --crimson: #a3214a; --crimson-t: #a3214a; --crimson-bg: rgba(163,33,74,.1); --code-k: #a3214a;
+  --fx1: #c2335f; --fx2: #e0527c; --fx3: #e88aa6;
+}
+/* St. Patrick's */
+:root[data-holiday="march"][data-theme="dark"] {
+  --crimson: #23774a; --crimson-t: #6fdc8c; --crimson-bg: rgba(111,220,140,.13); --code-k: #6fdc8c;
+  --fx1: #6fdc8c; --fx2: #3fb36a; --fx3: #a6e8b8;
+}
+:root[data-holiday="march"][data-theme="light"] {
+  --crimson: #1d6b3e; --crimson-t: #1d6b3e; --crimson-bg: rgba(29,107,62,.1); --code-k: #1d6b3e;
+  --fx1: #2e8b57; --fx2: #1d6b3e; --fx3: #4fa573;
+}
+/* Independence Day */
+:root[data-holiday="july"][data-theme="dark"] {
+  --crimson: #2f5fc4; --crimson-t: #7aa2ff; --crimson-bg: rgba(122,162,255,.13); --code-k: #7aa2ff;
+  --fx1: #ff5a5f; --fx2: #ffffff; --fx3: #7aa2ff;
+}
+:root[data-holiday="july"][data-theme="light"] {
+  --crimson: #244fa8; --crimson-t: #244fa8; --crimson-bg: rgba(36,79,168,.1); --code-k: #244fa8;
+  --fx1: #c8312f; --fx2: #244fa8; --fx3: #8a96b3;
+}
+
+/* ---------- decor layers ---------- */
+.decor { position: fixed; inset: 0; z-index: 40; overflow: hidden; pointer-events: none; }
+.fx { position: absolute; width: var(--s); height: var(--s); color: var(--c); opacity: 0; will-change: transform, opacity; }
+.fx svg { display: block; width: 100%; height: 100%; }
+.fx--fall { top: 0; left: var(--x); animation: fx-fall var(--t) linear var(--d) infinite; }
+.fx--rise { bottom: 0; left: var(--x); animation: fx-rise var(--t) linear var(--d) infinite; }
+.fx--drift { top: var(--y); left: 0; width: calc(var(--s) * 1.4); animation: fx-drift var(--t) linear var(--d) infinite; }
+.fx--drift svg { animation: fx-flap .45s ease-in-out infinite alternate; transform-origin: 50% 40%; }
+@keyframes fx-fall {
+  0%   { transform: translate3d(0, -12vh, 0) rotate(0); opacity: 0; }
+  8%   { opacity: var(--o); }
+  92%  { opacity: var(--o); }
+  100% { transform: translate3d(var(--sw), 108vh, 0) rotate(var(--r)); opacity: 0; }
+}
+@keyframes fx-rise {
+  0%   { transform: translate3d(0, 12vh, 0) rotate(0); opacity: 0; }
+  10%  { opacity: var(--o); }
+  85%  { opacity: var(--o); }
+  100% { transform: translate3d(var(--sw), -108vh, 0) rotate(calc(var(--r) / 4)); opacity: 0; }
+}
+@keyframes fx-drift {
+  0%   { transform: translate3d(-12vw, 0, 0); opacity: 0; }
+  6%   { opacity: var(--o); }
+  50%  { transform: translate3d(55vw, -7vh, 0); }
+  94%  { opacity: var(--o); }
+  100% { transform: translate3d(112vw, 4vh, 0); opacity: 0; }
+}
+@keyframes fx-flap { from { transform: scaleY(1); } to { transform: scaleY(.55); } }
+
+/* decorative row above the footer */
+.decor-row { display: flex; justify-content: center; align-items: flex-end; gap: clamp(10px, 3vw, 34px); padding: 0 var(--gut); margin-top: 8px; overflow: hidden; pointer-events: none; }
+.decor-row span { display: block; height: var(--h); flex: 0 1 auto; color: var(--crimson-t); }
+.decor-row svg { height: 100%; width: auto; display: block; }
+:root[data-holiday="february"] .decor-row span, :root[data-holiday="march"] .decor-row span, :root[data-holiday="july"] .decor-row span { --h: 34px !important; }
+:root[data-holiday="february"] .decor-row svg { color: var(--fx1); }
+:root[data-holiday="february"] .decor-row path { fill: var(--fx1); }
+:root[data-holiday="march"] .decor-row svg { --c: var(--fx2); }
+:root[data-holiday="july"] .decor-row svg:nth-of-type(n) { --c: var(--fx1); }
+:root[data-holiday="july"] .decor-row span:nth-child(2n) svg { --c: var(--fx3); }
+:root[data-holiday="halloween"] .decor-row, :root[data-holiday="november"] .decor-row, :root[data-holiday="december"] .decor-row { margin-top: 24px; }
+:root[data-holiday="november"] .decor-row svg { --c: var(--fx1); }
+:root[data-holiday="november"] .decor-row span:nth-child(3n) svg { --c: var(--fx2); }
+:root[data-holiday="december"] .decor-row svg path[d^="M24 0l"],:root[data-holiday="december"] .decor-row svg { --c: #ffd166; }
+
+/* cobwebs */
+.hero { position: relative; }
+.corner { position: absolute; top: 0; width: clamp(90px, 14vw, 170px); color: var(--fx1); opacity: .55; pointer-events: none; }
+.corner svg { display: block; width: 100%; height: auto; }
+.corner--l { left: 0; }
+.corner--r { right: 0; transform: scaleX(-1); }
+
+/* bobbing ghost */
+.decor-float { position: fixed; right: clamp(8px, 2vw, 28px); bottom: 18px; width: 44px; z-index: 40; pointer-events: none; animation: bob 3.6s ease-in-out infinite; opacity: .92; }
+.decor-float svg { display: block; width: 100%; height: auto; }
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
+
+/* string lights */
+.bar { position: sticky; }
+.lights { position: absolute; left: 0; right: 0; top: 100%; display: flex; justify-content: space-between; padding: 0 6px; pointer-events: none; height: 26px; }
+.lights::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--line-2); }
+.lights i { position: relative; display: block; width: 8px; height: 12px; margin-top: 4px; border-radius: 50% 50% 55% 55%; background: var(--b, #ff4d5e); box-shadow: 0 0 8px 1px var(--b, #ff4d5e); animation: twinkle 2.4s ease-in-out infinite; }
+.lights i::before { content: ""; position: absolute; left: 50%; top: -5px; width: 1px; height: 5px; background: var(--line-2); }
+.lights i:nth-child(4n+1) { --b: #ff4d5e; }
+.lights i:nth-child(4n+2) { --b: #ffd166; animation-delay: -.6s; }
+.lights i:nth-child(4n+3) { --b: #5fd08a; animation-delay: -1.2s; }
+.lights i:nth-child(4n)   { --b: #5aa9ff; animation-delay: -1.8s; }
+.lights i:nth-child(odd) { margin-top: 7px; }
+@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+
+/* greeting + footer note */
+.greet { color: var(--crimson-t); }
+.greet[hidden], #holidayNote[hidden] { display: none; }
+#holidayNote { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+
+@media (max-width: 760px) { .lights i:nth-child(3n) { visibility: hidden; } .decor-float { width: 34px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx, .decor-float, .lights i, .fx--drift svg { animation: none !important; }
+  .fx { display: none; }
+}
+.greet:not([hidden])::before { content: "/"; color: var(--line-2); margin-right: 8px; }
+.eyebrow .greet { text-transform: none; }
+.fx--drift { --o: .6; }
