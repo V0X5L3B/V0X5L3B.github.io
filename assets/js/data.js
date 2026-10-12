@@ -22,7 +22,7 @@ export const LINKS = {
   discord: {
     label: "Discord",
     handle: "v0x5l.3b",
-    url: "https://discord.com/users/REMOVED_DISCORD_ID",
+    url: null, // deliberately no discord.com/users/<numeric-id> link: the ID is a permanent account identifier
     copy: "v0x5l.3b",
   },
   email: null, // e.g. { label: "Email", handle: "you@example.com", url: "mailto:you@example.com", copy: "you@example.com" }
