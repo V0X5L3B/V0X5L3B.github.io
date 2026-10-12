@@ -1,468 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V0X5L.3B</title>
-    <link rel="stylesheet" href="style.css?v=2">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V0X5L3B — experimental developer</title>
+  <meta name="description" content="V0X5L3B (@V0X5L3B): a self-directed developer experimenting with Python AI agents, Roblox systems in Luau, and hand-built web interfaces.">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="canonical" href="https://v0x5l3b.is-a.dev/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="V0X5L3B">
+  <meta property="og:title" content="V0X5L3B — experimental developer">
+  <meta property="og:description" content="Python agents, Roblox systems, hand-built web. A personal lab and project archive.">
+  <meta property="og:url" content="https://v0x5l3b.is-a.dev/">
+  <meta property="og:image" content="https://v0x5l3b.is-a.dev/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="V0X5L3B — experimental developer">
+  <meta name="twitter:description" content="Python agents, Roblox systems, hand-built web. A personal lab and project archive.">
+  <meta name="twitter:image" content="https://v0x5l3b.is-a.dev/assets/img/og.png">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <script>
+    /* Set theme + js flag before first paint to avoid a flash. */
+    (function () {
+      var d = document.documentElement;
+      d.classList.add("js");
+      try {
+        var t = localStorage.getItem("v0x-theme");
+        if (t === "light" || t === "dark") d.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-    <div class="scanline"></div>
-    <div class="noise"></div>
-    <div class="vignette-overlay"></div>
-    <div class="main-bg-grid" id="mainGrid"></div>
-    <div class="bg-gradient" id="bgGradient"></div>
+  <a class="skip" href="#main">Skip to content</a>
 
-    <audio id="bgMusic" loop>
-        <source id="audioSource" src="audio/track2.mp3" type="audio/mpeg">
-    </audio>
+  <header class="bar" id="top">
+    <div class="wrap bar__in">
+      <a class="mark" href="#top" aria-label="V0X5L3B — back to top">
+        <span class="mark__l">V</span><span class="mark__d">0</span><span class="mark__l">X</span><span class="mark__d">5</span><span class="mark__l">L</span><span class="mark__d">3</span><span class="mark__l">B</span>
+      </a>
 
-    <div id="splashScreen" class="splash-screen">
-        <div class="splash-grid-bg"></div>
-        <canvas id="splashCanvas" class="splash-canvas"></canvas>
-        <div class="boot-scanline"></div>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#lab">Lab</a>
+        <a href="#contact">Contact</a>
+      </nav>
 
-        <div class="floating-code" id="floatingCode"></div>
-
-        <div class="splash-center" id="splashCenter">
-            <div class="glow-orb"></div>
-            <div class="hex-ring" id="hexRing">
-                <div class="hex-ring-segment"></div>
-                <div class="hex-ring-segment"></div>
-                <div class="hex-ring-segment"></div>
-                <div class="hex-ring-segment"></div>
-                <div class="hex-ring-segment"></div>
-            </div>
-            <div class="splash-title-wrapper">
-                <h1 class="splash-title" data-text="V0X5L.3B">V0X5L.3B</h1>
-                <div class="title-line-left"></div>
-                <div class="title-line-right"></div>
-            </div>
-            <p class="splash-subtitle" data-text="// click anywhere to enter //">// click anywhere to enter //</p>
-            <div class="splash-status">
-                <span class="status-blink"></span>
-                <span class="status-text">SYSTEM ONLINE</span>
-            </div>
-        </div>
-
-        <div class="corner-bracket top-left"></div>
-        <div class="corner-bracket top-right"></div>
-        <div class="corner-bracket bottom-left"></div>
-        <div class="corner-bracket bottom-right"></div>
-    </div>
-
-    <div class="audio-controls" id="audioControls">
-        <button class="audio-btn" id="playPauseBtn" title="Play/Pause">
-            <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-                <path d="M8 5v14l11-7z"/>
-            </svg>
-            <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="display:none;">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-            </svg>
+      <div class="bar__tools">
+        <button class="icon-btn" id="themeBtn" type="button" aria-pressed="false" aria-label="Switch to light theme" title="Toggle theme">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.75a8.25 8.25 0 0 1 0 16.5z" fill="currentColor"/></svg>
         </button>
-        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.01" value="0.3">
-        <span class="volume-label" id="volumeLabel">30%</span>
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path class="m-top" d="M4 8h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path class="m-bot" d="M4 16h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
     </div>
+  </header>
 
-    <canvas id="particleCanvas" class="particle-canvas"></canvas>
-    <canvas id="hexGridCanvas" class="hex-grid-canvas"></canvas>
-    <div id="mouseTrail" class="mouse-trail-container"></div>
-    <div class="floating-shapes" id="floatingShapes"></div>
-    <div class="light-beams"></div>
-
-    <div class="info-card tools-card">
-        <div class="card-mouse-glow"></div>
-        <h2 class="section-title">
-            <span class="bracket">[</span> Tools <span class="bracket">]</span>
-        </h2>
-        <div class="tools-grid">
-            <div class="tool-item">
-                <div class="tool-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.68H3.17l-.21-.03-.27-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.53.12.46.19.3.27.15.32.05.34-.05.34-.15.32-.3.27-.46.19-.53.12-.28.06-.31.02H18.56v-.84h.15l.02-.2.02-.22-.02-.21-.05-.2-.08-.19-.12-.17-.17-.15-.21-.12-.26-.1-.3-.06zm-1.5 2.78l-.2.09-.35.2-.27.27-.18.33-.08.37.08.37.18.33.27.27.35.2.2.09.24.04h1.9v-.84h-1.15l-.2-.01-.18-.05-.16-.09-.13-.14-.1-.18-.06-.22-.02-.26.02-.26.06-.22.1-.18.13-.14.16-.09.18-.05.2-.01h.4v-.84h-.4z"/></svg>
-                </div>
-                <div class="tool-info">
-                    <span class="tool-name">Python</span>
-                    <span class="tool-desc">Automation & scripting</span>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M11.998 24c-.321 0-.636-.084-.916-.243C5.644 20.543 3 17.607 3 14.017V5.983c0-3.59 2.644-6.526 8.082-7.74.28-.063.57-.097.86-.097.274 0 .54.038.8.115C14.397-.896 17.773.71 19.434 2.95c.067.091.13.186.193.28l1.787 2.877c.154.248.097.53-.135.698-.095.07-.204.103-.317.103zm-8.32-3.05c.276.055.56.082.843.082.865 0 1.69-.283 2.374-.797.422-.316.753-.735.976-1.22.224-.485.335-1.027.335-1.61V8.19c-.002-.18-.018-.36-.048-.538-.03-.178-.076-.352-.137-.522-.444 1.14-1.22 2.1-2.25 2.78-.31.205-.65.37-1.01.488z"/></svg>
-                </div>
-                <div class="tool-info">
-                    <span class="tool-name">Node.js</span>
-                    <span class="tool-desc">TypeScript tooling</span>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M23.546 10.93L13.067 1.415c-.644-.6-1.686-.6-2.33 0L1.49 10.93c-.647.602-.647 1.58 0 2.182l9.479 8.52c.322.294.74.441 1.165.441.426 0 .844-.147 1.165-.44l9.479-8.52c.647-.6.647-1.582.002-2.184zM12 15.828c-2.11 0-3.822-1.712-3.822-3.828S9.89 8.172 12 8.172 15.822 9.884 15.822 12 14.11 15.828 12 15.828z"/></svg>
-                </div>
-                <div class="tool-info">
-                    <span class="tool-name">VS Code</span>
-                    <span class="tool-desc">Primary editor</span>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M21.178 1.701l.001.001C19.38.14 17.322.025 15.5.025c-2.392 0-4.69.472-6.432 1.293a10.013 10.013 0 0 0-1.724 1.076L6.5 3.872a7.46 7.46 0 0 0-.977.964L4.02 6.943A10.414 10.414 0 0 0 3.1 10.1c-.206 1.183-.147 2.415.174 3.59.04.15.087.298.139.445l-1.49 1.49a.75.75 0 1 0 1.06 1.06l1.49-1.49c.147.052.295.099.445.139 1.175.321 2.407.38 3.59.174a10.414 10.414 0 0 0 3.157-.92l2.078-1.903c.338-.31.648-.654.925-1.023.82-1.742 1.293-4.04 1.293-6.432 0-1.822-.115-3.88-1.676-5.678l.001-.001zM7.25 13a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg>
-                </div>
-                <div class="tool-info">
-                    <span class="tool-name">Wireshark</span>
-                    <span class="tool-desc">Network analysis</span>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                </div>
-                <div class="tool-info">
-                    <span class="tool-name">Ghidra</span>
-                    <span class="tool-desc">Binary analysis</span>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 6.84 9.49c.5.09.69-.21.69-.48v-1.7C6.73 19.91 6.14 17.97 6.14 17.97c-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.8c.85.004 1.71.115 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 22 12 10 10 0 0 0 12 2z"/></svg>
-                </div>
-                <div class="tool-info">
-                    <span class="tool-name">Git</span>
-                    <span class="tool-desc">Version control</span>
-                </div>
-            </div>
-            <div class="tool-item">
-                <div class="tool-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.36-.76-.54-1.09-.01-.02-.04-.03-.07-.03-1.5.26-2.93.71-4.27 1.33-.01 0-.02.01-.03.02-2.72 4.07-3.47 8.03-3.1 11.95 0 .02.01.04.03.05 1.8 1.32 3.53 2.12 5.24 2.65.03.01.06 0 .07-.02.4-.55.76-1.13 1.07-1.74.02-.04 0-.08-.04-.09-.57-.22-1.11-.48-1.64-.78-.04-.02-.04-.08-.01-.11.11-.08.22-.17.33-.25.02-.02.05-.02.07-.01 3.44 1.57 7.15 1.57 10.55 0 .02-.01.05-.01.07.01.11.09.22.17.33.26.04.03.04.09-.01.11-.52.31-1.07.56-1.64.78-.04.01-.05.06-.04.09.32.61.68 1.19 1.07 1.74.03.01.06.02.09.01 1.72-.53 3.45-1.33 5.25-2.65.02-.01.03-.03.03-.05.44-4.53-.73-8.46-3.1-11.95-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.83 2.12-1.89 2.12z"/></svg>
-                </div>
-                <div class="tool-info">
-                    <span class="tool-name">Discord</span>
-                    <span class="tool-desc">Community</span>
-                </div>
-            </div>
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span> <span id="statusText">experiments in progress</span> <span class="sep">/</span> <span class="sig">@V0X5L3B</span></p>
+          <h1 id="hero-title" class="hero__title">
+            I build things to find out <em>how they work</em><span class="caret" aria-hidden="true"></span>
+          </h1>
+          <p class="hero__lede" id="heroLede">Self-directed developer working in Python, Luau and the web. I take projects apart, rebuild them, break them again, and write down what the error was actually saying.</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#projects">Explore projects <span aria-hidden="true">↓</span></a>
+            <a class="btn" id="heroGithub" href="https://github.com/V0X5L3B" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+          </div>
+          <ul class="hero__facts" aria-label="Focus areas">
+            <li><span>01</span> Python agents</li>
+            <li><span>02</span> Roblox / Luau</li>
+            <li><span>03</span> Hand-built web</li>
+          </ul>
         </div>
-    </div>
 
-    <div class="container">
-        <div class="layout-3col">
-            <div class="col-profile">
-                <div class="profile-card" id="profileCard">
-                    <div class="card-glow"></div>
-                    <div class="card-border-glow"></div>
-                    <div class="card-mouse-glow"></div>
-                    <div class="card-scanline-sweep"></div>
+        <figure class="panel hero__panel" aria-label="Illustrative code sketch">
+          <div class="panel__bar">
+            <span class="panel__file">loop.py</span>
+            <span class="panel__tag">sketch · illustrative</span>
+          </div>
+<pre class="code" tabindex="0"><code><span class="c"># the loop I keep rebuilding</span>
+<span class="k">while not</span> task.done:
+    obs    = env.<span class="f">observe</span>()
+    action = <span class="f">policy</span>(obs)        <span class="c"># a tool call</span>
+    result = env.<span class="f">step</span>(action)   <span class="c"># list_dir, read_file,</span>
+                                  <span class="c"># write_file, run_tests</span>
+    <span class="k">if</span> result.error:
+        notes.<span class="f">add</span>(<span class="f">inspect</span>(result.error))
+    checkpoints.<span class="f">maybe_save</span>()</code></pre>
+          <figcaption class="panel__foot">A sketch of the idea, not source code. <a href="#projects">See the agent experiment →</a></figcaption>
+        </figure>
+      </div>
+    </section>
 
-                    <div class="card-vertical">
-                        <div class="left-column" id="leftCol">
-                            <div class="left-column-bg">
-                                <img src="cat.gif" alt="" class="left-column-gif">
-                            </div>
-                            <div class="left-column-scanline"></div>
-                            <div class="left-column-grid"></div>
-                            <div class="left-column-vignette"></div>
-                            <div class="left-column-noise"></div>
-                            <canvas id="leftDotCanvas" class="left-dot-canvas"></canvas>
-                            <div class="profile-header">
-                                <div class="avatar-wrapper">
-                                    <div class="avatar-ring">
-                                        <img src="profile.png" alt="V0X5L.3B" class="avatar" id="avatar">
-                                        <div class="avatar-placeholder" id="avatarPlaceholder">
-                                            <span class="avatar-text">V0X5L</span>
-                                        </div>
-                                    </div>
-                                    <div class="status-dot online"></div>
-                                </div>
-                                <div class="header-info">
-                                    <h1 class="name" data-text="V0X5L.3B">V0X5L.3B</h1>
-                                    <p class="tagline">coder // developer</p>
-                                </div>
-                            </div>
-
-                            <div class="about-tags">
-                                <span class="about-tag">// Systems Programming</span>
-                                <span class="about-tag">// Reverse Engineering</span>
-                                <span class="about-tag">// Automation</span>
-                                <span class="about-tag">// Tool Development</span>
-                            </div>
-
-                            <div class="promo-banner">
-                                <div class="promo-border"></div>
-                                <p class="promo-text" data-text="DM me — I build things for people">DM me — I build things for people</p>
-                                <div class="promo-border"></div>
-                            </div>
-
-                            <div class="social-links">
-                                <a href="https://discord.com/users/REMOVED_DISCORD_ID" target="_blank" class="social-btn discord wide" title="Discord" id="discordLink">
-                                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157-2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157-2.418z"/></svg>
-                                    <span class="social-label">Discord</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="info-card shoutouts-card">
-                    <div class="card-mouse-glow"></div>
-                    <h2 class="section-title">
-                        <span class="bracket">[</span> Shoutouts <span class="bracket">]</span>
-                    </h2>
-                    <div class="shoutouts-list">
-                        <a href="https://clanker.pxsl.dev/" target="_blank" class="shoutout-item">
-                            <span class="shoutout-icon">&#x26A1;</span>
-                            <div class="shoutout-info">
-                                <span class="shoutout-name">Clanker</span>
-                                <span class="shoutout-desc">Entertainment Discord bot — economy, memes, games & more</span>
-                            </div>
-                            <span class="shoutout-arrow">&rarr;</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-mid">
-                <div class="info-card projects-card">
-                    <div class="card-mouse-glow"></div>
-                    <h2 class="section-title">
-                        <span class="bracket">[</span> Projects <span class="bracket">]</span>
-                    </h2>
-
-                    <div class="projects-grid">
-                        <div class="project-item">
-                            <div class="project-header">
-                                <span class="project-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"/></svg></span>
-                                <span class="project-name">V0X Engine</span>
-                                <span class="status-badge active">active</span>
-                            </div>
-                            <p class="project-desc">Runtime analysis framework — interception engine, memory scanner, multi-platform support</p>
-                            <div class="tech-tags">
-                                <span class="tech-tag">C++</span>
-                                <span class="tech-tag">Python</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 78%;"></div>
-                                <span class="progress-label">78%</span>
-                            </div>
-                        </div>
-
-                        <div class="project-item">
-                            <div class="project-header">
-                                <span class="project-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></span>
-                                <span class="project-name">NetHook</span>
-                                <span class="status-badge beta">beta</span>
-                            </div>
-                            <p class="project-desc">Network protocol analyzer — packet inspection and real-time traffic analysis for game protocols</p>
-                            <div class="tech-tags">
-                                <span class="tech-tag">Python</span>
-                                <span class="tech-tag">Scapy</span>
-                                <span class="tech-tag">JS</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 62%;"></div>
-                                <span class="progress-label">62%</span>
-                            </div>
-                        </div>
-
-                        <div class="project-item">
-                            <div class="project-header">
-                                <span class="project-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg></span>
-                                <span class="project-name">Client Toolkit</span>
-                                <span class="status-badge active">active</span>
-                            </div>
-                            <p class="project-desc">Client-side toolkit — runtime interface, Discord integration, audio module</p>
-                            <div class="tech-tags">
-                                <span class="tech-tag">TypeScript</span>
-                                <span class="tech-tag">Python</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 90%;"></div>
-                                <span class="progress-label">90%</span>
-                            </div>
-                        </div>
-
-                        <div class="project-item">
-                            <div class="project-header">
-                                <span class="project-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg></span>
-                                <span class="project-name">Obscura // Deobscura</span>
-                                <span class="status-badge active">active</span>
-                            </div>
-                            <p class="project-desc">Binary analysis suite — deobfuscation engines, multi-format support</p>
-                            <div class="tech-tags">
-                                <span class="tech-tag">Batch</span>
-                                <span class="tech-tag">Node.js</span>
-                                <span class="tech-tag">Python</span>
-                                <span class="tech-tag">C#</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 85%;"></div>
-                                <span class="progress-label">85%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-card activity-card">
-                    <div class="card-mouse-glow"></div>
-                    <h2 class="section-title">
-                        <span class="bracket">[</span> Activity <span class="bracket">]</span>
-                    </h2>
-
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <div class="activity-dot working"></div>
-                            <div class="activity-content">
-                                <span class="activity-label">currently</span>
-                                <span class="activity-text">working on V0X Engine v2.0</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-dot coding"></div>
-                            <div class="activity-content">
-                                <span class="activity-label">last commit</span>
-                                <span class="activity-text">engine: fix memory leak in scan routine</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-dot listening"></div>
-                            <div class="activity-content">
-                                <span class="activity-label">listening to</span>
-                                <span class="activity-text">synthwave / darksynth</span>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-dot status"></div>
-                            <div class="activity-content">
-                                <span class="activity-label">status</span>
-                                <span class="activity-text">available for commissions</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="terminal-widget">
-                        <div class="terminal-header">
-                            <div class="terminal-dot red"></div>
-                            <div class="terminal-dot yellow"></div>
-                            <div class="terminal-dot green"></div>
-                            <span class="terminal-title">~/v0x</span>
-                        </div>
-                        <div class="terminal-body">
-                            <div class="terminal-line">
-                                <span class="terminal-prompt">$</span>
-                                <span class="terminal-text">neofetch --off && echo "V0X5L.3B"</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-right">
-                <div class="info-card contact-card">
-                    <div class="card-mouse-glow"></div>
-                    <h2 class="section-title">
-                        <span class="bracket">[</span> Contact <span class="bracket">]</span>
-                    </h2>
-
-                    <div class="contact-grid">
-                        <button class="contact-btn" data-copy="v0x5l.3b" id="copyDiscord">
-                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157-2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157-2.418z"/></svg>
-                            <span class="contact-label">Discord</span>
-                            <span class="contact-value">v0x5l.3b</span>
-                            <span class="contact-hint">click to copy</span>
-                            <span class="contact-done">copied!</span>
-                        </button>
-                        <a href="https://github.com/V0X5L3B" target="_blank" class="contact-btn">
-                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                            <span class="contact-label">GitHub</span>
-                            <span class="contact-value">V0X5L3B</span>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="info-card skills-card" id="skillsCard">
-                    <div class="card-mouse-glow"></div>
-                    <h2 class="section-title">
-                        <span class="bracket">[</span> Skills <span class="bracket">]</span>
-                    </h2>
-
-                    <div class="skills-grid">
-                        <div class="skill-category">
-                            <h3 class="category-title">// Programming</h3>
-                            <div class="skill-item">
-                                <div class="skill-header">
-                                    <span class="skill-name">JavaScript</span>
-                                    <span class="skill-percent">89%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-fill" data-percent="89"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-header">
-                                    <span class="skill-name">TypeScript</span>
-                                    <span class="skill-percent">85%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-fill" data-percent="85"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-header">
-                                    <span class="skill-name">Python</span>
-                                    <span class="skill-percent">79%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-fill" data-percent="79"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-header">
-                                    <span class="skill-name">C#</span>
-                                    <span class="skill-percent">49%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-fill" data-percent="49"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="skill-category">
-                            <h3 class="category-title">// Security</h3>
-                            <div class="skill-item">
-                                <div class="skill-header">
-                                    <span class="skill-name">Reverse Engineering</span>
-                                    <span class="skill-percent">71%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-fill security" data-percent="71"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-header">
-                                    <span class="skill-name">Runtime Development</span>
-                                    <span class="skill-percent">85%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-fill security" data-percent="85"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="footer">
-                        <p class="footer-text">
-                            <span class="cursor">></span> built with caffeine and bad decisions
-                        </p>
-                        <p class="copyright">&copy; 2026 V0X5L.3B</p>
-                        <p class="views-counter" id="viewsCounter" title="unique visitors">
-                            <span class="views-icon"></span>
-                            <span class="views-count" id="viewsCount">—</span>
-                            <span class="views-label">views</span>
-                        </p>
-                    </div>
-                </div>
-
-            </div>
+    <!-- ABOUT -->
+    <section class="section" id="about" aria-labelledby="about-h">
+      <div class="wrap">
+        <p class="label"><span>01</span> about</p>
+        <div class="about">
+          <h2 id="about-h" class="h2">Curious first, polished later.</h2>
+          <div class="about__body">
+            <p>I learn by building: opening an existing project, changing one thing, and seeing what breaks. A lot of my best understanding comes from a stack trace I didn't expect.</p>
+            <p>Right now that means a Python agent that works through tasks using tools, Roblox systems about sleep and dreams, and a few dark, minimal interfaces I keep rebuilding until they feel right.</p>
+            <p>I'm still developing as an engineer, and I'd rather show an honest, unfinished experiment than a perfect-looking claim. Anything on this site that is early, rough or local-only is labelled that way.</p>
+          </div>
+          <aside class="about__aside" aria-label="Where I'm heading">
+            <h3 class="mini">Where I'd like to take things</h3>
+            <ul class="arrows" id="direction"></ul>
+          </aside>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <script src="script.js"></script>
+    <!-- PROJECTS -->
+    <section class="section" id="projects" aria-labelledby="projects-h">
+      <div class="wrap">
+        <p class="label"><span>02</span> projects</p>
+        <div class="section__head">
+          <h2 id="projects-h" class="h2">Things I'm building</h2>
+          <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
+        </div>
+        <p class="sr-only" id="filterStatus" role="status" aria-live="polite"></p>
+        <div class="projects" id="projectGrid"></div>
+        <noscript><p class="note">Projects are rendered with JavaScript. They're listed on <a href="https://github.com/V0X5L3B">GitHub</a>.</p></noscript>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="section" id="skills" aria-labelledby="skills-h">
+      <div class="wrap">
+        <p class="label"><span>03</span> skills &amp; tools</p>
+        <div class="section__head">
+          <h2 id="skills-h" class="h2">What I work with</h2>
+          <p class="section__note">Labelled by how I use them, not by a score.</p>
+        </div>
+        <div class="skills" id="skillGrid"></div>
+      </div>
+    </section>
+
+    <!-- LAB -->
+    <section class="section" id="lab" aria-labelledby="lab-h">
+      <div class="wrap">
+        <p class="label"><span>04</span> lab</p>
+        <div class="section__head">
+          <h2 id="lab-h" class="h2">Small experiments &amp; loose ends</h2>
+          <p class="section__note">Prototypes, half-ideas, things I'm poking at.</p>
+        </div>
+        <div class="lab" id="labGrid"></div>
+
+        <div class="panel console" id="console">
+          <div class="panel__bar">
+            <span class="panel__file">console</span>
+            <span class="panel__tag">a small fixed set of commands · runs in your browser only</span>
+          </div>
+          <div class="console__out" id="consoleOut" role="log" aria-live="polite" aria-label="Console output" tabindex="0"></div>
+          <form class="console__form" id="consoleForm" autocomplete="off">
+            <label for="consoleIn" class="console__prompt">v0x@lab:~$</label>
+            <input id="consoleIn" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" placeholder="type help">
+          </form>
+          <div class="console__chips" aria-label="Quick commands">
+            <button type="button" class="chip" data-cmd="help">help</button>
+            <button type="button" class="chip" data-cmd="projects">projects</button>
+            <button type="button" class="chip" data-cmd="links">links</button>
+            <button type="button" class="chip" data-cmd="theme">theme</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact" aria-labelledby="contact-h">
+      <div class="wrap">
+        <p class="label"><span>05</span> contact</p>
+        <div class="section__head">
+          <h2 id="contact-h" class="h2">Say hello</h2>
+          <p class="section__note">The best places to find me are listed below.</p>
+        </div>
+        <ul class="links" id="linkList"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__in">
+      <div class="foot__id">
+        <span class="mark mark--sm" aria-hidden="true"><span class="mark__l">V</span><span class="mark__d">0</span><span class="mark__l">X</span><span class="mark__d">5</span><span class="mark__l">L</span><span class="mark__d">3</span><span class="mark__l">B</span></span>
+        <span class="sig">@V0X5L3B</span>
+        <span class="muted">Hand-built, static, no trackers.</span>
+      </div>
+
+      <div class="player" id="player" hidden>
+        <span class="player__label" id="playerLabel">ambient · off</span>
+        <button class="chip" id="playBtn" type="button" aria-pressed="false">Play</button>
+        <button class="chip" id="nextBtn" type="button" aria-label="Next track">Next</button>
+        <label class="player__vol"><span class="sr-only">Volume</span>
+          <input id="vol" type="range" min="0" max="1" step="0.05" value="0.3">
+        </label>
+      </div>
+
+      <p class="foot__sh" id="shout"></p>
+    </div>
+  </footer>
+
+  <dialog class="dlg" id="dlg" aria-labelledby="dlgTitle">
+    <div class="dlg__in">
+      <button class="icon-btn dlg__x" id="dlgClose" type="button" aria-label="Close project details">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <div id="dlgBody"></div>
+    </div>
+  </dialog>
+
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
