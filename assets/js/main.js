@@ -279,6 +279,13 @@ const COMMANDS = {
     if (previewHoliday(arg)) print(`previewing ${arg} (not saved)`);
     else print(h("span", { class: "err", text: `unknown holiday "${arg}". try: holiday list` }));
   },
+  boo() {
+    if (currentHoliday() !== "halloween") return print("…nothing here. (try again in October, or `holiday halloween`)");
+    print("   .-.");
+    print("  (o o)  boo!");
+    print("  | O |");
+    print("  '~~~'");
+  },
   clear() { out.replaceChildren(); },
 };
 function run(raw) {
