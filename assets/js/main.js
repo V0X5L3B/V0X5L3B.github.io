@@ -206,7 +206,7 @@ function linkCard(l) {
     });
     actions.append(btn);
   }
-  actions.append(ext(l.url, "Open ↗", "link-btn"));
+  if (l.url) actions.append(ext(l.url, "Open ↗", "link-btn"));
   return h("li", {}, h("div", { class: "lk reveal" },
     h("span", { class: "lk__k", text: l.label }), h("span", { class: "lk__v", text: l.handle }), actions, status));
 }
@@ -265,7 +265,7 @@ const COMMANDS = {
     SKILLS.forEach((g) => print(`${g.group}: ${g.items.map((i) => `${i.name} (${i.stance.toLowerCase()})`).join(", ")}`));
   },
   links() {
-    Object.values(LINKS).filter(Boolean).forEach((l) => print(`${l.label.padEnd(8)} `, ext(l.url, l.handle)));
+    Object.values(LINKS).filter(Boolean).forEach((l) => print(`${l.label.padEnd(8)} `, l.url ? ext(l.url, l.handle) : l.handle));
   },
   theme(arg) {
     const t = arg === "light" || arg === "dark" ? arg : currentTheme() === "light" ? "dark" : "light";
