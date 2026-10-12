@@ -85,34 +85,8 @@ export const FILTERS = [
 
 /* Lab: small experiments, prototypes, unfinished ideas. Add entries freely. */
 export const LAB = [
-  {
-    name: "Stable-Baselines3 runs",
-    note: "Trying training configurations and watching how behaviour changes with experience.",
-    status: "experimenting",
-    tags: ["Python", "RL"],
-    url: null,
-  },
-  {
-    name: "Task difficulty ladder",
-    note: "Sorting agent tasks from trivial to annoying so training has somewhere to climb.",
-    status: "in progress",
-    tags: ["Python", "Agents"],
-    url: null,
-  },
-  {
-    name: "Rainmeter & Windhawk tweaks",
-    note: "Windows customization: skins, mods, and the odd system-config rabbit hole.",
-    status: "tinkering",
-    tags: ["Windows", "Customization"],
-    url: null,
-  },
-  {
-    name: "Browser identity sketches",
-    note: "Hand-drawn logo and dark-palette ideas that keep turning into CSS.",
-    status: "sketching",
-    tags: ["Design", "CSS"],
-    url: null,
-  },
+  // Add experiments here, e.g.
+  // { name: "...", note: "...", status: "in progress", tags: ["..."], url: null },
 ];
 
 /* Skills: labelled by stance, never by percentage. */

@@ -171,6 +171,9 @@ $("#skillGrid").append(...SKILLS.map((g) =>
       h("li", {}, h("span", { class: "skills__n", text: i.name }), h("span", { class: "skills__s", text: i.stance })))))));
 
 /* ---------------- lab ---------------- */
+if (!LAB.length) {
+  $("#labGrid").append(h("div", { class: "empty" }, h("p", { text: "Nothing in the lab right now. New experiments will show up here." })));
+}
 $("#labGrid").append(...LAB.map((e) =>
   h("article", { class: "exp reveal" },
     h("div", { class: "exp__row" }, h("h3", { text: e.name }), h("span", { class: "exp__st", text: e.status })),
