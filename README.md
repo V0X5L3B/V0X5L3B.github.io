@@ -33,6 +33,12 @@ Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · 
 - Floating particles are hidden when the visitor prefers reduced motion; static decor stays.
 - To add or move a holiday: edit `HOLIDAYS` in `holiday.js` and add a colour block in `holidays.css`.
 
+## Security notes
+
+- `index.html` ships a Content-Security-Policy `<meta>` (no third-party origins, no `connect-src`). The tiny inline theme script in `<head>` is allowed by its SHA-256 hash: **if you edit that inline script, recompute the hash** or the browser will block it (Pages can't set real headers, so `frame-ancestors`/clickjacking protection isn't possible here).
+- Don't put keys, tokens or webhooks in this repo — it's public. Don't add `discord.com/users/<id>` links (permanent account ID).
+- Add any new third-party host to the CSP deliberately, not by loosening it.
+
 ## Layout
 
 ```
