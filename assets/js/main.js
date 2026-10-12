@@ -286,12 +286,12 @@ input.addEventListener("keydown", (e) => {
 $$(".console__chips .chip").forEach((c) => c.addEventListener("click", () => run(c.dataset.cmd)));
 print("v0x lab console — type `help` or tap a command below.");
 
-/* ---------------- ambient audio (opt-in, never autoplays) ---------------- */
+/* ---------------- ambient audio (autoplays; falls back to first interaction) ---------------- */
 (function player() {
   if (!TRACKS.length) return;
   const wrap = $("#player");
   const audio = new Audio();
-  audio.preload = "none";
+  audio.preload = "auto";
   audio.loop = false;
   let idx = 0, ready = false;
   const label = $("#playerLabel");
@@ -322,6 +322,21 @@ print("v0x lab console — type `help` or tap a command below.");
   vol.addEventListener("input", () => { audio.volume = parseFloat(vol.value); store.set("v0x-vol", vol.value); });
   paint(false);
   wrap.hidden = false;
+
+  /* Autoplay: try immediately. Browsers usually block sound until the first
+     user gesture, so if that happens, start on the first click/tap/keypress. */
+  const start = async () => {
+    if (!audio.paused) return true;
+    if (!ready) load();
+    try { await audio.play(); paint(true); return true; } catch { return false; }
+  };
+  const onGesture = async (e) => {
+    if (e.target.closest && e.target.closest("#player")) return; // let the player's own controls decide
+    if (await start()) removeGestures();
+  };
+  const gestures = ["pointerdown", "keydown", "touchend"];
+  const removeGestures = () => gestures.forEach((g) => document.removeEventListener(g, onGesture, true));
+  start().then((ok) => { if (!ok) gestures.forEach((g) => document.addEventListener(g, onGesture, true)); });
 })();
 
 /* ---------------- scroll: active nav + reveal ---------------- */

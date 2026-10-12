@@ -20,7 +20,7 @@ Everything lives in **`assets/js/data.js`**: profile text, links, projects, lab 
 - Add a lab entry: append to `LAB`.
 - Add an email: set `LINKS.email` (see the commented example).
 - Code previews on project cards are *illustrative sketches*, labelled as such. Replace with real excerpts if you prefer.
-- Ambient music (`audio/`) is opt-in from the footer and never autoplays; list tracks in `TRACKS`.
+- Ambient music (`audio/`) tries to autoplay on load. Browsers block sound until the first click/tap/keypress, so it then starts on that first interaction. Pause/skip/volume are in the footer; list tracks in `TRACKS`.
 
 ## Layout
 
