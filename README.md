@@ -29,6 +29,7 @@ Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · 
 
 - Preview any theme: `?holiday=halloween` (ids: halloween, november, december, january, february, march, july) or `?holiday=none`.
 - Visitors can turn it off in the footer (remembered in their browser). The `holiday` console command previews too.
+- Halloween has the most detail (moon, spiders, graveyard row, witch, fog, glowing eyes, `boo` in the console).
 - Floating particles are hidden when the visitor prefers reduced motion; static decor stays.
 - To add or move a holiday: edit `HOLIDAYS` in `holiday.js` and add a colour block in `holidays.css`.
 
