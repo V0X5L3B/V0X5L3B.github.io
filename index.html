@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OTUkdHW18Yw0hL1Ay1JnUTk7LSgQ66TR5sOGkKZEH9w='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kkK73l+8g9shQWoPgyyJYzHa09yTKt1yVXBKhIi8VpU='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>V0X5L3B — experimental developer</title>
   <meta name="description" content="V0X5L3B (@V0X5L3B): a self-directed developer experimenting with Python AI agents and hand-built web interfaces.">
-  <meta name="theme-color" content="#0b0b0c">
+  <meta name="theme-color" content="#f5f0e6">
   <link rel="canonical" href="https://v0x5l3b.is-a.dev/">
 
   <meta property="og:type" content="website">
@@ -28,12 +28,13 @@
   <script>
     /* Set theme + js flag before first paint to avoid a flash. */
     (function () {
-      var d = document.documentElement;
+      var d = document.documentElement, t = null;
       d.classList.add("js");
-      try {
-        var t = localStorage.getItem("v0x-theme");
-        if (t === "light" || t === "dark") d.setAttribute("data-theme", t);
-      } catch (e) {}
+      try { t = localStorage.getItem("v0x-theme"); } catch (e) {}
+      if (t !== "light" && t !== "dark") {
+        t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      d.setAttribute("data-theme", t);
     })();
   </script>
   <link rel="stylesheet" href="assets/css/main.css">
@@ -81,6 +82,7 @@
             <a class="btn btn--primary" href="#projects">Explore projects <span aria-hidden="true">↓</span></a>
             <a class="btn" id="heroGithub" href="https://github.com/V0X5L3B" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
             <a class="btn" id="heroDiscord" href="#contact" target="_blank" rel="noopener noreferrer">Join Discord <span aria-hidden="true">↗</span></a>
+            <span class="scribble scribble--cta" aria-hidden="true"><svg viewBox="0 0 50 42"><path d="M44 36C30 38 14 32 9 12"/><path d="M3 20l6-9 8 7"/></svg><span>start here</span></span>
           </div>
           <ul class="hero__facts" aria-label="Focus areas">
             <li><span>01</span> Python agents</li>
@@ -114,9 +116,9 @@
         <div class="about">
           <h2 id="about-h" class="h2">Curious first, polished later.</h2>
           <div class="about__body">
-            <p>I learn by building: opening an existing project, changing one thing, and seeing what breaks. A lot of my best understanding comes from a stack trace I didn't expect.</p>
+            <p>I learn by building: opening an existing project, changing one thing, and seeing what breaks. A lot of my best understanding comes from <span class="hl">a stack trace I didn't expect</span>.</p>
             <p>Right now that means a Python agent that works through tasks using tools, this site, and a few dark, minimal interfaces I keep rebuilding until they feel right.</p>
-            <p>I'm still developing as an engineer, and I'd rather show an honest, unfinished experiment than a perfect-looking claim. Anything on this site that is early, rough or local-only is labelled that way.</p>
+            <p>I'm still developing as an engineer, and I'd rather show <span class="hl">an honest, unfinished experiment</span> than a perfect-looking claim. Anything on this site that is early, rough or local-only is labelled that way.</p>
           </div>
           <aside class="about__aside" aria-label="Where I'm heading">
             <h3 class="mini">Where I'd like to take things</h3>
