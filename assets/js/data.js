@@ -119,7 +119,6 @@ export const SKILLS = [
       { name: "Git & GitHub", stance: "Using" },
       { name: "Command line & PowerShell", stance: "Using" },
       { name: "AI coding assistants", stance: "Using" },
-      { name: "Rainmeter & Windhawk", stance: "Experimenting with" },
     ],
   },
 ];
