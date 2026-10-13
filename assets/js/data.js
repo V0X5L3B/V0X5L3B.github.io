@@ -25,6 +25,11 @@ export const LINKS = {
     url: null, // deliberately no discord.com/users/<numeric-id> link: the ID is a permanent account identifier
     copy: "v0x5l.3b",
   },
+  discordServer: {
+    label: "Discord Server",
+    handle: "Join the server",
+    url: "https://discord.gg/y9vfNpFgN",
+  },
   email: null, // e.g. { label: "Email", handle: "you@example.com", url: "mailto:you@example.com", copy: "you@example.com" }
   site: { label: "Site", handle: "v0x5l3b.is-a.dev", url: "https://v0x5l3b.is-a.dev/" },
 };

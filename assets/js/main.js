@@ -65,6 +65,8 @@ $("#statusText").textContent = PROFILE.status;
 $("#heroLede").textContent = PROFILE.intro;
 const gh = $("#heroGithub");
 if (LINKS.github) gh.href = LINKS.github.url; else gh.remove();
+const hd = $("#heroDiscord");
+if (LINKS.discordServer) hd.href = LINKS.discordServer.url; else hd.remove();
 $("#direction").append(...DIRECTION.map((d) => h("li", { text: d })));
 
 /* ---------------- projects ---------------- */
