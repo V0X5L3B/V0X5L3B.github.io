@@ -33,6 +33,10 @@ Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · 
 - Floating particles are hidden when the visitor prefers reduced motion; static decor stays.
 - To add or move a holiday: edit `HOLIDAYS` in `holiday.js` and add a colour block in `holidays.css`.
 
+## Look & fonts
+
+Warm paper/terracotta palette (follows the visitor's system light/dark setting until they use the toggle), a serif for headings, and hand-drawn details (uneven corners, wobbly ink lines, highlighter, sticky note, margin scribbles). Fonts are self-hosted subsets in `assets/fonts/`: Newsreader (headings) and Caveat (handwriting), both SIL Open Font License (see the `OFL-*.txt` files).
+
 ## Security notes
 
 - `index.html` ships a Content-Security-Policy `<meta>` (no third-party origins, no `connect-src`). The tiny inline theme script in `<head>` is allowed by its SHA-256 hash: **if you edit that inline script, recompute the hash** or the browser will block it (Pages can't set real headers, so `frame-ancestors`/clickjacking protection isn't possible here).
