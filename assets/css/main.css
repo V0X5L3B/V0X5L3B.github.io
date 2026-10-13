@@ -284,3 +284,16 @@ a:hover { text-decoration-color: var(--crimson-t); }
 }
 .projects > .card:only-child { grid-column: 1 / -1; }
 .lab > .empty { grid-column: 1 / -1; }
+
+/* ---------- polish ---------- */
+.skills { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.skills__g { border-left: 0; border-top: 0; box-shadow: -1px 0 0 var(--line), 0 -1px 0 var(--line); }
+.lab > .empty { padding: 22px 20px; }
+.console__out { height: 150px; }
+.console__out:focus-visible { outline-offset: -2px; }
+@media (max-width: 520px) {
+  .hero__panel .code { font-size: .7rem; padding: 14px 12px; }
+  .section__head { gap: 10px; }
+  .foot__id { gap: 6px 12px; }
+}
+@media (min-width: 961px) { .lab:not(:has(.exp)) { margin-bottom: 20px; } }
