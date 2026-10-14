@@ -66,3 +66,6 @@ git push origin main   # or whichever branch Pages is set to
 ```
 
 Check Settings → Pages: source = "Deploy from a branch", branch matches the one you push, custom domain `v0x5l3b.is-a.dev`. DNS is untouched.
+
+## Motion
+`assets/css/motion.css` + `assets/js/motion.js` add the entrance, scroll-reveal, hover and cursor effects. Delete both (and their two tags in index.html) to turn them off. Reduced-motion users get a static page.
