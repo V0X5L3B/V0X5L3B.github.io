@@ -1,0 +1,202 @@
+/* Motion & polish layer. Pure DOM, no network, no storage. Safe to delete along with motion.css. */
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+const root = document.documentElement;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const NS = "http://www.w3.org/2000/svg";
+const svg = (tag, attrs = {}, kids = []) => {
+  const n = document.createElementNS(NS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  kids.forEach((c) => n.appendChild(c));
+  return n;
+};
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text) n.textContent = text;
+  return n;
+};
+
+/* ---- logo letters get an index for the hover wave ---- */
+$$(".bar .mark span").forEach((s, i) => s.style.setProperty("--i", i));
+
+/* ---- hero: split the headline into words, and the code into lines ---- */
+function splitTitle() {
+  const t = $(".hero__title");
+  if (!t || reduce) return;
+  let i = 0;
+  const wrap = (node) => { const w = el("span", "w"); w.style.setProperty("--i", i++); w.appendChild(node); return w; };
+  Array.from(t.childNodes).forEach((n) => {
+    if (n.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      n.textContent.split(/(\s+)/).forEach((p) => {
+        if (!p) return;
+        if (/^\s+$/.test(p)) frag.appendChild(document.createTextNode(" "));
+        else frag.appendChild(wrap(document.createTextNode(p)));
+      });
+      n.replaceWith(frag);
+    } else if (n.nodeType === 1 && n.tagName === "EM") {
+      n.replaceWith(wrap(n.cloneNode(true)));
+    }
+  });
+}
+function splitCode() {
+  const code = $(".hero__panel .code code");
+  if (!code || reduce) return;
+  const lines = [document.createDocumentFragment()];
+  Array.from(code.childNodes).forEach((n) => {
+    if (n.nodeType === 3) {
+      n.textContent.split("\n").forEach((part, idx) => {
+        if (idx > 0) lines.push(document.createDocumentFragment());
+        if (part) lines[lines.length - 1].appendChild(document.createTextNode(part));
+      });
+    } else lines[lines.length - 1].appendChild(n.cloneNode(true));
+  });
+  code.textContent = "";
+  lines.forEach((f, i) => {
+    const l = el("span", "ln");
+    l.style.setProperty("--i", i);
+    l.appendChild(f);
+    if (i === lines.length - 1) l.appendChild(el("span", "tc"));
+    code.appendChild(l);
+  });
+}
+splitTitle();
+splitCode();
+
+/* ---- scroll reveal for headings, copy, labels, highlights ---- */
+const targets = [
+  ...$$(".label"), ...$$(".h2"), ...$$(".section__note"), ...$$(".filters"),
+  ...$$(".about__body p"), ...$$(".about__aside"), ...$$(".console"), ...$$(".hl"),
+];
+targets.forEach((n) => { if (!n.classList.contains("hl")) n.classList.add("rv"); });
+// stagger siblings inside grids that main.js builds
+function stagger() {
+  ["#projectGrid", "#skillGrid", "#labGrid", "#linkList"].forEach((sel) => {
+    const g = $(sel);
+    if (g) Array.from(g.children).forEach((c, i) => c.style.setProperty("--d", i));
+  });
+  $$(".about__body p").forEach((p, i) => p.style.setProperty("--d", i));
+}
+stagger();
+if ("IntersectionObserver" in window && !reduce) {
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { threshold: 0.18, rootMargin: "0px 0px -6% 0px" });
+  targets.forEach((n) => io.observe(n));
+  setTimeout(() => targets.forEach((n) => n.classList.add("in")), 6000); // safety net
+} else targets.forEach((n) => n.classList.add("in"));
+
+/* ---- progress bar + back-to-top ---- */
+const bar = el("div", "progress");
+bar.setAttribute("aria-hidden", "true");
+document.body.prepend(bar);
+const top = el("button", "totop");
+top.type = "button";
+top.setAttribute("aria-label", "Back to top");
+top.append(svg("svg", { viewBox: "0 0 46 46", "aria-hidden": "true" }, [svg("circle", { cx: 23, cy: 23, r: 20 })]), el("span", "", "↑"));
+top.firstChild.firstChild.setAttribute("pathLength", "126");
+top.addEventListener("click", () => scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }));
+document.body.appendChild(top);
+let tick = false;
+function onScroll() {
+  if (tick) return;
+  tick = true;
+  requestAnimationFrame(() => {
+    const max = root.scrollHeight - innerHeight;
+    const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+    bar.style.setProperty("--p", p.toFixed(4));
+    top.style.setProperty("--p", p.toFixed(4));
+    top.classList.toggle("show", scrollY > 600);
+    tick = false;
+  });
+}
+addEventListener("scroll", onScroll, { passive: true });
+addEventListener("resize", onScroll);
+onScroll();
+
+/* ---- theme button spin + smooth colour crossfade ---- */
+const themeBtn = $("#themeBtn");
+if (themeBtn) themeBtn.addEventListener("click", () => {
+  root.classList.add("theme-fade");
+  themeBtn.classList.remove("spin"); void themeBtn.offsetWidth; themeBtn.classList.add("spin");
+  setTimeout(() => root.classList.remove("theme-fade"), 600);
+});
+
+/* ---- button ripple ---- */
+document.addEventListener("pointerdown", (e) => {
+  const b = e.target.closest && e.target.closest(".btn, .chip");
+  if (!b || reduce) return;
+  const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2;
+  const s = el("span", "ripple");
+  s.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+  b.appendChild(s);
+  s.addEventListener("animationend", () => s.remove());
+});
+
+if (!reduce) {
+  /* ---- ambient aurora + hand-drawn doodles ---- */
+  const au = el("div", "aurora");
+  au.setAttribute("aria-hidden", "true");
+  au.append(el("i"), el("i"), el("i"));
+  document.body.prepend(au);
+
+  const hero = $(".hero");
+  if (hero) {
+    hero.append(
+      svg("svg", { class: "doodle doodle--spark", viewBox: "0 0 40 40", "aria-hidden": "true" }, [svg("path", { d: "M20 3C21 14 26 19 37 20 26 21 21 26 20 37 19 26 14 21 3 20 14 19 19 14 20 3Z" })]),
+      svg("svg", { class: "doodle doodle--squig", viewBox: "0 0 110 24", "aria-hidden": "true" }, [svg("path", { d: "M3 14C12 2 20 22 30 12S46 2 55 13s17 8 26-2 17 3 26 1" })]),
+      svg("svg", { class: "doodle doodle--ring", viewBox: "0 0 60 60", "aria-hidden": "true" }, [svg("path", { d: "M32 6C48 7 56 22 52 37 48 52 30 56 17 48 4 40 5 20 18 11 24 7 31 6 40 9" })]),
+    );
+  }
+
+  if (fine) {
+    /* ---- cursor glow (eased) ---- */
+    const g = el("div", "glow");
+    g.setAttribute("aria-hidden", "true");
+    document.body.prepend(g);
+    let tx = innerWidth / 2, ty = innerHeight / 3, x = tx, y = ty, run = false;
+    const loop = () => {
+      x += (tx - x) * 0.12; y += (ty - y) * 0.12;
+      g.style.transform = `translate3d(${x}px,${y}px,0)`;
+      if (Math.abs(tx - x) + Math.abs(ty - y) > 0.5) requestAnimationFrame(loop); else run = false;
+    };
+    addEventListener("pointermove", (e) => {
+      tx = e.clientX; ty = e.clientY; g.classList.add("on");
+      if (!run) { run = true; requestAnimationFrame(loop); }
+    }, { passive: true });
+    document.addEventListener("pointerleave", () => g.classList.remove("on"));
+
+    /* ---- card spotlight, panel tilt, magnetic buttons ---- */
+    document.addEventListener("pointermove", (e) => {
+      const c = e.target.closest && e.target.closest(".card, .lk, .exp, .skills__g");
+      if (c) {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty("--px", e.clientX - r.left + "px");
+        c.style.setProperty("--py", e.clientY - r.top + "px");
+      }
+    }, { passive: true });
+
+    const panel = $(".hero__panel");
+    if (panel) {
+      panel.addEventListener("pointermove", (e) => {
+        const r = panel.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width - 0.5, ny = (e.clientY - r.top) / r.height - 0.5;
+        panel.style.setProperty("--ry", (nx * 7).toFixed(2) + "deg");
+        panel.style.setProperty("--rx", (-ny * 7).toFixed(2) + "deg");
+      });
+      panel.addEventListener("pointerleave", () => { panel.style.setProperty("--rx", "0deg"); panel.style.setProperty("--ry", "0deg"); });
+    }
+
+    $$(".hero__cta .btn").forEach((b) => {
+      b.style.transition = "translate .25s cubic-bezier(.2,.8,.2,1), border-color .15s, background .15s, scale .15s";
+      b.addEventListener("pointermove", (e) => {
+        const r = b.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) * 0.18, dy = (e.clientY - (r.top + r.height / 2)) * 0.28;
+        b.style.translate = `${dx.toFixed(1)}px ${dy.toFixed(1)}px`;
+      });
+      b.addEventListener("pointerleave", () => { b.style.translate = ""; });
+    });
+  }
+}
