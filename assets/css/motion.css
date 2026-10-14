@@ -130,3 +130,6 @@
   .totop { transition: none; }
 }
 @media (hover: none) { .glow { display: none; } }
+
+/* holiday themes bring their own decor; keep the hero doodles out of its way */
+html[data-holiday] .doodle { display: none; }
