@@ -18,6 +18,17 @@ const el = (tag, cls, text) => {
   return n;
 };
 
+/* ---- opening animation: mark as seen, allow skipping ---- */
+const intro = $("#intro");
+if (intro) {
+  const done = () => { root.classList.remove("intro-on"); };
+  try { sessionStorage.setItem("v0x-intro", "1"); } catch (e) {}
+  const skip = () => { intro.classList.add("skip"); setTimeout(done, 500); removeEventListener("keydown", skip); intro.removeEventListener("pointerdown", skip); };
+  intro.addEventListener("pointerdown", skip);
+  addEventListener("keydown", skip);
+  setTimeout(() => { done(); intro.remove(); }, 3000);
+}
+
 /* ---- logo letters get an index for the hover wave ---- */
 $$(".bar .mark span").forEach((s, i) => s.style.setProperty("--i", i));
 
@@ -200,3 +211,26 @@ if (!reduce) {
     });
   }
 }
+
+/* ---- Halloween: a bat flies across now and then ---- */
+(function () {
+  if (reduce) return;
+  const bat = () => svg("svg", { viewBox: "0 0 40 20", "aria-hidden": "true" }, [svg("path", { d: "M20 6C16 0 8 0 0 4c6 2 8 6 12 4 2 4 6 4 8 10 2-6 6-6 8-10 4 2 6-2 12-4-8-4-16-4-20 2Z" })]);
+  let timer = null;
+  const fly = () => {
+    if (root.getAttribute("data-holiday") !== "halloween") { timer = null; return; }
+    if (!document.hidden) {
+      const w = el("div", "batfly"), inner = el("div", "bw");
+      w.style.setProperty("--y", 8 + Math.random() * 40 + "vh");
+      w.style.setProperty("--dur", 7 + Math.random() * 5 + "s");
+      w.style.setProperty("--w", 30 + Math.random() * 28 + "px");
+      inner.appendChild(bat()); w.appendChild(inner);
+      document.body.appendChild(w);
+      w.addEventListener("animationend", (e) => { if (e.target === w) w.remove(); });
+    }
+    timer = setTimeout(fly, 7000 + Math.random() * 9000);
+  };
+  const start = () => { if (!timer && root.getAttribute("data-holiday") === "halloween") timer = setTimeout(fly, 2500); };
+  new MutationObserver(start).observe(root, { attributes: true, attributeFilter: ["data-holiday"] });
+  start();
+})();

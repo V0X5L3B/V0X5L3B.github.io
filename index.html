@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kkK73l+8g9shQWoPgyyJYzHa09yTKt1yVXBKhIi8VpU='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-F1IlFyvXXsErwMQa/yjQ1raL1UykAZITbCbPshFUepU='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>V0X5L3B — experimental developer</title>
   <meta name="description" content="V0X5L3B (@V0X5L3B): a self-directed developer experimenting with Python AI agents and hand-built web interfaces.">
@@ -35,6 +35,10 @@
         t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       }
       d.setAttribute("data-theme", t);
+      var seen = false;
+      try { seen = !!sessionStorage.getItem("v0x-intro"); } catch (e) {}
+      if (/[?&]intro\b/.test(location.search)) seen = false;
+      if (!seen && !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) d.classList.add("intro-on");
     })();
   </script>
   <link rel="stylesheet" href="assets/css/main.css">
@@ -42,6 +46,11 @@
   <link rel="stylesheet" href="assets/css/motion.css">
 </head>
 <body>
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro__mark"><span style="--i:0">V</span><span style="--i:1">0</span><span style="--i:2">X</span><span style="--i:3">5</span><span style="--i:4">L</span><span style="--i:5">3</span><span style="--i:6">B</span></div>
+    <div class="intro__line"></div>
+    <div class="intro__hi">hello, world</div>
+  </div>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="bar" id="top">

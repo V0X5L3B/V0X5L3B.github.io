@@ -69,3 +69,4 @@ Check Settings → Pages: source = "Deploy from a branch", branch matches the on
 
 ## Motion
 `assets/css/motion.css` + `assets/js/motion.js` add the entrance, scroll-reveal, hover and cursor effects. Delete both (and their two tags in index.html) to turn them off. Reduced-motion users get a static page.
+The opening animation plays once per browser session; add `?intro` to the URL to replay it. Click or press a key to skip it.
