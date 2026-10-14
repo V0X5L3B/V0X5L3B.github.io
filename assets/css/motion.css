@@ -154,19 +154,23 @@ html[data-holiday] .doodle { display: none; }
 :root[data-holiday="halloween"] .decor-row span:hover { translate: 0 -10px; scale: 1.12; }
 :root[data-holiday="halloween"] .decor-row span[data-k="ghost"] { animation: ghostfloat 4.6s ease-in-out infinite; }
 :root[data-holiday="halloween"] .decor-row span[data-k="witchhat"] { transform-origin: 50% 100%; animation: hatwobble 5.5s ease-in-out infinite; }
-:root[data-holiday="halloween"] .decor-row span[data-k="skull"] { animation: rattle 6s ease-in-out infinite; }
+:root[data-holiday="halloween"] .decor-row span[data-k="skull"] { animation: rattle 3.6s ease-in-out infinite; }
 :root[data-holiday="halloween"] .decor-row span[data-k="cat"] { transform-origin: 50% 100%; animation: catsway 4s ease-in-out infinite; }
 :root[data-holiday="halloween"] .decor-row span[data-k="candle"] { animation: candlebob 3s ease-in-out infinite alternate; }
-:root[data-holiday="halloween"] .corner--left svg, :root[data-holiday="halloween"] .corner--right svg { transform-origin: top left; animation: websway 7s ease-in-out infinite alternate; }
-:root[data-holiday="halloween"] .corner--right svg { transform-origin: top right; animation-delay: -3s; }
+:root[data-holiday="halloween"] .corner--l svg, :root[data-holiday="halloween"] .corner--r svg { transform-origin: top left; animation: websway 7s ease-in-out infinite alternate; }
+:root[data-holiday="halloween"] .corner--r svg { transform-origin: top left; animation-delay: -3s; }
 :root[data-holiday="halloween"] .moon svg { animation: moonpulse 6s ease-in-out infinite alternate; }
-@keyframes ghostfloat { 0%, 100% { transform: translateY(0) rotate(-3deg); opacity: .85; } 50% { transform: translateY(-16px) rotate(3deg); opacity: 1; } }
-@keyframes hatwobble { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
-@keyframes rattle { 0%, 84%, 100% { transform: none; } 86% { transform: rotate(-7deg); } 88% { transform: rotate(7deg); } 90% { transform: rotate(-5deg); } 92% { transform: rotate(5deg); } 94% { transform: rotate(-2deg); } }
-@keyframes catsway { 0%, 100% { transform: rotate(-2deg) scaleY(1); } 50% { transform: rotate(2deg) scaleY(1.04); } }
-@keyframes candlebob { to { transform: translateY(-2px); } }
-@keyframes websway { to { transform: rotate(2.4deg) scale(1.03); } }
-@keyframes moonpulse { to { transform: scale(1.06); filter: brightness(1.12); } }
+@keyframes ghostfloat { 0%, 100% { transform: translateY(0) rotate(-6deg); opacity: .8; } 50% { transform: translateY(-30px) rotate(6deg); opacity: 1; } }
+@keyframes hatwobble { 0%, 100% { transform: rotate(-11deg); } 50% { transform: rotate(11deg); } }
+@keyframes rattle { 0%, 60%, 100% { transform: none; } 64% { transform: rotate(-14deg) translateY(-4px); } 68% { transform: rotate(14deg); } 72% { transform: rotate(-10deg) translateY(-3px); } 76% { transform: rotate(10deg); } 80% { transform: rotate(-4deg); } }
+@keyframes catsway { 0%, 100% { transform: rotate(-5deg) scaleY(1); } 50% { transform: rotate(5deg) scaleY(1.08); } }
+@keyframes candlebob { to { transform: translateY(-4px) rotate(2deg); } }
+@keyframes websway { to { transform: rotate(4deg) scale(1.07); } }
+@keyframes moonpulse { to { transform: scale(1.1); filter: brightness(1.18); } }
+:root[data-holiday="halloween"] .decor-row span[data-k="pumpkin"], :root[data-holiday="halloween"] .decor-row span[data-k="pumpkinPlain"] { transform-origin: 50% 100%; animation: flicker 3.4s steps(1) infinite, pumphop 4.4s ease-in-out infinite; }
+:root[data-holiday="halloween"] .decor-row span[data-k="pumpkinPlain"] { animation: pumphop 4.4s ease-in-out infinite; }
+@keyframes pumphop { 0%, 70%, 100% { transform: none; } 76% { transform: translateY(-14px) scale(.94, 1.08); } 84% { transform: translateY(0) scale(1.08, .92); } 90% { transform: scale(.98, 1.02); } }
+html[data-holiday] .totop { bottom: 92px; }
 
 /* a bat now and then flies across the page (made by motion.js) */
 .batfly { position: fixed; left: 0; top: var(--y, 18vh); z-index: 40; pointer-events: none; color: #3b2d4d; animation: batcross var(--dur, 9s) linear forwards; }
