@@ -18,6 +18,8 @@ Everything lives in **`assets/js/data.js`**: profile text, links, projects, lab 
 - A link set to `null` renders no button (nothing is faked).
 - Add a project: copy an object in `PROJECTS`; `categories` must match an id in `FILTERS`.
 - Add a lab entry: append to `LAB`.
+- Services (the "hire me" section): edit `SERVICES`, `PROCESS` and `HIRE`.
+- Payment is Discord first: visitors message you, you agree on the job, then you send them a payment link. To add a pay button later, set `HIRE.pay.url` (it's a normal outbound link, so the CSP doesn't need changing); while it's `null`, no button shows.
 - Add an email: set `LINKS.email` (see the commented example).
 - Code previews on project cards are *illustrative sketches*, labelled as such. Replace with real excerpts if you prefer.
 - Ambient music (`audio/`) tries to autoplay on load. Browsers block sound until the first click/tap/keypress, so it then starts on that first interaction. Pause/skip/volume are in the footer; list tracks in `TRACKS`.
@@ -50,6 +52,7 @@ index.html            page structure + metadata
 404.html              GitHub Pages not-found page
 assets/css/main.css   design system (dark default, light theme)
 assets/css/holidays.css seasonal palettes + decor
+assets/css/hire.css   services / hire me section
 assets/js/holiday.js  month → holiday logic, SVG decor
 assets/js/data.js     all editable content
 assets/js/main.js     rendering + interactions

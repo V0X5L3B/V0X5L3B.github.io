@@ -1,6 +1,6 @@
 /*
  * V0X5L3B — central content file.
- * Edit this file to change links, projects, lab entries and skills.
+ * Edit this file to change links, projects, services, lab entries and skills.
  * Nothing here is rendered unless it has a real value:
  *   - a link set to null simply doesn't render a button
  *   - no stats, percentages or dates are shown anywhere
@@ -10,10 +10,10 @@ export const PROFILE = {
   handle: "V0X5L3B",
   tag: "@V0X5L3B",
   site: "https://v0x5l3b.is-a.dev/",
-  headline: "I build things to find out how they work.",
+  headline: "I build things, and I help you make yours.",
   intro:
-    "Self-directed developer working in Python and the web. I take projects apart, rebuild them, break them again, and write down what the error was actually saying.",
-  status: "experiments in progress",
+    "Self-directed developer working in Python and the web. I make websites, small tools and experiments, and I'd love to help you build the thing you've been picturing, from a first idea to something that actually works.",
+  status: "open for projects",
 };
 
 /* Public destinations. Set to null to hide. */
@@ -81,12 +81,109 @@ export const PROJECTS = [
 // null link = no button. Nothing invented.`,
     },
   },
+  {
+    id: "agent-experiment",
+    name: "Experimental AI Agent",
+    kicker: "Python · experiment",
+    summary:
+      "A task-oriented agent that works inside a controlled environment through tools: it can look around, read and write files, run code and tests, and read its own errors.",
+    details: [
+      "Tools: list directories, create and read files, write files, create directories, run code, run tests, inspect errors.",
+      "Exploring training loops, checkpoints, exploration and task difficulty.",
+      "Learning reinforcement-learning ideas with Stable-Baselines3 and related tooling.",
+      "Future interest: agents that communicate with each other, and support for more programming languages. Neither exists yet.",
+      "This is experimental work, not a production coding agent.",
+    ],
+    status: "Experimental",
+    tags: ["Python", "Reinforcement learning", "Stable-Baselines3", "Tool use"],
+    categories: ["python"],
+    accent: "lime",
+    links: { github: null, live: null },
+    sketch: {
+      file: "loop.py",
+      lang: "python",
+      code: `# sketch: the loop I keep rebuilding
+while not task.done:
+    obs = env.observe()
+    action = policy(obs)          # a tool call
+    result = env.step(action)     # list_dir, read_file, run_tests ...
+    if result.error:
+        notes.add(inspect(result.error))`,
+    },
+  },
 ];
 
 export const FILTERS = [
   { id: "all", label: "All" },
   { id: "web", label: "Web" },
+  { id: "python", label: "Python" },
 ];
+
+/*
+ * Services: what people can hire me for.
+ * No prices are invented here: every job is quoted after we talk.
+ */
+export const SERVICES = [
+  {
+    id: "website",
+    icon: "✿",
+    name: "A website of your own",
+    summary:
+      "A personal page, portfolio or small project site, hand-built like this one: quick to load, no trackers, and yours to keep.",
+    includes: [
+      "A look that fits you, with light and dark themes",
+      "Set up and published on GitHub Pages",
+      "One simple content file, so you can edit it yourself later",
+    ],
+    tags: ["HTML", "CSS", "JavaScript"],
+  },
+  {
+    id: "tools",
+    icon: "✦",
+    name: "Python scripts & small tools",
+    summary:
+      "Something that does a boring job for you: a script, a little command-line tool, a helper for your project or your files.",
+    includes: [
+      "Plain, readable Python you can open and understand",
+      "Notes on how to run it and how to change it",
+      "Small and focused: one job, done well",
+    ],
+    tags: ["Python", "Automation"],
+  },
+  {
+    id: "help",
+    icon: "♡",
+    name: "Help making your thing",
+    summary:
+      "Stuck on a bug or an idea you can't get started on? I'll read the error with you, explain what it's actually saying, and help you get it working.",
+    includes: [
+      "Debugging and fixing what's broken",
+      "Explaining what went wrong in plain words",
+      "Working on your own project with you, step by step",
+    ],
+    tags: ["Debugging", "Web", "Python"],
+  },
+];
+
+/* How working together goes, in order. */
+export const PROCESS = [
+  { step: "Tell me what you want to make", note: "A sentence is enough to start. Sketches and links help too." },
+  { step: "Get a plan and a price", note: "I reply with what I'd build and what it costs, before any work starts." },
+  { step: "I build it with you", note: "You see it as it grows and can change your mind along the way." },
+  { step: "It's yours", note: "You get the finished files and everything you need to keep it running." },
+];
+
+/*
+ * Hiring + payment.
+ * Payment is Discord first: people message me, we agree on the job, then I send a payment link.
+ * pay.url: optional. Set it to a public payment page (Ko-fi, Stripe link, PayPal.me, ...) to add
+ * a pay button; while it is null, no button is shown.
+ */
+export const HIRE = {
+  pitch: "Got something you want to make? I'd love to help you build it.",
+  price: "Message me on Discord and tell me your idea. Every project is quoted after we talk, and once we agree I send you a payment link, so you only pay for what you need.",
+  pay: { label: "Pay for a project", url: null },
+};
 
 /* Lab: small experiments, prototypes, unfinished ideas. Add entries freely. */
 export const LAB = [
