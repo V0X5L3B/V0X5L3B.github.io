@@ -2,7 +2,7 @@
  * Opening animation. Plays once per browser session (add ?intro to the address to replay).
  * Letters bounce in, a hand-drawn line and heart draw themselves, a greeting types out,
  * petals drift down, then the screen closes like an iris onto the logo in the header.
- * Click or press any key to skip. If GSAP is missing, the overlay simply fades away.
+ * It cannot be skipped. If GSAP is missing, the overlay simply fades away.
  */
 const root = document.documentElement;
 const intro = document.getElementById("intro");
@@ -51,7 +51,6 @@ if (intro && root.classList.contains("intro-on")) {
     });
 
     const tl = g.timeline({ defaults: { ease: "power3.out" } });
-    let exiting = false;
 
     tl.from(intro, { opacity: 0, duration: 0.25 }, 0);
     tl.fromTo(letters, { y: -140, rotate: () => g.utils.random(-35, 35), scale: 0.4, opacity: 0 },
@@ -77,30 +76,13 @@ if (intro && root.classList.contains("intro-on")) {
     tl.call(() => g.delayedCall(0.85, finish), null, "exit");
 
     function exit() {
-      exiting = true;
       const mark = document.querySelector(".bar .mark");
       const r = mark ? mark.getBoundingClientRect() : { left: W / 2, top: 40, width: 0, height: 0 };
       const x = r.left + r.width / 2, y = r.top + r.height / 2;
       const R = Math.hypot(Math.max(x, W - x), Math.max(y, H - y)) + 20;
       g.fromTo(intro, { clipPath: `circle(${R}px at ${x}px ${y}px)` },
         { clipPath: `circle(0px at ${x}px ${y}px)`, duration: 0.75, ease: "power3.inOut" });
-      g.to(intro.querySelectorAll(".intro__mark, .intro__art, .intro__hi, .intro__skip"), { scale: 0.85, opacity: 0, duration: 0.45, ease: "power2.in" });
+      g.to(intro.querySelectorAll(".intro__mark, .intro__art, .intro__hi"), { scale: 0.85, opacity: 0, duration: 0.45, ease: "power2.in" });
     }
-
-    // skip: jump to the exit right away
-    let skipped = false;
-    const skip = () => {
-      if (skipped || exiting) return;
-      skipped = true;
-      removeEventListener("keydown", skip);
-      intro.removeEventListener("pointerdown", skip);
-      tl.pause();
-      g.killTweensOf([letters, line, heart, chars, petals]);
-      g.set(petals, { opacity: 0 });
-      exit();
-      g.delayedCall(0.8, finish);
-    };
-    intro.addEventListener("pointerdown", skip);
-    addEventListener("keydown", skip);
   }
 }

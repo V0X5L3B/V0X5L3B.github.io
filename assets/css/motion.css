@@ -141,8 +141,6 @@ html[data-holiday] .doodle { display: none; }
 .intro__hi { font: 600 clamp(1.5rem, 4.6vw, 2.1rem)/1 var(--hand); color: var(--muted); min-height: 1em; }
 .intro__hi .ch { display: inline-block; opacity: 0; }
 .intro__bit { position: absolute; top: 0; pointer-events: none; color: var(--crimson-t); line-height: 1; opacity: 0; }
-.intro__skip { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; font: 500 .72rem/1 var(--mono); letter-spacing: .1em; color: var(--dim); opacity: 0; animation: introSkip .6s ease 1.2s forwards; }
-@keyframes introSkip { to { opacity: .8; } }
 @keyframes introGone { to { visibility: hidden; } }
 
 /* ---------- Halloween: the decor comes alive ---------- */
