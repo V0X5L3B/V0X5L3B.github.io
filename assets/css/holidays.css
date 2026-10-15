@@ -66,6 +66,15 @@
   --fx1: #c8312f; --fx2: #244fa8; --fx3: #8a96b3;
 }
 
+/* sticky-note paper in each holiday's colours (base pink clashes, e.g. on Halloween's black) */
+:root[data-holiday="halloween"] { --note: #ffd9b8; }
+:root[data-holiday="november"] { --note: #f6dfbf; }
+:root[data-holiday="december"] { --note: #d9efe0; }
+:root[data-holiday="january"] { --note: #f8e7b5; }
+:root[data-holiday="february"] { --note: #ffd1df; }
+:root[data-holiday="march"] { --note: #d6f0dc; }
+:root[data-holiday="july"] { --note: #d9e4fb; }
+
 /* ---------- decor layers ---------- */
 .decor { position: fixed; inset: 0; z-index: 40; overflow: hidden; pointer-events: none; }
 .fx { position: absolute; width: var(--s); height: var(--s); color: var(--c); opacity: 0; will-change: transform, opacity; }
@@ -204,9 +213,10 @@
 /* hanging spiders */
 .spiders { position: absolute; left: 0; right: 0; top: 100%; height: 0; pointer-events: none; }
 .spider { position: absolute; left: var(--l); top: 0; width: 24px; margin-left: -12px; display: flex; flex-direction: column; align-items: center; }
-.spider i { display: block; flex: none; width: 1px; height: var(--len); background: #8a77a3; opacity: .75; animation: thread var(--t) ease-in-out infinite; animation-delay: inherit; }
+.spider { --k: 1; }
+.spider i { display: block; flex: none; width: 1px; height: calc(var(--len) * var(--k)); background: #8a77a3; opacity: .75; animation: thread var(--t) ease-in-out infinite; animation-delay: inherit; }
 .spider svg { display: block; width: 24px; height: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,.4)); }
-@keyframes thread { 0%, 100% { height: var(--len); } 50% { height: calc(var(--len) + 26px); } }
+@keyframes thread { 0%, 100% { height: calc(var(--len) * var(--k)); } 50% { height: calc((var(--len) + 26px) * var(--k)); } }
 
 /* glowing eyes in the dark (dark theme only) */
 .eyes { position: absolute; display: flex; gap: 7px; animation: eyeblink 7s ease-in-out infinite; opacity: 0; }
@@ -234,15 +244,19 @@
 :root[data-holiday="halloween"] .decor-row { gap: clamp(6px, 1.6vw, 22px); }
 
 /* tiny cobwebs in project-card corners */
-:root[data-holiday="halloween"] .card::after { content: ""; position: absolute; right: 0; top: 0; width: 64px; height: 64px; pointer-events: none; opacity: .4;
+/* on ::before (unused since soft.css) so the hover spotlight on ::after keeps working */
+:root[data-holiday="halloween"] .card::before { content: ""; display: block; position: absolute; left: auto; bottom: auto; right: 0; top: 0; width: 64px; height: 64px; pointer-events: none; opacity: .4;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none' stroke='%238a77a3' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M120 0L0 0M120 0L8 38M120 0L32 88M120 0L82 112M120 0L120 120'/%3E%3Cpath d='M86 0Q90 30 120 34M56 0Q62 58 120 64M26 0Q36 84 120 94'/%3E%3C/svg%3E") no-repeat right top / contain; }
 
 @media (max-width: 760px) {
-  .spider:nth-child(3) { display: none; }
-  .moon { right: 8%; top: 8px; width: 64px; }
+  /* phones: short threads, and no spider over the middle of the headline */
+  .spider { --k: .25; }
+  .spider:nth-child(n+2) { display: none; }
+  .moon { right: 6%; top: -6px; width: 56px; }
   .eyes { display: none; }
 }
 @media (max-width: 640px) { .decor-row span:nth-child(n+8) { display: none; } }
+@media (max-width: 520px) { .eyebrow .greet { flex-basis: 100%; } .greet:not([hidden])::before { content: none; } }
 
 /* more Halloween detail */
 :root[data-holiday="halloween"] .decor-row span[data-k="cauldron"] svg { filter: drop-shadow(0 0 9px rgba(111,224,74,.5)); animation: bubble 2.4s ease-in-out infinite alternate; }
