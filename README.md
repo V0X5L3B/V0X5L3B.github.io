@@ -70,3 +70,6 @@ Check Settings → Pages: source = "Deploy from a branch", branch matches the on
 ## Motion
 `assets/css/motion.css` + `assets/js/motion.js` add the entrance, scroll-reveal, hover and cursor effects. Delete both (and their two tags in index.html) to turn them off. Reduced-motion users get a static page.
 The opening animation plays once per browser session; add `?intro` to the URL to replay it. Click or press a key to skip it.
+
+## Libraries
+GSAP 3.15 (free "no charge" license) and Lenis 1.3.27 (MIT) are self-hosted in `assets/vendor/` (see its README). `assets/js/fx.js` uses them for smooth scrolling, parallax, split-text headings and click sparks, and does nothing under reduced motion. React Bits is React-only, so a few effects are re-made in plain JS instead.

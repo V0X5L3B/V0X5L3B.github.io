@@ -38,3 +38,10 @@ body { background-image: radial-gradient(1100px 520px at 12% -8%, color-mix(in s
 /* the swaying cobweb must never create a sideways scrollbar */
 .hero { overflow-x: clip; }
 :root[data-holiday] .corner svg { transform-origin: top center; }
+
+/* Lenis smooth scroll (from lenis.css, MIT) */
+html.lenis, html.lenis body { height: auto; }
+html.lenis { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
