@@ -364,7 +364,8 @@ initHoliday();
 })();
 
 /* ---------------- scroll: active nav + reveal ---------------- */
-const sections = ["about", "projects", "skills", "lab", "contact"].map((id) => $(`#${id}`)).filter(Boolean);
+// the hero has no nav link, so reaching it again clears the highlight
+const sections = [$(".hero"), ...["about", "projects", "skills", "lab", "contact"].map((id) => $(`#${id}`))].filter(Boolean);
 const navLinks = new Map($$("a", nav).map((a) => [a.getAttribute("href").slice(1), a]));
 if ("IntersectionObserver" in window) {
   const so = new IntersectionObserver((entries) => {
