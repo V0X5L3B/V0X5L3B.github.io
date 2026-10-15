@@ -54,13 +54,13 @@ export const HOLIDAYS = {
   halloween: {
     month: 9, name: "Halloween", greet: "Happy Halloween",
     fx: [
-      { icon: "bat", mode: "drift", n: 6, size: [26, 42], colors: [1, 2, 3] },
-      { icon: "leaf", mode: "fall", n: 9, size: [14, 24], colors: [4, 5, 6] },
-      { icon: "candy", mode: "fall", n: 4, size: [14, 20], colors: [1] },
-      { icon: "ghost", mode: "float", n: 2, size: [30, 38], colors: [1] },
+      { icon: "bat", mode: "drift", n: 3, size: [26, 40], colors: [1, 2, 3] },
+      { icon: "leaf", mode: "fall", n: 5, size: [14, 22], colors: [4, 5, 6] },
+      { icon: "ghost", mode: "float", n: 1, size: [30, 36], colors: [1] },
       { icon: "witch", mode: "drift", n: 1, size: [44, 52], colors: [1] },
     ],
-    row: ["tombstone", "candle", "pumpkin", "witchhat", "cauldron", "ghost", "pumpkin", "cat", "pumpkinPlain", "skull", "candle", "pumpkin", "tombstone"],
+    // a small graveyard scene, spaced out on a hill (fewer pieces reads better than a crowded shelf)
+    row: ["tombstone", "pumpkin", "candle", "cauldron", "cat", "pumpkinPlain", "tombstone"],
     corners: ["cobweb"], float: "ghost", scene: true,
   },
   november: {
@@ -166,6 +166,7 @@ function build(id) {
       row.append(s);
     });
     if (H.fog) row.classList.add("has-fog");
+    if (H.scene) row.classList.add("is-scene");
     document.querySelector("footer.foot")?.before(row);
     extras.push(row);
   }
@@ -194,7 +195,7 @@ function build(id) {
     hero?.append(moon); extras.push(moon);
 
     const spiders = make("spiders");
-    [{ l: "13%", len: 44, t: 5.6 }, { l: "58%", len: 92, t: 7.2 }, { l: "90%", len: 64, t: 6.3 }].forEach((sp, i) => {
+    [{ l: "13%", len: 44, t: 5.6 }, { l: "90%", len: 64, t: 6.3 }].forEach((sp, i) => {
       const e = document.createElement("div");
       e.className = "spider";
       e.style.cssText = `--l:${sp.l};--len:${sp.len}px;--t:${sp.t}s;animation-delay:-${i * 1.7}s`;
@@ -203,13 +204,16 @@ function build(id) {
     });
     document.querySelector(".bar")?.append(spiders); extras.push(spiders);
 
-    [["2.5%", "64%", 0], ["95%", "42%", 1.8], ["7%", "86%", 3.4]].forEach(([x, y, d]) => {
+    [["2.5%", "64%", 0], ["95%", "82%", 2.6]].forEach(([x, y, d]) => {
       const e = document.createElement("i");
       e.className = "eyes";
       e.style.cssText = `left:${x};top:${y};animation-delay:-${d}s`;
       e.innerHTML = "<b></b><b></b>";
       decor.append(e);
     });
+
+    const sky = make("hsky");                         // slow aurora glow + twinkling stars behind everything
+    document.body.prepend(sky); extras.push(sky);
 
     const fog = make("fog");
     document.body.append(fog); extras.push(fog);
