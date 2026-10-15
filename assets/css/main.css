@@ -4,26 +4,26 @@
 
 /* V0X5L3B — hand-written, no framework. */
 
-:root {                       /* warm dark */
-  --bg: #1f1e1b;
-  --bg-2: #262521;
-  --surface: #2a2924;
-  --surface-2: #32312b;
-  --line: #3d3b34;
-  --line-2: #55524a;
-  --text: #f3efe5;
-  --muted: #b8b1a1;
-  --dim: #8b8576;
-  --crimson: #b9532f;           /* terracotta (name kept: holiday themes override it) */
-  --crimson-t: #e8896a;         /* terracotta for text on dark */
-  --crimson-bg: rgba(217, 119, 87, .15);
-  --green: #6a9a63;
-  --lime: #b5c95a;
-  --code-k: #e8896a;
-  --code-f: #e6e1d4;
-  --code-c: #8b8576;
-  --note: #ecd98f;
-  --shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 12px 30px -18px rgba(0,0,0,.7);
+:root {                       /* plum night */
+  --bg: #1f1720;
+  --bg-2: #281d2a;
+  --surface: #2d2130;
+  --surface-2: #372938;
+  --line: #4a3750;
+  --line-2: #6a4f72;
+  --text: #fbeef3;
+  --muted: #d1b9c6;
+  --dim: #a68c9b;
+  --crimson: #e0709a;           /* rose (name kept: holiday themes override it) */
+  --crimson-t: #f59ab9;         /* rose for text on dark */
+  --crimson-bg: rgba(245, 154, 185, .14);
+  --green: #8fd0b0;
+  --lime: #b9a2f0;              /* lavender */
+  --code-k: #f59ab9;
+  --code-f: #f3e6ec;
+  --code-c: #a68c9b;
+  --note: #f7c6d8;
+  --shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 14px 34px -20px rgba(0,0,0,.7);
 
   --mono: ui-monospace, "JetBrains Mono", "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "Noto Serif", Georgia, serif;
@@ -36,26 +36,26 @@
   --r: 6px;
 }
 
-:root[data-theme="light"] {    /* warm paper */
-  --bg: #f5f0e6;
-  --bg-2: #eee6d6;
-  --surface: #fbf7ee;
-  --surface-2: #fffdf8;
-  --line: #ddd2bc;
-  --line-2: #c4b79d;
-  --text: #2b2822;
-  --muted: #5e584b;
-  --dim: #857d6c;
-  --crimson: #b9532f;
-  --crimson-t: #a8451f;
-  --crimson-bg: rgba(185, 83, 47, .10);
-  --green: #3f7a46;
-  --lime: #6b8a14;
-  --code-k: #a8451f;
-  --code-f: #2b2822;
-  --code-c: #857d6c;
-  --note: #f6e6a2;
-  --shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 12px 26px -20px rgba(70,50,20,.4);
+:root[data-theme="light"] {    /* blush paper */
+  --bg: #fff5f7;
+  --bg-2: #ffeaf0;
+  --surface: #fffafb;
+  --surface-2: #ffffff;
+  --line: #f3d5de;
+  --line-2: #e3b5c4;
+  --text: #3a2a33;
+  --muted: #6d5560;
+  --dim: #9a8189;
+  --crimson: #d6577f;
+  --crimson-t: #c23d6b;
+  --crimson-bg: rgba(214, 87, 127, .11);
+  --green: #3f8a68;
+  --lime: #7b5cc4;
+  --code-k: #c23d6b;
+  --code-f: #3a2a33;
+  --code-c: #9a8189;
+  --note: #ffe0ea;
+  --shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 14px 30px -22px rgba(150,60,100,.45);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -345,11 +345,11 @@ a:hover { text-decoration-color: var(--crimson-t); }
 .hl { background: linear-gradient(100deg, transparent 0 1%, color-mix(in srgb, var(--crimson-t) 30%, transparent) 1% 97%, transparent 97%); padding: 0 .2em; margin: 0 -.2em; border-radius: .3em .7em .4em .6em; -webkit-box-decoration-break: clone; box-decoration-break: clone; color: var(--text); }
 
 /* sticky note with a bit of tape */
-.about__aside { position: relative; background: var(--note); color: #3b3322; border: 0; rotate: 1.4deg; padding: 26px 22px 20px; box-shadow: 0 14px 18px -14px rgba(0,0,0,.55), 0 1px 0 rgba(0,0,0,.06); }
+.about__aside { position: relative; background: var(--note); color: #4a2a38; border: 0; rotate: 1.4deg; padding: 26px 22px 20px; box-shadow: 0 14px 18px -14px rgba(0,0,0,.55), 0 1px 0 rgba(0,0,0,.06); }
 .about__aside::before { content: ""; position: absolute; top: -11px; left: 50%; width: 92px; height: 24px; margin-left: -46px; background: rgba(255,255,255,.45); box-shadow: 0 1px 0 rgba(0,0,0,.08); rotate: -2.5deg; border-radius: 2px; }
-.about__aside .mini { font: 600 1.5rem/1.1 var(--hand); letter-spacing: 0; text-transform: none; color: #3b3322; margin-bottom: 10px; }
-.about__aside .arrows li { color: #3b3322; font: 600 1.3rem/1.2 var(--hand); }
-.about__aside .arrows li::before { color: #a8451f; font-family: var(--hand); content: "\2192"; }
+.about__aside .mini { font: 600 1.5rem/1.1 var(--hand); letter-spacing: 0; text-transform: none; color: #4a2a38; margin-bottom: 10px; }
+.about__aside .arrows li { color: #4a2a38; font: 600 1.3rem/1.2 var(--hand); }
+.about__aside .arrows li::before { color: var(--crimson-t); font-family: var(--hand); content: "\2192"; }
 
 /* quieter chrome so the paper feels like paper */
 .panel__bar { background: color-mix(in srgb, var(--surface-2) 70%, var(--surface)); }

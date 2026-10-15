@@ -158,11 +158,26 @@ if (!reduce) {
     hero.append(
       svg("svg", { class: "doodle doodle--spark", viewBox: "0 0 40 40", "aria-hidden": "true" }, [svg("path", { d: "M20 3C21 14 26 19 37 20 26 21 21 26 20 37 19 26 14 21 3 20 14 19 19 14 20 3Z" })]),
       svg("svg", { class: "doodle doodle--squig", viewBox: "0 0 110 24", "aria-hidden": "true" }, [svg("path", { d: "M3 14C12 2 20 22 30 12S46 2 55 13s17 8 26-2 17 3 26 1" })]),
-      svg("svg", { class: "doodle doodle--ring", viewBox: "0 0 60 60", "aria-hidden": "true" }, [svg("path", { d: "M32 6C48 7 56 22 52 37 48 52 30 56 17 48 4 40 5 20 18 11 24 7 31 6 40 9" })]),
+      svg("svg", { class: "doodle doodle--ring", viewBox: "0 0 40 40", "aria-hidden": "true" }, [svg("path", { d: "M20 35C7 25 3 15 9 9c5-5 11-2 11 3 0-5 6-8 11-3 6 6 2 16-11 26Z" })]),
+      svg("svg", { class: "doodle doodle--flower", viewBox: "0 0 40 40", "aria-hidden": "true" }, [...[0, 72, 144, 216, 288].map((a) => svg("circle", { cx: 20 + 9 * Math.sin(a * Math.PI / 180), cy: 20 - 9 * Math.cos(a * Math.PI / 180), r: 6 })), svg("circle", { cx: 20, cy: 20, r: 3.2 })]),
     );
   }
 
   if (fine) {
+    /* ---- a little trail of sparkles and hearts ---- */
+    const bits = ["✦", "♡", "✧", "✿"];
+    let lastT = 0, lx = 0, ly = 0;
+    addEventListener("pointermove", (e) => {
+      const now = performance.now();
+      if (now - lastT < 70 || Math.hypot(e.clientX - lx, e.clientY - ly) < 22) return;
+      lastT = now; lx = e.clientX; ly = e.clientY;
+      const b = el("span", "trail", bits[(Math.random() * bits.length) | 0]);
+      b.setAttribute("aria-hidden", "true");
+      b.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--dx:${(Math.random() * 40 - 20) | 0}px;--s:${(0.7 + Math.random() * 0.7).toFixed(2)}`;
+      document.body.appendChild(b);
+      b.addEventListener("animationend", () => b.remove());
+    }, { passive: true });
+
     /* ---- cursor glow (eased) ---- */
     const g = el("div", "glow");
     g.setAttribute("aria-hidden", "true");

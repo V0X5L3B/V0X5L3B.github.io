@@ -37,7 +37,7 @@ const themeBtn = $("#themeBtn");
 function setTheme(t, persist = true) {
   root.setAttribute("data-theme", t);
   const meta = $('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", t === "light" ? "#f5f0e6" : "#1f1e1b");
+  if (meta) meta.setAttribute("content", t === "light" ? "#fff5f7" : "#1f1720");
   themeBtn.setAttribute("aria-pressed", String(t === "light"));
   themeBtn.setAttribute("aria-label", t === "light" ? "Switch to dark theme" : "Switch to light theme");
   if (persist) store.set("v0x-theme", t);
