@@ -34,3 +34,7 @@ body { background-image: radial-gradient(1100px 520px at 12% -8%, color-mix(in s
 
 /* footer */
 .foot__id .muted::after { content: " ♡"; color: var(--crimson-t); }
+
+/* the swaying cobweb must never create a sideways scrollbar */
+.hero { overflow-x: clip; }
+:root[data-holiday] .corner svg { transform-origin: top center; }
