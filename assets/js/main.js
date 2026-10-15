@@ -192,7 +192,6 @@ $("#hirePrice").textContent = HIRE.price;
     ? ext(talk, "Start a project ↗", "btn btn--primary")
     : h("a", { class: "btn btn--primary", href: "#contact" }, "Start a project ↓"));
   if (HIRE.pay?.url) cta.append(ext(HIRE.pay.url, `${HIRE.pay.label} ↗`, "btn"));
-  else cta.append(h("span", { class: "hire__soon", text: "payment link coming soon" }));
   if (LINKS.discord?.copy) cta.append(h("p", { class: "hire__dm", text: `or message ${LINKS.discord.copy} on Discord` }));
 })();
 

@@ -19,7 +19,7 @@ Everything lives in **`assets/js/data.js`**: profile text, links, projects, lab 
 - Add a project: copy an object in `PROJECTS`; `categories` must match an id in `FILTERS`.
 - Add a lab entry: append to `LAB`.
 - Services (the "hire me" section): edit `SERVICES`, `PROCESS` and `HIRE`.
-- Payment: set `HIRE.pay.url` to your payment link. While it is `null`, a "payment link coming soon" note shows instead of a button. If the link goes to a new host, nothing in the CSP needs changing (it's a normal outbound link).
+- Payment is Discord first: visitors message you, you agree on the job, then you send them a payment link. To add a pay button later, set `HIRE.pay.url` (it's a normal outbound link, so the CSP doesn't need changing); while it's `null`, no button shows.
 - Add an email: set `LINKS.email` (see the commented example).
 - Code previews on project cards are *illustrative sketches*, labelled as such. Replace with real excerpts if you prefer.
 - Ambient music (`audio/`) tries to autoplay on load. Browsers block sound until the first click/tap/keypress, so it then starts on that first interaction. Pause/skip/volume are in the footer; list tracks in `TRACKS`.

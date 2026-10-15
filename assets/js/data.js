@@ -175,12 +175,13 @@ export const PROCESS = [
 
 /*
  * Hiring + payment.
- * pay.url: set this to your payment link (Ko-fi, Stripe payment link, PayPal.me, ...).
- * While it is null, the site shows a "payment link coming soon" note instead of a button.
+ * Payment is Discord first: people message me, we agree on the job, then I send a payment link.
+ * pay.url: optional. Set it to a public payment page (Ko-fi, Stripe link, PayPal.me, ...) to add
+ * a pay button; while it is null, no button is shown.
  */
 export const HIRE = {
   pitch: "Got something you want to make? I'd love to help you build it.",
-  price: "Every project is quoted after we talk, so you only pay for what you need.",
+  price: "Message me on Discord and tell me your idea. Every project is quoted after we talk, and once we agree I send you a payment link, so you only pay for what you need.",
   pay: { label: "Pay for a project", url: null },
 };
 

@@ -66,10 +66,6 @@
 .hire__h { margin: 0; font: 400 clamp(1.6rem, 3vw, 2.1rem)/1.1 var(--serif); }
 .hire__price { margin: 0; color: var(--muted); }
 .hire__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 6px; }
-.hire__soon {
-  padding: 10px 16px; font: 500 .76rem/1 var(--mono); color: var(--dim);
-  border: 1.5px dashed var(--line-2); border-radius: 999px;
-}
 .hire__dm { flex-basis: 100%; margin: 4px 0 0; font: 600 1.2rem/1.1 var(--hand); color: var(--muted); }
 
 @media (max-width: 960px) {
