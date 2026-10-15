@@ -14,7 +14,7 @@
   --text: #fbeef3;
   --muted: #d1b9c6;
   --dim: #a68c9b;
-  --crimson: #e0709a;           /* rose (name kept: holiday themes override it) */
+  --crimson: #c24a78;           /* rose, deep enough for white button text (name kept: holiday themes override it) */
   --crimson-t: #f59ab9;         /* rose for text on dark */
   --crimson-bg: rgba(245, 154, 185, .14);
   --green: #8fd0b0;
