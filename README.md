@@ -13,15 +13,16 @@ python3 -m http.server 8000
 
 ## Edit content
 
-Everything lives in **`assets/js/data.js`**: profile text, links, projects, lab experiments, skills.
+Everything lives in **`assets/js/data.js`**: profile text, links, projects, promo spots, notes, skills and the "now" line.
 
 - A link set to `null` renders no button (nothing is faked).
 - Add a project: copy an object in `PROJECTS`; `categories` must match an id in `FILTERS`.
-- Add a lab entry: append to `LAB`.
+- Add a note (write-up): append to `NOTES`.
+- Change the featured strip: edit `PROMOS` (your own promos only, no ad networks).
+- Change what you are building right now: edit `NOW` (null hides it).
 - Services (the "hire me" section): edit `SERVICES`, `PROCESS` and `HIRE`.
 - Payment is Discord first: visitors message you, you agree on the job, then you send them a payment link. To add a pay button later, set `HIRE.pay.url` (it's a normal outbound link, so the CSP doesn't need changing); while it's `null`, no button shows.
 - Add an email: set `LINKS.email` (see the commented example).
-- Code previews on project cards are *illustrative sketches*, labelled as such. Replace with real excerpts if you prefer.
 - Ambient music (`audio/`) tries to autoplay on load. Browsers block sound until the first click/tap/keypress, so it then starts on that first interaction. Pause/skip/volume are in the footer; list tracks in `TRACKS`.
 
 ## Seasonal themes
@@ -32,7 +33,7 @@ Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · 
 - Preview any theme: `?holiday=halloween` (ids: halloween, november, december, january, february, march, july) or `?holiday=none`.
 - Visitors can turn it off in the footer (remembered in their browser). The `holiday` console command previews too.
 - Halloween has the most detail (moon, spiders, graveyard row, witch, fog, glowing eyes, `boo` in the console).
-- Motion is always on: the site deliberately ignores the visitor's reduced-motion setting (owner's choice).
+- Motion is on by default and ignores the visitor's reduced-motion setting (owner's choice). Visitors can turn animations off with the footer switch (stored in localStorage as `v0x-motion`).
 - To add or move a holiday: edit `HOLIDAYS` in `holiday.js` and add a colour block in `holidays.css`.
 
 ## Look & fonts
@@ -75,4 +76,4 @@ Check Settings → Pages: source = "Deploy from a branch", branch matches the on
 The opening animation plays once per browser session; add `?intro` to the URL to replay it. It cannot be skipped.
 
 ## Libraries
-GSAP 3.15 (free "no charge" license) and Lenis 1.3.27 (MIT) are self-hosted in `assets/vendor/` (see its README). `assets/js/fx.js` uses them for smooth scrolling, parallax, split-text headings and click sparks, and does nothing under reduced motion. React Bits is React-only, so a few effects are re-made in plain JS instead.
+GSAP 3.15 (free "no charge" license) and Lenis 1.3.27 (MIT) are self-hosted in `assets/vendor/` (see its README). `assets/js/fx.js` uses them for smooth scrolling, parallax, split-text headings and click sparks, and does nothing when animations are switched off. React Bits is React-only, so a few effects are re-made in plain JS instead.

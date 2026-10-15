@@ -1,12 +1,13 @@
 import {
-  PROFILE, LINKS, SHOUTOUTS, PROJECTS, FILTERS, LAB, SKILLS, DIRECTION, TRACKS,
-  SERVICES, PROCESS, HIRE,
+  PROFILE, LINKS, SHOUTOUTS, PROJECTS, FILTERS, SKILLS, DIRECTION, TRACKS,
+  SERVICES, PROCESS, HIRE, NOW, PROMOS, NOTES,
 } from "./data.js";
 import { initHoliday, preview as previewHoliday, setEnabled as setHolidayEnabled, HOLIDAYS, current as currentHoliday } from "./holiday.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const reduced = false; /* motion is always on (owner's choice) */
+/* motion is on by default (owner's choice); visitors can turn it off with the footer switch */
+const reduced = (() => { try { return localStorage.getItem("v0x-motion") === "off"; } catch { return false; } })();
 
 /** Tiny DOM builder. Text is always set via textContent (never innerHTML). */
 function h(tag, attrs = {}, ...kids) {
@@ -34,6 +35,7 @@ const store = {
 
 /* ---------------- theme ---------------- */
 const root = document.documentElement;
+if (reduced) root.classList.add("calm");
 const themeBtn = $("#themeBtn");
 function setTheme(t, persist = true) {
   root.setAttribute("data-theme", t);
@@ -70,77 +72,79 @@ const hd = $("#heroDiscord");
 if (LINKS.discordServer) hd.href = LINKS.discordServer.url; else hd.remove();
 $("#direction").append(...DIRECTION.map((d) => h("li", { text: d })));
 
-/* ---------------- projects ---------------- */
-const grid = $("#projectGrid");
-const dlg = $("#dlg");
-let lastTrigger = null;
+/* ---------------- now + promo spots ---------------- */
+const termNow = $("#termNow");
+if (NOW && termNow) termNow.textContent = NOW;
+else $$(".term__now").forEach((n) => n.remove());
 
-function sketchBlock(s, cls = "") {
-  return h("pre", { class: `code ${cls}`, tabindex: "0" }, h("code", { text: s.code }));
-}
+const isLocal = (href) => href.startsWith("#");
+$("#promoRow")?.append(...PROMOS.map((p) =>
+  h("li", { class: `promo__c reveal`, "data-kind": p.kind },
+    h("span", { class: "promo__k", text: p.kind }),
+    h("strong", { class: "promo__t", text: p.title }),
+    h("span", { class: "promo__s", text: p.text }),
+    isLocal(p.href) ? h("a", { class: "promo__a", href: p.href }, `${p.cta} \u2192`) : ext(p.href, `${p.cta} \u2197`, "promo__a"))));
 
-function projectCard(p) {
+/* ---------------- projects: a small file explorer ---------------- */
+const tree = $("#projectTree");
+const view = $("#projectView");
+let activeProject = PROJECTS[0]?.id;
+
+function projectView(p) {
   const links = [];
-  if (p.links?.github) links.push(ext(p.links.github, "Source ↗", "link-btn"));
-  if (p.links?.live) links.push(ext(p.links.live, "Live ↗", "link-btn"));
-  const more = h("button", {
-    type: "button", class: "link-btn",
-    "aria-haspopup": "dialog",
-    "aria-label": `Details: ${p.name}`,
-    onclick: (e) => openProject(p.id, e.currentTarget),
-  }, "Details");
-
-  return h("article", { class: "card reveal", "data-accent": p.accent, "data-cats": p.categories.join(" "), id: `p-${p.id}` },
-    h("div", { class: "card__top" },
-      h("div", { class: "card__kicker" }, h("span", { text: p.kicker }), h("span", { class: "badge", text: p.status })),
-      h("h3", { class: "card__title", text: p.name }),
-      h("p", { class: "card__sum", text: p.summary }),
-      h("ul", { class: "tags", "aria-label": "Technologies" }, p.tags.map((t) => h("li", { text: t }))),
-    ),
-    h("div", { class: "card__sketch" },
-      h("div", { class: "panel__bar" }, h("span", { class: "panel__file", text: p.sketch.file }), h("span", { class: "panel__tag", text: "sketch · illustrative" })),
-      sketchBlock(p.sketch, "code--card"),
-    ),
-    h("div", { class: "card__actions" }, more, links,
-      !links.length && h("span", { class: "nolink", text: "no public source yet" })),
+  if (p.links?.github) links.push(ext(p.links.github, "Source \u2197", "btn"));
+  if (p.links?.live) links.push(ext(p.links.live, "Live \u2197", "btn"));
+  view.setAttribute("data-accent", p.accent);
+  view.setAttribute("aria-labelledby", `tab-${p.id}`);
+  view.replaceChildren(
+    h("div", { class: "card__kicker" }, h("span", { text: p.kicker }), h("span", { class: "badge", text: p.status })),
+    h("h3", { class: "card__title", text: p.name }),
+    h("p", { class: "card__sum", text: p.summary }),
+    h("h4", { class: "mini", text: "How it's built" }),
+    h("ul", { class: "det" }, p.details.map((d) => h("li", { text: d }))),
+    h("ul", { class: "tags", "aria-label": "Technologies" }, p.tags.map((t) => h("li", { text: t }))),
+    h("div", { class: "card__actions" }, links, !links.length && h("span", { class: "nolink", text: "No public source or demo yet." })),
   );
 }
 
-grid.append(...PROJECTS.map(projectCard));
-
-/* a friendly last tile: "your project could go here" (not a .card, so filters leave it alone) */
-grid.append(h("a", { class: "card-you reveal", href: "#hire" },
-  h("span", { class: "card-you__plus", "aria-hidden": "true", text: "+" }),
-  h("span", { class: "card-you__t", text: "Your project could go here" }),
-  h("span", { class: "card-you__s", text: "Tell me what you want to make →" })));
-
-function openProject(id, trigger) {
+function selectProject(id, focus = false) {
   const p = PROJECTS.find((x) => x.id === id);
   if (!p) return false;
-  lastTrigger = trigger || document.activeElement;
-  const links = [];
-  if (p.links?.github) links.push(ext(p.links.github, "Source ↗", "link-btn"));
-  if (p.links?.live) links.push(ext(p.links.live, "Live ↗", "link-btn"));
-  const body = $("#dlgBody");
-  body.replaceChildren(
-    h("div", { class: "card__kicker" }, h("span", { text: p.kicker }), h("span", { class: "badge", style: "margin-right:44px", text: p.status })),
-    h("h3", { id: "dlgTitle", text: p.name }),
-    h("p", { class: "muted", text: p.summary }),
-    h("ul", { class: "det" }, p.details.map((d) => h("li", { text: d }))),
-    h("ul", { class: "tags" }, p.tags.map((t) => h("li", { text: t }))),
-    h("p", { class: "code-cap", text: `${p.sketch.file} — an illustrative sketch of the idea, not the real source.` }),
-    sketchBlock(p.sketch),
-    links.length ? h("div", { class: "card__actions", style: "padding:18px 0 0;border:0" }, links)
-                 : h("p", { class: "code-cap", style: "margin-top:18px", text: "No public repository or demo yet." }),
-  );
-  $("#dlg").setAttribute("data-accent", p.accent);
-  if (typeof dlg.showModal === "function") dlg.showModal();
-  else dlg.setAttribute("open", "");
+  activeProject = id;
+  $$("[role=tab]", tree).forEach((t) => {
+    const on = t.dataset.id === id;
+    t.setAttribute("aria-selected", String(on));
+    t.tabIndex = on ? 0 : -1;
+    if (on && focus) t.focus();
+  });
+  projectView(p);
   return true;
 }
-$("#dlgClose").addEventListener("click", () => dlg.close());
-dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); }); // backdrop click
-dlg.addEventListener("close", () => { if (lastTrigger && document.contains(lastTrigger)) lastTrigger.focus(); });
+
+function openProject(id) {
+  if (!selectProject(id)) return false;
+  if (window.v0xLenis) window.v0xLenis.scrollTo("#projects"); else $("#projects").scrollIntoView();
+  return true;
+}
+
+tree.append(
+  ...PROJECTS.map((p) => h("button", {
+    type: "button", role: "tab", class: "tree__i", id: `tab-${p.id}`, "data-id": p.id, "data-accent": p.accent,
+    "data-cats": p.categories.join(" "), "aria-controls": "projectView",
+    onclick: () => selectProject(p.id),
+  }, h("span", { class: "tree__n", text: p.name }), h("span", { class: "tree__s", text: p.status }))),
+  h("a", { class: "tree__i tree__you", href: "#hire" },
+    h("span", { class: "tree__n", text: "+ Your project" }), h("span", { class: "tree__s", text: "Tell me what you want to make" })),
+);
+tree.addEventListener("keydown", (e) => {
+  if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)) return;
+  const tabs = $$("[role=tab]:not([hidden])", tree);
+  const i = tabs.findIndex((t) => t.dataset.id === activeProject);
+  const step = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : -1;
+  const next = tabs[(i + step + tabs.length) % tabs.length];
+  if (next) { e.preventDefault(); selectProject(next.dataset.id, true); }
+});
+selectProject(activeProject);
 
 /* filters */
 const filterBar = $("#filters");
@@ -155,20 +159,14 @@ function renderFilters() {
 }
 function applyFilter(id) {
   activeFilter = id;
-  let shown = 0;
-  $$(".card", grid).forEach((c) => {
-    const ok = id === "all" || c.dataset.cats.split(" ").includes(id);
-    c.hidden = !ok;
-    if (ok) { shown++; c.classList.add("in"); }
+  const shown = $$("[role=tab]", tree).filter((t) => {
+    const ok = id === "all" || t.dataset.cats.split(" ").includes(id);
+    t.hidden = !ok;
+    return ok;
   });
-  $(".empty", grid)?.remove();
-  if (!shown) {
-    grid.append(h("div", { class: "empty" },
-      h("p", { text: "Nothing under that filter yet." }),
-      h("button", { type: "button", class: "chip", onclick: () => applyFilter("all") }, "Show all projects")));
-  }
+  if (shown.length && !shown.some((t) => t.dataset.id === activeProject)) selectProject(shown[0].dataset.id);
   const label = FILTERS.find((f) => f.id === id)?.label ?? id;
-  filterStatus.textContent = `${shown} project${shown === 1 ? "" : "s"} shown: ${label}`;
+  filterStatus.textContent = `${shown.length} project${shown.length === 1 ? "" : "s"} shown: ${label}`;
   renderFilters();
 }
 renderFilters();
@@ -202,16 +200,18 @@ $("#skillGrid").append(...SKILLS.map((g) =>
     h("ul", {}, g.items.map((i) =>
       h("li", {}, h("span", { class: "skills__n", text: i.name }), h("span", { class: "skills__s", text: i.stance })))))));
 
-/* ---------------- lab ---------------- */
-if (!LAB.length) {
-  $("#labGrid").append(h("div", { class: "empty" }, h("p", { text: "Nothing in the lab right now. New experiments will show up here." })));
-}
-$("#labGrid").append(...LAB.map((e) =>
-  h("article", { class: "exp reveal" },
-    h("div", { class: "exp__row" }, h("h3", { text: e.name }), h("span", { class: "exp__st", text: e.status })),
-    h("p", { text: e.note }),
-    h("ul", { class: "tags" }, e.tags.map((t) => h("li", { text: t }))),
-    e.url && ext(e.url, "Code ↗", "link-btn"))));
+/* ---------------- notes ---------------- */
+const fmtDate = (d) => new Date(`${d}T12:00:00`).toLocaleDateString("en", { year: "numeric", month: "short", day: "numeric" });
+$("#notesList").append(...NOTES.map((n) =>
+  h("li", { class: "note-i reveal", id: `note-${n.id}` },
+    h("details", {},
+      h("summary", {},
+        h("time", { class: "note-i__d", datetime: n.date, text: fmtDate(n.date) }),
+        h("span", { class: "note-i__t", text: n.title }),
+        h("span", { class: "note-i__s", text: n.summary })),
+      h("div", { class: "note-i__b" },
+        n.body.map((para) => h("p", { text: para })),
+        h("ul", { class: "tags", "aria-label": "Topics" }, n.tags.map((t) => h("li", { text: t }))))))));
 
 /* ---------------- contact ---------------- */
 async function copyText(text) {
@@ -272,6 +272,7 @@ const COMMANDS = {
     print("  hire              what I can make for you");
     print("  open <id>         open a project's details");
     print("  skills            how I use what I use");
+    print("  notes             write-ups from building this site");
     print("  links             public links");
     print("  theme [dark|light] switch or toggle theme");
     print("  holiday [id|on|off] preview or toggle seasonal themes");
@@ -281,7 +282,7 @@ const COMMANDS = {
   about() { print(PROFILE.intro); },
   projects() {
     PROJECTS.forEach((p) => {
-      const b = h("button", { type: "button", class: "inline", onclick: (e) => openProject(p.id, e.currentTarget) }, p.id);
+      const b = h("button", { type: "button", class: "inline", onclick: () => openProject(p.id) }, p.id);
       print(b, `  — ${p.name} [${p.status.toLowerCase()}]`);
     });
     print("tip: `open <id>` shows details.");
@@ -290,8 +291,8 @@ const COMMANDS = {
     if (!arg) return print(h("span", { class: "err", text: "usage: open <project-id>" }));
     const hit = PROJECTS.find((p) => p.id === arg || p.id.startsWith(arg));
     if (!hit) return print(h("span", { class: "err", text: `no project "${arg}". try: projects` }));
-    print(`opening ${hit.name}…`);
-    openProject(hit.id, input);
+    print(`showing ${hit.name}`);
+    openProject(hit.id);
   },
   hire() {
     print(HIRE.pitch);
@@ -299,6 +300,12 @@ const COMMANDS = {
     print(HIRE.price);
     const go = h("button", { type: "button", class: "inline", onclick: () => (window.v0xLenis ? window.v0xLenis.scrollTo("#hire") : $("#hire").scrollIntoView()) }, "see the hire me section");
     print("next: ", go);
+  },
+  notes() {
+    NOTES.forEach((n) => {
+      const b = h("button", { type: "button", class: "inline", onclick: () => { const d = $(`#note-${n.id} details`); d.open = true; d.scrollIntoView({ block: "center" }); } }, n.title);
+      print(`${n.date}  `, b);
+    });
   },
   skills() {
     SKILLS.forEach((g) => print(`${g.group}: ${g.items.map((i) => `${i.name} (${i.stance.toLowerCase()})`).join(", ")}`));
@@ -422,3 +429,22 @@ if ("IntersectionObserver" in window) {
 } else {
   $$(".reveal").forEach((el) => el.classList.add("in"));
 }
+
+/* ---------------- footer: animations switch + status bar ---------------- */
+const motionBtn = $("#motionBtn");
+if (motionBtn) {
+  motionBtn.textContent = reduced ? "Off" : "On";
+  motionBtn.setAttribute("aria-pressed", String(!reduced));
+  motionBtn.setAttribute("aria-label", reduced ? "Turn animations on" : "Turn animations off");
+  motionBtn.addEventListener("click", () => {
+    store.set("v0x-motion", reduced ? "on" : "off");
+    location.reload();                              // the animation layers read the setting once, at load
+  });
+}
+function paintStatus() {
+  const t = $("#sbTheme"), s = $("#sbSeason");
+  if (t) t.textContent = `theme: ${currentTheme()}`;
+  if (s) s.textContent = `season: ${root.dataset.holiday ?? "none"}`;
+}
+paintStatus();
+new MutationObserver(paintStatus).observe(root, { attributes: true, attributeFilter: ["data-theme", "data-holiday"] });

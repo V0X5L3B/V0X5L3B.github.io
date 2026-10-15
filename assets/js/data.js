@@ -1,6 +1,6 @@
 /*
  * V0X5L3B — central content file.
- * Edit this file to change links, projects, services, lab entries and skills.
+ * Edit this file to change links, projects, services, promos, notes and skills.
  * Nothing here is rendered unless it has a real value:
  *   - a link set to null simply doesn't render a button
  *   - no stats, percentages or dates are shown anywhere
@@ -47,8 +47,6 @@ export const SHOUTOUTS = [
  * accent: "crimson" | "green" | "lime"  — per-project identity colour
  * status: honest, plain-language state of the work
  * links:  { github, live } — null when no public destination exists
- * sketch: code-inspired preview. These are ILLUSTRATIVE sketches of the idea,
- *         not excerpts of the real source, and are labelled that way in the UI.
  */
 export const PROJECTS = [
   {
@@ -70,16 +68,6 @@ export const PROJECTS = [
       github: "https://github.com/V0X5L3B/v0x5l3b.github.io",
       live: "https://v0x5l3b.is-a.dev/",
     },
-    sketch: {
-      file: "data.js",
-      lang: "javascript",
-      code: `// one file, whole site
-export const PROJECTS = [
-  { id: "...", name: "...", status: "Evolving",
-    links: { github: null, live: null } },
-];
-// null link = no button. Nothing invented.`,
-    },
   },
   {
     id: "agent-experiment",
@@ -99,17 +87,6 @@ export const PROJECTS = [
     categories: ["python"],
     accent: "lime",
     links: { github: null, live: null },
-    sketch: {
-      file: "loop.py",
-      lang: "python",
-      code: `# sketch: the loop I keep rebuilding
-while not task.done:
-    obs = env.observe()
-    action = policy(obs)          # a tool call
-    result = env.step(action)     # list_dir, read_file, run_tests ...
-    if result.error:
-        notes.add(inspect(result.error))`,
-    },
   },
 ];
 
@@ -185,12 +162,6 @@ export const HIRE = {
   pay: { label: "Pay for a project", url: null },
 };
 
-/* Lab: small experiments, prototypes, unfinished ideas. Add entries freely. */
-export const LAB = [
-  // Add experiments here, e.g.
-  // { name: "...", note: "...", status: "in progress", tags: ["..."], url: null },
-];
-
 /* Skills: labelled by stance, never by percentage. */
 export const SKILLS = [
   {
@@ -231,4 +202,62 @@ export const TRACKS = [
   { name: "track 01", src: "audio/track1.mp3" },
   { name: "track 02", src: "audio/track2.mp3" },
   { name: "track 03", src: "audio/track3.mp3" },
+];
+
+/* What I'm working on right now. One short line, shown in the hero terminal. Set to null to hide. */
+export const NOW = "a pastel terminal remodel of this site";
+
+/*
+ * Promo spots: the "featured" strip under the hero. These are my own ads:
+ * my services, my server and things I recommend. No ad networks, no tracking.
+ * href: a section on this page ("#hire") or a full https link.
+ */
+export const PROMOS = [
+  { kind: "service", title: "Need a website?", text: "I build personal sites and small project pages, like this one.", cta: "Hire me", href: "#hire" },
+  { kind: "service", title: "Stuck on a bug?", text: "Send me the error. I'll help you find what's wrong and fix it.", cta: "Get help", href: "#hire" },
+  { kind: "community", title: "My Discord server", text: "Come hang out, ask questions and see what I'm building.", cta: "Join", href: "https://discord.gg/y9vfNpFgN" },
+  { kind: "recommended", title: "Clanker", text: "An entertainment Discord bot with economy, memes and games.", cta: "Visit", href: "https://clanker.pxsl.dev/" },
+];
+
+/*
+ * Notes: short write-ups about real things I built or fixed on this site.
+ * date: when it happened (YYYY-MM-DD). body: paragraphs, plain text.
+ */
+export const NOTES = [
+  {
+    id: "contrast",
+    date: "2026-10-15",
+    title: "Making button text readable in dark mode",
+    tags: ["CSS", "Accessibility"],
+    summary: "My pink buttons looked nice but the white text on them was too faint to read comfortably.",
+    body: [
+      "In dark mode the main button was white text on a light rose. It looked soft, but the contrast was only 3.0 to 1. The usual minimum for normal text (WCAG AA) is 4.5 to 1.",
+      "I darkened that rose a little, from #e0709a to #c24a78. The button still reads as pink, and the contrast is now 4.6 to 1.",
+      "The holiday themes each set their own button colour, so I checked those too, in light and dark.",
+    ],
+  },
+  {
+    id: "cobweb",
+    date: "2026-10-14",
+    title: "The cobweb that made my page scroll sideways",
+    tags: ["CSS", "Halloween theme"],
+    summary: "A swaying Halloween cobweb in the corner gave the whole page a sideways scrollbar.",
+    body: [
+      "The Halloween theme hangs a cobweb in the top corner and gently rotates it back and forth. While it rotated, part of it poked past the right edge of the screen, so the browser added a sideways scrollbar and the page wobbled on phones.",
+      "Two small CSS changes fixed it. The cobweb now rotates around its top edge, so it swings down instead of out. And the hero section clips anything that goes past its sides (overflow-x: clip), so decorations can never widen the page.",
+      "Since then I check every theme for sideways scrolling on a phone-sized screen before I ship.",
+    ],
+  },
+  {
+    id: "csp",
+    date: "2026-10-12",
+    title: "Why this site loads nothing from other websites",
+    tags: ["Security", "HTML"],
+    summary: "The site has a strict security policy, so every library and font lives in the repo.",
+    body: [
+      "The page has a Content Security Policy. It tells the browser to only run scripts and load fonts from this site itself, and to block everything else.",
+      "That means no CDNs: the animation libraries and fonts are copied into the repo. It also means the one small inline script in the page is allowed by its exact fingerprint (a sha256 hash). If I change even one character of that script, I have to update the hash, or the browser refuses to run it.",
+      "It's a bit more work, but nobody else's server can change what runs on my site, and there are no trackers.",
+    ],
+  },
 ];

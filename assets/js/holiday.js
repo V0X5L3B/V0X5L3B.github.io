@@ -226,10 +226,11 @@ function build(id) {
 function paintNote() {
   const note = document.getElementById("holidayNote");
   const greet = document.getElementById("greet");
+  const termGreet = document.getElementById("termGreet");
   const id = state.none ? null : state.override ?? byMonth(new Date().getMonth());
   const on = store.get(OFF_KEY) !== "off";
   if (!note) return;
-  if (!known(id)) { note.hidden = true; if (greet) greet.hidden = true; return; }
+  if (!known(id)) { note.hidden = true; if (greet) greet.hidden = true; if (termGreet) termGreet.hidden = true; return; }
   note.hidden = false;
   note.replaceChildren();
   const label = document.createElement("span");
@@ -243,6 +244,11 @@ function paintNote() {
   if (greet) {
     greet.hidden = !on;
     const g = HOLIDAYS[id].greet; greet.textContent = on ? (typeof g === "function" ? g() : g) : "";
+  }
+  if (termGreet) {                                  // the same greeting as a comment line in the hero terminal
+    const g = HOLIDAYS[id].greet;
+    termGreet.hidden = !on;
+    termGreet.textContent = on ? `# ${typeof g === "function" ? g() : g}` : "";
   }
 }
 

@@ -5,7 +5,8 @@
  */
 import Lenis from "../vendor/lenis/index.js";
 
-const reduce = false; /* motion is always on (owner's choice) */
+/* motion is on by default (owner's choice); visitors can turn it off with the footer switch */
+const reduce = (() => { try { return localStorage.getItem("v0x-motion") === "off"; } catch { return false; } })();
 const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
 const g = window.gsap;
 const $ = (s, r = document) => r.querySelector(s);
