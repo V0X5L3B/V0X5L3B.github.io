@@ -24,6 +24,8 @@
   <meta name="twitter:image" content="https://v0x5l3b.is-a.dev/assets/img/og.png">
 
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
   <script>
     /* Set theme + js flag before first paint to avoid a flash. */
@@ -46,6 +48,7 @@
   <link rel="stylesheet" href="assets/css/motion.css">
   <link rel="stylesheet" href="assets/css/soft.css">
   <link rel="stylesheet" href="assets/css/hire.css">
+  <link rel="stylesheet" href="assets/css/terminal.css">
 </head>
 <body>
   <div class="intro" id="intro" aria-hidden="true">
@@ -105,20 +108,20 @@
           </ul>
         </div>
 
-        <figure class="panel hero__panel" aria-label="Illustrative code sketch">
-          <div class="panel__bar">
-            <span class="panel__file">make.py</span>
-            <span class="panel__tag">sketch · illustrative</span>
+        <figure class="panel hero__panel term" aria-label="About this site, as a terminal">
+          <div class="panel__bar"><span class="panel__file term__title">v0x@v0x5l3b: ~</span></div>
+          <div class="term__body">
+            <p class="term__out term__hol" id="termGreet" hidden></p>
+            <p class="term__l" style="--i:0"><span class="term__ps">~</span> <span class="term__cmd" style="--n:5">about</span></p>
+            <p class="term__out" style="--i:1">I'm a developer. I build websites and tools in Python and JavaScript.</p>
+            <p class="term__l" style="--i:2"><span class="term__ps">~</span> <span class="term__cmd" style="--n:8">projects</span></p>
+            <p class="term__out" style="--i:3">This website and an experimental AI agent. <a href="#projects">See them</a></p>
+            <p class="term__l" style="--i:4"><span class="term__ps">~</span> <span class="term__cmd" style="--n:4">hire</span></p>
+            <p class="term__out" style="--i:5"><span class="term__ok">&#10003;</span> Taking on websites and small tools. <a href="#hire">How it works</a></p>
+            <p class="term__l" style="--i:6"><span class="term__ps">~</span> <span class="term__cmd" style="--n:7">contact</span></p>
+            <p class="term__out" style="--i:7">Message me on Discord or GitHub. <a href="#contact">Links</a></p>
+            <p class="term__l" style="--i:8"><span class="term__ps">~</span> <span class="term__cur" aria-hidden="true"></span></p>
           </div>
-<pre class="code" tabindex="0"><code><span class="c"># how I work with you, roughly</span>
-<span class="k">def</span> <span class="f">make</span>(idea):
-    plan = <span class="f">sketch</span>(idea)          <span class="c"># we talk first</span>
-    <span class="k">while not</span> you.happy:
-        <span class="f">build</span>(plan)
-        plan = <span class="f">tweak</span>(plan, you.notes)
-    <span class="k">return</span> <span class="f">ship</span>(plan)           <span class="c"># and it's yours</span>
-<span class="f">make</span>(<span class="k">"your idea here"</span>)</code></pre>
-          <figcaption class="panel__foot">A sketch of the idea, not source code. <a href="#hire">Work with me →</a></figcaption>
         </figure>
       </div>
     </section>
@@ -126,7 +129,7 @@
     <!-- ABOUT -->
     <section class="section" id="about" aria-labelledby="about-h">
       <div class="wrap">
-        <p class="label"><span>01</span> about</p>
+        <p class="label"><span>~/</span>about</p>
         <div class="about">
           <h2 id="about-h" class="h2">Curious first, polished later.</h2>
           <div class="about__body">
@@ -145,7 +148,7 @@
     <!-- PROJECTS -->
     <section class="section" id="projects" aria-labelledby="projects-h">
       <div class="wrap">
-        <p class="label"><span>02</span> projects</p>
+        <p class="label"><span>~/</span>projects</p>
         <div class="section__head">
           <h2 id="projects-h" class="h2">Things I've made</h2>
           <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
@@ -159,7 +162,7 @@
     <!-- HIRE -->
     <section class="section" id="hire" aria-labelledby="hire-h">
       <div class="wrap">
-        <p class="label"><span>03</span> hire me</p>
+        <p class="label"><span>~/</span>hire-me</p>
         <div class="section__head">
           <h2 id="hire-h" class="h2">Let me help you make it</h2>
           <p class="section__note" id="hirePitch">Got something you want to make? I'd love to help you build it.</p>
@@ -183,7 +186,7 @@
     <!-- SKILLS -->
     <section class="section" id="skills" aria-labelledby="skills-h">
       <div class="wrap">
-        <p class="label"><span>04</span> skills &amp; tools</p>
+        <p class="label"><span>~/</span>skills</p>
         <div class="section__head">
           <h2 id="skills-h" class="h2">What I work with</h2>
           <p class="section__note">Labelled by how I use them, not by a score.</p>
@@ -195,7 +198,7 @@
     <!-- LAB -->
     <section class="section" id="lab" aria-labelledby="lab-h">
       <div class="wrap">
-        <p class="label"><span>05</span> lab</p>
+        <p class="label"><span>~/</span>lab</p>
         <div class="section__head">
           <h2 id="lab-h" class="h2">Small experiments &amp; loose ends</h2>
           <p class="section__note">Prototypes, half-ideas, things I'm poking at.</p>
@@ -209,7 +212,7 @@
           </div>
           <div class="console__out" id="consoleOut" role="log" aria-live="polite" aria-label="Console output" tabindex="0"></div>
           <form class="console__form" id="consoleForm" autocomplete="off">
-            <label for="consoleIn" class="console__prompt">v0x@lab:~$</label>
+            <label for="consoleIn" class="console__prompt">v0x ~/lab $</label>
             <input id="consoleIn" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" placeholder="type help">
           </form>
           <div class="console__chips" aria-label="Quick commands">
@@ -226,7 +229,7 @@
     <!-- CONTACT -->
     <section class="section" id="contact" aria-labelledby="contact-h">
       <div class="wrap">
-        <p class="label"><span>06</span> contact</p>
+        <p class="label"><span>~/</span>contact</p>
         <div class="section__head">
           <h2 id="contact-h" class="h2">Say hello, or tell me your idea</h2>
           <p class="section__note">Questions, projects, or just hi. Find me here.</p>

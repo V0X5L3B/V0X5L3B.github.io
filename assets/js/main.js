@@ -75,8 +75,25 @@ const grid = $("#projectGrid");
 const dlg = $("#dlg");
 let lastTrigger = null;
 
+/* Small syntax colouring for the sketches: comments, strings, keywords, numbers, calls. Builds text nodes, no innerHTML. */
+const KW = new Set(["const", "let", "export", "import", "from", "return", "if", "else", "while", "for", "in", "not", "and", "or", "def", "class", "null", "true", "false", "None", "True", "False"]);
+const TOKEN = /(\/\/.*|#.*)|("[^"\n]*"|'[^'\n]*'|`[^`\n]*`)|\b(\d+(?:\.\d+)?)\b|\b([A-Za-z_]\w*)(?=\s*\()|\b([A-Za-z_]\w*)\b/g;
+function highlight(src) {
+  const out = []; let last = 0;
+  for (const m of src.matchAll(TOKEN)) {
+    const [t, com, str, num, call, word] = m;
+    const cls = com ? "c" : str ? "s" : num ? "n" : call ? (KW.has(call) ? "k" : "f") : KW.has(word) ? "k" : null;
+    if (!cls) continue;
+    if (m.index > last) out.push(src.slice(last, m.index));
+    out.push(h("span", { class: cls, text: t }));
+    last = m.index + t.length;
+  }
+  out.push(src.slice(last));
+  return out;
+}
+
 function sketchBlock(s, cls = "") {
-  return h("pre", { class: `code ${cls}`, tabindex: "0" }, h("code", { text: s.code }));
+  return h("pre", { class: `code ${cls}`, tabindex: "0" }, h("code", {}, highlight(s.code)));
 }
 
 function projectCard(p) {
