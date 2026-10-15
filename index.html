@@ -5,22 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-smKBRqpAEc18eWGr2LP/BEHerbepURz7IgQy7afUaaU='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>V0X5L3B — experimental developer</title>
-  <meta name="description" content="V0X5L3B (@V0X5L3B): a self-directed developer experimenting with Python AI agents and hand-built web interfaces.">
+  <title>V0X5L3B — developer · I help you make things</title>
+  <meta name="description" content="V0X5L3B (@V0X5L3B): a self-directed developer who builds websites, Python tools and experiments, and helps people make their own.">
   <meta name="theme-color" content="#fff5f7">
   <link rel="canonical" href="https://v0x5l3b.is-a.dev/">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="V0X5L3B">
-  <meta property="og:title" content="V0X5L3B — experimental developer">
-  <meta property="og:description" content="Python agents and hand-built web. A personal lab and project archive.">
+  <meta property="og:title" content="V0X5L3B — developer · I help you make things">
+  <meta property="og:description" content="Websites, Python tools and experiments. See what I've made, or hire me to help you make yours.">
   <meta property="og:url" content="https://v0x5l3b.is-a.dev/">
   <meta property="og:image" content="https://v0x5l3b.is-a.dev/assets/img/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="V0X5L3B — experimental developer">
-  <meta name="twitter:description" content="Python agents and hand-built web. A personal lab and project archive.">
+  <meta name="twitter:title" content="V0X5L3B — developer · I help you make things">
+  <meta name="twitter:description" content="Websites, Python tools and experiments. See what I've made, or hire me to help you make yours.">
   <meta name="twitter:image" content="https://v0x5l3b.is-a.dev/assets/img/og.png">
 
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -45,6 +45,7 @@
   <link rel="stylesheet" href="assets/css/holidays.css">
   <link rel="stylesheet" href="assets/css/motion.css">
   <link rel="stylesheet" href="assets/css/soft.css">
+  <link rel="stylesheet" href="assets/css/hire.css">
 </head>
 <body>
   <div class="intro" id="intro" aria-hidden="true">
@@ -63,6 +64,7 @@
       <nav class="nav" id="nav" aria-label="Primary">
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
+        <a href="#hire">Hire me</a>
         <a href="#skills">Skills</a>
         <a href="#lab">Lab</a>
         <a href="#contact">Contact</a>
@@ -84,38 +86,39 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero__grid">
         <div class="hero__copy">
-          <p class="eyebrow"><span class="dot" aria-hidden="true"></span> <span id="statusText">experiments in progress</span> <span class="sep">/</span> <span class="sig">@V0X5L3B</span> <span class="greet" id="greet" hidden></span></p>
+          <p class="eyebrow"><span class="dot" aria-hidden="true"></span> <span id="statusText">open for projects</span> <span class="sep">/</span> <span class="sig">@V0X5L3B</span> <span class="greet" id="greet" hidden></span></p>
           <h1 id="hero-title" class="hero__title">
-            I build things to find out <em>how they work</em><span class="caret" aria-hidden="true"></span>
+            I build things, and I help you <em>make yours</em><span class="caret" aria-hidden="true"></span>
           </h1>
-          <p class="hero__lede" id="heroLede">Self-directed developer working in Python and the web. I take projects apart, rebuild them, break them again, and write down what the error was actually saying.</p>
+          <p class="hero__lede" id="heroLede">Self-directed developer working in Python and the web. I make websites, small tools and experiments, and I'd love to help you build the thing you've been picturing, from a first idea to something that actually works.</p>
           <div class="hero__cta">
-            <a class="btn btn--primary" href="#projects">Explore projects <span aria-hidden="true">↓</span></a>
+            <a class="btn btn--primary" href="#hire">Work with me <span aria-hidden="true">♡</span></a>
+            <a class="btn" href="#projects">See what I made <span aria-hidden="true">↓</span></a>
             <a class="btn" id="heroGithub" href="https://github.com/V0X5L3B" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
             <a class="btn" id="heroDiscord" href="#contact" target="_blank" rel="noopener noreferrer">Join Discord <span aria-hidden="true">↗</span></a>
             <span class="scribble scribble--cta" aria-hidden="true"><svg viewBox="0 0 50 42"><path d="M44 36C30 38 14 32 9 12"/><path d="M3 20l6-9 8 7"/></svg><span>start here</span></span>
           </div>
           <ul class="hero__facts" aria-label="Focus areas">
-            <li><span>01</span> Python agents</li>
-            <li><span>02</span> Hand-built web</li>
+            <li><span>01</span> Websites</li>
+            <li><span>02</span> Python tools</li>
+            <li><span>03</span> Help making your thing</li>
           </ul>
         </div>
 
         <figure class="panel hero__panel" aria-label="Illustrative code sketch">
           <div class="panel__bar">
-            <span class="panel__file">loop.py</span>
+            <span class="panel__file">make.py</span>
             <span class="panel__tag">sketch · illustrative</span>
           </div>
-<pre class="code" tabindex="0"><code><span class="c"># the loop I keep rebuilding</span>
-<span class="k">while not</span> task.done:
-    obs    = env.<span class="f">observe</span>()
-    action = <span class="f">policy</span>(obs)        <span class="c"># a tool call</span>
-    result = env.<span class="f">step</span>(action)   <span class="c"># list_dir, read_file,</span>
-                                  <span class="c"># write_file, run_tests</span>
-    <span class="k">if</span> result.error:
-        notes.<span class="f">add</span>(<span class="f">inspect</span>(result.error))
-    checkpoints.<span class="f">maybe_save</span>()</code></pre>
-          <figcaption class="panel__foot">A sketch of the idea, not source code. <a href="#lab">See the lab →</a></figcaption>
+<pre class="code" tabindex="0"><code><span class="c"># how I work with you, roughly</span>
+<span class="k">def</span> <span class="f">make</span>(idea):
+    plan = <span class="f">sketch</span>(idea)          <span class="c"># we talk first</span>
+    <span class="k">while not</span> you.happy:
+        <span class="f">build</span>(plan)
+        plan = <span class="f">tweak</span>(plan, you.notes)
+    <span class="k">return</span> <span class="f">ship</span>(plan)           <span class="c"># and it's yours</span>
+<span class="f">make</span>(<span class="k">"your idea here"</span>)</code></pre>
+          <figcaption class="panel__foot">A sketch of the idea, not source code. <a href="#hire">Work with me →</a></figcaption>
         </figure>
       </div>
     </section>
@@ -144,7 +147,7 @@
       <div class="wrap">
         <p class="label"><span>02</span> projects</p>
         <div class="section__head">
-          <h2 id="projects-h" class="h2">Things I'm building</h2>
+          <h2 id="projects-h" class="h2">Things I've made</h2>
           <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
         </div>
         <p class="sr-only" id="filterStatus" role="status" aria-live="polite"></p>
@@ -153,10 +156,34 @@
       </div>
     </section>
 
+    <!-- HIRE -->
+    <section class="section" id="hire" aria-labelledby="hire-h">
+      <div class="wrap">
+        <p class="label"><span>03</span> hire me</p>
+        <div class="section__head">
+          <h2 id="hire-h" class="h2">Let me help you make it</h2>
+          <p class="section__note" id="hirePitch">Got something you want to make? I'd love to help you build it.</p>
+        </div>
+        <div class="svc" id="svcGrid"></div>
+
+        <div class="hire">
+          <div class="hire__steps">
+            <h3 class="mini">How it works</h3>
+            <ol class="steps" id="steps"></ol>
+          </div>
+          <div class="hire__pay" id="hirePay">
+            <h3 class="hire__h">Ready to start?</h3>
+            <p class="hire__price" id="hirePrice"></p>
+            <div class="hire__cta" id="hireCta"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- SKILLS -->
     <section class="section" id="skills" aria-labelledby="skills-h">
       <div class="wrap">
-        <p class="label"><span>03</span> skills &amp; tools</p>
+        <p class="label"><span>04</span> skills &amp; tools</p>
         <div class="section__head">
           <h2 id="skills-h" class="h2">What I work with</h2>
           <p class="section__note">Labelled by how I use them, not by a score.</p>
@@ -168,7 +195,7 @@
     <!-- LAB -->
     <section class="section" id="lab" aria-labelledby="lab-h">
       <div class="wrap">
-        <p class="label"><span>04</span> lab</p>
+        <p class="label"><span>05</span> lab</p>
         <div class="section__head">
           <h2 id="lab-h" class="h2">Small experiments &amp; loose ends</h2>
           <p class="section__note">Prototypes, half-ideas, things I'm poking at.</p>
@@ -188,6 +215,7 @@
           <div class="console__chips" aria-label="Quick commands">
             <button type="button" class="chip" data-cmd="help">help</button>
             <button type="button" class="chip" data-cmd="projects">projects</button>
+            <button type="button" class="chip" data-cmd="hire">hire</button>
             <button type="button" class="chip" data-cmd="links">links</button>
             <button type="button" class="chip" data-cmd="theme">theme</button>
           </div>
@@ -198,10 +226,10 @@
     <!-- CONTACT -->
     <section class="section" id="contact" aria-labelledby="contact-h">
       <div class="wrap">
-        <p class="label"><span>05</span> contact</p>
+        <p class="label"><span>06</span> contact</p>
         <div class="section__head">
-          <h2 id="contact-h" class="h2">Say hello</h2>
-          <p class="section__note">The best places to find me are listed below.</p>
+          <h2 id="contact-h" class="h2">Say hello, or tell me your idea</h2>
+          <p class="section__note">Questions, projects, or just hi. Find me here.</p>
         </div>
         <ul class="links" id="linkList"></ul>
       </div>
