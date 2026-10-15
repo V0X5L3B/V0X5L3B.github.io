@@ -117,12 +117,10 @@ addEventListener("scroll", onScroll, { passive: true });
 addEventListener("resize", onScroll);
 onScroll();
 
-/* ---- theme button spin + smooth colour crossfade ---- */
+/* ---- theme button spin (the colours switch instantly: a crossfade on every element made the toggle feel laggy) ---- */
 const themeBtn = $("#themeBtn");
 if (themeBtn) themeBtn.addEventListener("click", () => {
-  root.classList.add("theme-fade");
   themeBtn.classList.remove("spin"); void themeBtn.offsetWidth; themeBtn.classList.add("spin");
-  setTimeout(() => root.classList.remove("theme-fade"), 600);
 });
 
 /* ---- button ripple ---- */

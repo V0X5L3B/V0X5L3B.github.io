@@ -74,7 +74,6 @@
 
 .icon-btn.spin svg { animation: spin .6s cubic-bezier(.5, 0, .2, 1); }
 @keyframes spin { to { transform: rotate(360deg); } }
-.theme-fade, .theme-fade * { transition: background-color .45s ease, color .45s ease, border-color .45s ease, fill .45s ease !important; }
 
 /* spotlight that follows the pointer inside cards */
 .card, .lk, .exp, .skills__g { position: relative; }
