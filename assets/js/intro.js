@@ -12,7 +12,12 @@ function finish() {
   intro?.remove();
 }
 
-if (intro && root.classList.contains("intro-on")) {
+let calm = false;
+try { calm = localStorage.getItem("v0x-motion") === "off"; } catch (e) {}
+
+if (intro && calm) {
+  finish();                                         // the visitor turned animations off in the footer
+} else if (intro && root.classList.contains("intro-on")) {
   try { sessionStorage.setItem("v0x-intro", "1"); } catch (e) {}
   const g = window.gsap;
 

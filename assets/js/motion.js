@@ -1,5 +1,6 @@
 /* Motion & polish layer. Pure DOM, no network, no storage. Safe to delete along with motion.css. */
-const reduce = false; /* motion is always on (owner's choice) */
+/* motion is on by default (owner's choice); visitors can turn it off with the footer switch */
+const reduce = (() => { try { return localStorage.getItem("v0x-motion") === "off"; } catch { return false; } })();
 const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
 const root = document.documentElement;
 const $ = (s, r = document) => r.querySelector(s);
@@ -73,7 +74,7 @@ const targets = [
 targets.forEach((n) => { if (!n.classList.contains("hl")) n.classList.add("rv"); });
 // stagger siblings inside grids that main.js builds
 function stagger() {
-  ["#projectGrid", "#skillGrid", "#labGrid", "#linkList"].forEach((sel) => {
+  ["#promoRow", "#svcGrid", "#skillGrid", "#notesList", "#linkList"].forEach((sel) => {
     const g = $(sel);
     if (g) Array.from(g.children).forEach((c, i) => c.style.setProperty("--d", i));
   });

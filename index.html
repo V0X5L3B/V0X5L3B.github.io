@@ -49,6 +49,7 @@
   <link rel="stylesheet" href="assets/css/soft.css">
   <link rel="stylesheet" href="assets/css/hire.css">
   <link rel="stylesheet" href="assets/css/terminal.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
 </head>
 <body>
   <div class="intro" id="intro" aria-hidden="true">
@@ -65,12 +66,11 @@
       </a>
 
       <nav class="nav" id="nav" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#hire">Hire me</a>
-        <a href="#skills">Skills</a>
-        <a href="#lab">Lab</a>
-        <a href="#contact">Contact</a>
+        <a href="#about">about</a>
+        <a href="#projects">projects</a>
+        <a href="#hire">hire-me</a>
+        <a href="#notes">notes</a>
+        <a href="#contact">contact</a>
       </nav>
 
       <div class="bar__tools">
@@ -120,9 +120,22 @@
             <p class="term__out" style="--i:5"><span class="term__ok">&#10003;</span> Taking on websites and small tools. <a href="#hire">How it works</a></p>
             <p class="term__l" style="--i:6"><span class="term__ps">~</span> <span class="term__cmd" style="--n:7">contact</span></p>
             <p class="term__out" style="--i:7">Message me on Discord or GitHub. <a href="#contact">Links</a></p>
-            <p class="term__l" style="--i:8"><span class="term__ps">~</span> <span class="term__cur" aria-hidden="true"></span></p>
+            <p class="term__l term__now" style="--i:8"><span class="term__ps">~</span> <span class="term__cmd" style="--n:3">now</span></p>
+            <p class="term__out term__now" style="--i:9" id="termNow"></p>
+            <p class="term__l" style="--i:10"><span class="term__ps">~</span> <span class="term__cur" aria-hidden="true"></span></p>
           </div>
         </figure>
+      </div>
+    </section>
+
+    <!-- FEATURED (my own promo spots) -->
+    <section class="promo" aria-labelledby="promo-h">
+      <div class="wrap">
+        <div class="promo__head">
+          <h2 class="promo__tag" id="promo-h">featured</h2>
+          <p class="promo__note">My own picks. No ad networks, no tracking.</p>
+        </div>
+        <ul class="promo__row" id="promoRow"></ul>
       </div>
     </section>
 
@@ -131,16 +144,29 @@
       <div class="wrap">
         <p class="label"><span>~/</span>about</p>
         <div class="about">
-          <h2 id="about-h" class="h2">Curious first, polished later.</h2>
-          <div class="about__body">
-            <p>I learn by building: opening an existing project, changing one thing, and seeing what breaks. A lot of my best understanding comes from <span class="hl">a stack trace I didn't expect</span>.</p>
-            <p>Right now that means a Python agent that works through tasks using tools, this site, and a few dark, minimal interfaces I keep rebuilding until they feel right.</p>
-            <p>I'm still developing as an engineer, and I'd rather show <span class="hl">an honest, unfinished experiment</span> than a perfect-looking claim. Anything on this site that is early, rough or local-only is labelled that way.</p>
-          </div>
+          <article class="panel readme">
+            <div class="panel__bar"><span class="panel__file">README.md</span></div>
+            <div class="readme__body">
+              <h2 id="about-h" class="h2">Curious first, polished later.</h2>
+              <div class="about__body">
+                <p>I learn by building: opening an existing project, changing one thing, and seeing what breaks. A lot of my best understanding comes from <span class="hl">a stack trace I didn't expect</span>.</p>
+                <p>Right now that means a Python agent that works through tasks using tools, this site, and a few dark, minimal interfaces I keep rebuilding until they feel right.</p>
+                <p>I'm still developing as an engineer, and I'd rather show <span class="hl">an honest, unfinished experiment</span> than a perfect-looking claim. Anything on this site that is early, rough or local-only is labelled that way.</p>
+              </div>
+            </div>
+          </article>
           <aside class="about__aside" aria-label="Where I'm heading">
             <h3 class="mini">Where I'd like to take things</h3>
             <ul class="arrows" id="direction"></ul>
           </aside>
+        </div>
+
+        <div class="stack" id="skills" aria-labelledby="skills-h">
+          <div class="section__head">
+            <h3 id="skills-h" class="h3">What I work with</h3>
+            <p class="section__note">Labelled by how I use them, not by a score.</p>
+          </div>
+          <div class="skills" id="skillGrid"></div>
         </div>
       </div>
     </section>
@@ -151,10 +177,19 @@
         <p class="label"><span>~/</span>projects</p>
         <div class="section__head">
           <h2 id="projects-h" class="h2">Things I've made</h2>
-          <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
+          <p class="section__note">Pick one to see how it's built.</p>
+        </div>
+        <div class="panel explorer">
+          <div class="panel__bar">
+            <span class="panel__file">projects</span>
+            <div class="filters" role="group" aria-label="Filter projects" id="filters"></div>
+          </div>
+          <div class="explorer__in">
+            <div class="explorer__tree" id="projectTree" role="tablist" aria-label="Projects" aria-orientation="vertical"></div>
+            <div class="explorer__view" id="projectView" role="tabpanel" tabindex="0"></div>
+          </div>
         </div>
         <p class="sr-only" id="filterStatus" role="status" aria-live="polite"></p>
-        <div class="projects" id="projectGrid"></div>
         <noscript><p class="note">Projects are rendered with JavaScript. They're listed on <a href="https://github.com/V0X5L3B">GitHub</a>.</p></noscript>
       </div>
     </section>
@@ -183,36 +218,24 @@
       </div>
     </section>
 
-    <!-- SKILLS -->
-    <section class="section" id="skills" aria-labelledby="skills-h">
+    <!-- NOTES -->
+    <section class="section" id="notes" aria-labelledby="notes-h">
       <div class="wrap">
-        <p class="label"><span>~/</span>skills</p>
+        <p class="label"><span>~/</span>notes</p>
         <div class="section__head">
-          <h2 id="skills-h" class="h2">What I work with</h2>
-          <p class="section__note">Labelled by how I use them, not by a score.</p>
+          <h2 id="notes-h" class="h2">Notes from building this site</h2>
+          <p class="section__note">Real bugs, real fixes, short reads.</p>
         </div>
-        <div class="skills" id="skillGrid"></div>
-      </div>
-    </section>
-
-    <!-- LAB -->
-    <section class="section" id="lab" aria-labelledby="lab-h">
-      <div class="wrap">
-        <p class="label"><span>~/</span>lab</p>
-        <div class="section__head">
-          <h2 id="lab-h" class="h2">Small experiments &amp; loose ends</h2>
-          <p class="section__note">Prototypes, half-ideas, things I'm poking at.</p>
-        </div>
-        <div class="lab" id="labGrid"></div>
+        <ol class="notes" id="notesList"></ol>
 
         <div class="panel console" id="console">
           <div class="panel__bar">
             <span class="panel__file">console</span>
-            <span class="panel__tag">a small fixed set of commands · runs in your browser only</span>
+            <span class="panel__tag">a few fixed commands · runs in your browser only</span>
           </div>
           <div class="console__out" id="consoleOut" role="log" aria-live="polite" aria-label="Console output" tabindex="0"></div>
           <form class="console__form" id="consoleForm" autocomplete="off">
-            <label for="consoleIn" class="console__prompt">v0x ~/lab $</label>
+            <label for="consoleIn" class="console__prompt">v0x ~ $</label>
             <input id="consoleIn" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" placeholder="type help">
           </form>
           <div class="console__chips" aria-label="Quick commands">
@@ -232,7 +255,7 @@
         <p class="label"><span>~/</span>contact</p>
         <div class="section__head">
           <h2 id="contact-h" class="h2">Say hello, or tell me your idea</h2>
-          <p class="section__note">Questions, projects, or just hi. Find me here.</p>
+          <p class="section__note">Questions, projects, or just hi.</p>
         </div>
         <ul class="links" id="linkList"></ul>
       </div>
@@ -256,19 +279,20 @@
         </label>
       </div>
 
+      <p class="foot__sh foot__opts"><span>Animations</span> <button class="chip" id="motionBtn" type="button" aria-pressed="true">On</button></p>
       <p class="foot__sh" id="holidayNote" hidden></p>
       <p class="foot__sh" id="shout"></p>
     </div>
+    <div class="statusbar" aria-hidden="true">
+      <div class="wrap statusbar__in">
+        <span class="sb__branch">main</span>
+        <span>static · no trackers</span>
+        <span class="sb__r" id="sbTheme"></span>
+        <span id="sbSeason"></span>
+      </div>
+    </div>
   </footer>
 
-  <dialog class="dlg" id="dlg" aria-labelledby="dlgTitle">
-    <div class="dlg__in">
-      <button class="icon-btn dlg__x" id="dlgClose" type="button" aria-label="Close project details">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </button>
-      <div id="dlgBody"></div>
-    </div>
-  </dialog>
 
   <script defer src="assets/vendor/gsap.min.js"></script>
   <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
