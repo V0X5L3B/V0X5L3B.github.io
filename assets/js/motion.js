@@ -1,5 +1,5 @@
 /* Motion & polish layer. Pure DOM, no network, no storage. Safe to delete along with motion.css. */
-const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const reduce = false; /* motion is always on (owner's choice) */
 const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
 const root = document.documentElement;
 const $ = (s, r = document) => r.querySelector(s);
@@ -17,17 +17,6 @@ const el = (tag, cls, text) => {
   if (text) n.textContent = text;
   return n;
 };
-
-/* ---- opening animation: mark as seen, allow skipping ---- */
-const intro = $("#intro");
-if (intro) {
-  const done = () => { root.classList.remove("intro-on"); };
-  try { sessionStorage.setItem("v0x-intro", "1"); } catch (e) {}
-  const skip = () => { intro.classList.add("skip"); setTimeout(done, 500); removeEventListener("keydown", skip); intro.removeEventListener("pointerdown", skip); };
-  intro.addEventListener("pointerdown", skip);
-  addEventListener("keydown", skip);
-  setTimeout(() => { done(); intro.remove(); }, 3000);
-}
 
 /* ---- logo letters get an index for the hover wave ---- */
 $$(".bar .mark span").forEach((s, i) => s.style.setProperty("--i", i));

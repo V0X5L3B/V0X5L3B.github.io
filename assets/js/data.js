@@ -59,7 +59,7 @@ export const PROJECTS = [
       "My personal developer hub, rebuilt as a plain static site: no framework, no build step, no trackers. Content lives in one data file.",
     details: [
       "Hand-written HTML, CSS and JavaScript — hosted as static files on GitHub Pages.",
-      "Custom wordmark, dark crimson palette, light theme, keyboard-accessible controls, reduced-motion support.",
+      "Custom wordmark, soft blush palette, light theme, keyboard-accessible controls.",
       "Projects, links and skills are edited in a single data file.",
     ],
     status: "Ongoing",

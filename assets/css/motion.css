@@ -1,7 +1,6 @@
 /*
  * Motion & polish layer. Loaded after main.css.
- * Everything here is progressive: without JS (no .js class) or with
- * prefers-reduced-motion the page simply renders in its static state.
+ * Everything here is progressive: without JS (no .js class) the page simply renders in its static state.
  */
 
 /* ---------- scroll progress ---------- */
@@ -120,34 +119,31 @@
 .foot .mark--sm { transition: scale .3s cubic-bezier(.3, 1.6, .5, 1); }
 .foot .mark--sm:hover { scale: 1.08; }
 
-/* ---------- reduced motion: static, fully visible ---------- */
-@media (prefers-reduced-motion: reduce) {
-  .js .rv, .js .rv.in { opacity: 1; translate: 0 0; }
-  .js .label.rv::after { scale: 1 1; }
-  .js .hl { background-size: 100% 100%; }
-  .aurora, .glow, .doodle { display: none; }
-  .hero__panel { transform: none; }
-  .totop { transition: none; }
-}
 @media (hover: none) { .glow { display: none; } }
 
 /* holiday themes bring their own decor; keep the hero doodles out of its way */
 html[data-holiday] .doodle { display: none; }
 
-/* ---------- opening animation ---------- */
+/* ---------- opening animation (driven by assets/js/intro.js) ---------- */
 .intro { display: none; }
-.intro-on { --t0: 1.9s; }
-.intro-on .intro { position: fixed; inset: 0; z-index: 300; display: grid; place-content: center; justify-items: center; gap: 18px; background: var(--bg); color: var(--text); border-radius: 0 0 50% 50% / 0 0 6vh 6vh; animation: introLift .85s cubic-bezier(.7, 0, .2, 1) 1.9s forwards, introGone 0s linear 2.8s forwards; }
-.intro.skip { animation: introLift .45s cubic-bezier(.7, 0, .2, 1) forwards, introGone 0s linear .5s forwards !important; }
-.intro__mark { display: flex; font: 700 clamp(2.2rem, 9vw, 4.6rem)/1 var(--mono); letter-spacing: .08em; }
-.intro__mark span { display: inline-block; opacity: 0; animation: introLetter .6s cubic-bezier(.3, 1.5, .5, 1) calc(.15s + var(--i) * 90ms) forwards; }
+.intro-on { --t0: 3.1s; }
+.intro-on .intro { position: fixed; inset: 0; z-index: 300; display: grid; place-content: center; justify-items: center; gap: 22px; overflow: hidden; color: var(--text); background:
+  radial-gradient(60vmax 50vmax at 15% 10%, color-mix(in srgb, var(--crimson-t) 26%, transparent), transparent 70%),
+  radial-gradient(55vmax 45vmax at 90% 95%, color-mix(in srgb, var(--lime) 24%, transparent), transparent 70%), var(--bg);
+  animation: introGone 0s linear 6s forwards; }   /* failsafe: if scripts never run, the overlay still goes away */
+.intro-done .intro { display: none !important; }
+.intro__mark { display: flex; font: 700 clamp(2.4rem, 10vw, 5.2rem)/1 var(--mono); letter-spacing: .08em; }
+.intro__mark span { display: inline-block; opacity: 0; }
 .intro__mark span:nth-child(even) { color: var(--crimson-t); }
-.intro__line { width: clamp(150px, 36vw, 300px); height: 10px; background: var(--crimson-t); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6C9 1 16 9 25 5S41 2 49 6s17 3 25-1 12 2 16 1' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6C9 1 16 9 25 5S41 2 49 6s17 3 25-1 12 2 16 1' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%; animation: inkDraw .8s cubic-bezier(.6, 0, .2, 1) .95s both; }
-.intro__hi { font: 600 1.5rem/1 "Caveat", cursive; color: var(--muted); animation: rise .6s ease 1.2s both; }
-@keyframes introLetter { from { opacity: 0; transform: translateY(.6em) rotate(-8deg) scale(.7); } to { opacity: 1; transform: none; } }
-@keyframes introLift { to { transform: translateY(-104%); } }
+.intro__art { width: clamp(180px, 40vw, 340px); height: 34px; overflow: visible; fill: none; stroke: var(--crimson-t); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.intro__art path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.intro__art .heart { fill: var(--crimson-t); stroke: none; }
+.intro__hi { font: 600 clamp(1.5rem, 4.6vw, 2.1rem)/1 var(--hand); color: var(--muted); min-height: 1em; }
+.intro__hi .ch { display: inline-block; opacity: 0; }
+.intro__bit { position: absolute; top: 0; pointer-events: none; color: var(--crimson-t); line-height: 1; opacity: 0; }
+.intro__skip { position: absolute; bottom: 22px; left: 0; right: 0; text-align: center; font: 500 .72rem/1 var(--mono); letter-spacing: .1em; color: var(--dim); opacity: 0; animation: introSkip .6s ease 1.2s forwards; }
+@keyframes introSkip { to { opacity: .8; } }
 @keyframes introGone { to { visibility: hidden; } }
-@media (prefers-reduced-motion: reduce) { .intro, .intro-on .intro { display: none !important; } .intro-on { --t0: 0s; } }
 
 /* ---------- Halloween: the decor comes alive ---------- */
 :root[data-holiday="halloween"] .decor-row span { display: inline-block; transition: translate .3s cubic-bezier(.3, 1.6, .5, 1), scale .3s; }
@@ -179,4 +175,3 @@ html[data-holiday] .totop { bottom: 92px; }
 [data-theme="dark"] .batfly { color: #9a74bd; }
 @keyframes batcross { from { transform: translateX(-80px); } to { transform: translateX(calc(100vw + 80px)); } }
 @keyframes batwave { from { transform: translateY(-22px); } to { transform: translateY(22px); } }
-@media (prefers-reduced-motion: reduce) { .batfly { display: none; } :root[data-holiday="halloween"] .decor-row span, :root[data-holiday="halloween"] .corner svg, :root[data-holiday="halloween"] .moon svg { animation: none !important; } }
