@@ -1,5 +1,6 @@
 import {
   PROFILE, LINKS, SHOUTOUTS, PROJECTS, FILTERS, LAB, SKILLS, DIRECTION, TRACKS,
+  SERVICES, PROCESS, HIRE,
 } from "./data.js";
 import { initHoliday, preview as previewHoliday, setEnabled as setHolidayEnabled, HOLIDAYS, current as currentHoliday } from "./holiday.js";
 
@@ -107,6 +108,12 @@ function projectCard(p) {
 
 grid.append(...PROJECTS.map(projectCard));
 
+/* a friendly last tile: "your project could go here" (not a .card, so filters leave it alone) */
+grid.append(h("a", { class: "card-you reveal", href: "#hire" },
+  h("span", { class: "card-you__plus", "aria-hidden": "true", text: "+" }),
+  h("span", { class: "card-you__t", text: "Your project could go here" }),
+  h("span", { class: "card-you__s", text: "Tell me what you want to make →" })));
+
 function openProject(id, trigger) {
   const p = PROJECTS.find((x) => x.id === id);
   if (!p) return false;
@@ -165,6 +172,29 @@ function applyFilter(id) {
   renderFilters();
 }
 renderFilters();
+
+/* ---------------- services / hire me ---------------- */
+$("#hirePitch").textContent = HIRE.pitch;
+$("#svcGrid").append(...SERVICES.map((s) =>
+  h("article", { class: "svc__c reveal", id: `s-${s.id}` },
+    h("span", { class: "svc__i", "aria-hidden": "true", text: s.icon }),
+    h("h3", { class: "svc__t", text: s.name }),
+    h("p", { class: "svc__s", text: s.summary }),
+    h("ul", { class: "svc__l" }, s.includes.map((i) => h("li", { text: i }))),
+    h("ul", { class: "tags", "aria-label": "Technologies" }, s.tags.map((t) => h("li", { text: t }))))));
+$("#steps").append(...PROCESS.map((p) =>
+  h("li", {}, h("strong", { text: p.step }), h("span", { text: p.note }))));
+$("#hirePrice").textContent = HIRE.price;
+(function hireCta() {
+  const cta = $("#hireCta");
+  const talk = LINKS.discordServer?.url;
+  cta.append(talk
+    ? ext(talk, "Start a project ↗", "btn btn--primary")
+    : h("a", { class: "btn btn--primary", href: "#contact" }, "Start a project ↓"));
+  if (HIRE.pay?.url) cta.append(ext(HIRE.pay.url, `${HIRE.pay.label} ↗`, "btn"));
+  else cta.append(h("span", { class: "hire__soon", text: "payment link coming soon" }));
+  if (LINKS.discord?.copy) cta.append(h("p", { class: "hire__dm", text: `or message ${LINKS.discord.copy} on Discord` }));
+})();
 
 /* ---------------- skills ---------------- */
 $("#skillGrid").append(...SKILLS.map((g) =>
@@ -240,6 +270,7 @@ const COMMANDS = {
     print("  whoami            who this is");
     print("  about             a short description");
     print("  projects          list projects");
+    print("  hire              what I can make for you");
     print("  open <id>         open a project's details");
     print("  skills            how I use what I use");
     print("  links             public links");
@@ -247,7 +278,7 @@ const COMMANDS = {
     print("  holiday [id|on|off] preview or toggle seasonal themes");
     print("  clear             clear this screen");
   },
-  whoami() { print(`${PROFILE.handle} (${PROFILE.tag}) — experimental developer`); },
+  whoami() { print(`${PROFILE.handle} (${PROFILE.tag}) — developer, open for projects`); },
   about() { print(PROFILE.intro); },
   projects() {
     PROJECTS.forEach((p) => {
@@ -262,6 +293,13 @@ const COMMANDS = {
     if (!hit) return print(h("span", { class: "err", text: `no project "${arg}". try: projects` }));
     print(`opening ${hit.name}…`);
     openProject(hit.id, input);
+  },
+  hire() {
+    print(HIRE.pitch);
+    SERVICES.forEach((s) => print(`  ${s.icon} ${s.name}`));
+    print(HIRE.price);
+    const go = h("button", { type: "button", class: "inline", onclick: () => (window.v0xLenis ? window.v0xLenis.scrollTo("#hire") : $("#hire").scrollIntoView()) }, "see the hire me section");
+    print("next: ", go);
   },
   skills() {
     SKILLS.forEach((g) => print(`${g.group}: ${g.items.map((i) => `${i.name} (${i.stance.toLowerCase()})`).join(", ")}`));
@@ -364,7 +402,7 @@ initHoliday();
 })();
 
 /* ---------------- scroll: active nav + reveal ---------------- */
-const sections = ["about", "projects", "skills", "lab", "contact"].map((id) => $(`#${id}`)).filter(Boolean);
+const sections = ["about", "projects", "hire", "skills", "lab", "contact"].map((id) => $(`#${id}`)).filter(Boolean);
 const navLinks = new Map($$("a", nav).map((a) => [a.getAttribute("href").slice(1), a]));
 if ("IntersectionObserver" in window) {
   const so = new IntersectionObserver((entries) => {
