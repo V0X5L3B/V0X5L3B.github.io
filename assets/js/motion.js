@@ -108,7 +108,7 @@ top.type = "button";
 top.setAttribute("aria-label", "Back to top");
 top.append(svg("svg", { viewBox: "0 0 46 46", "aria-hidden": "true" }, [svg("circle", { cx: 23, cy: 23, r: 20 })]), el("span", "", "↑"));
 top.firstChild.firstChild.setAttribute("pathLength", "126");
-top.addEventListener("click", () => scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }));
+top.addEventListener("click", () => { if (window.v0xLenis) window.v0xLenis.scrollTo(0); else scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); });
 document.body.appendChild(top);
 let tick = false;
 function onScroll() {
