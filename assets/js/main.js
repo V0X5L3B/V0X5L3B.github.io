@@ -5,7 +5,7 @@ import { initHoliday, preview as previewHoliday, setEnabled as setHolidayEnabled
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const reduced = false; /* motion is always on (owner's choice) */
 
 /** Tiny DOM builder. Text is always set via textContent (never innerHTML). */
 function h(tag, attrs = {}, ...kids) {

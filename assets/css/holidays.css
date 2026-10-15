@@ -142,10 +142,6 @@
 
 @media (max-width: 760px) { .lights i:nth-child(3n) { visibility: hidden; } .decor-float { width: 34px; } }
 
-@media (prefers-reduced-motion: reduce) {
-  .fx, .decor-float, .lights i, .fx--drift svg { animation: none !important; }
-  .fx { display: none; }
-}
 .greet:not([hidden])::before { content: "/"; color: var(--line-2); margin-right: 8px; }
 .eyebrow .greet { text-transform: none; }
 .fx--drift { --o: .6; }
@@ -192,9 +188,6 @@
 @media (max-width: 760px) {
   .decor-row span { height: calc(var(--h) * .62); }
   .decor-row { gap: 8px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .flame, .fx--float svg, .decor-row.has-fog::before, :root[data-holiday="halloween"] .hero__title em, :root[data-holiday="halloween"] .dot { animation: none !important; }
 }
 
 /* ======== Halloween extras ======== */
@@ -250,10 +243,6 @@
   .eyes { display: none; }
 }
 @media (max-width: 640px) { .decor-row span:nth-child(n+8) { display: none; } }
-@media (prefers-reduced-motion: reduce) {
-  .spider i, .eyes, .fog, :root[data-holiday="halloween"] .decor-row span[data-k="pumpkin"] { animation: none !important; }
-  .eyes { opacity: .9; }
-}
 
 /* more Halloween detail */
 :root[data-holiday="halloween"] .decor-row span[data-k="cauldron"] svg { filter: drop-shadow(0 0 9px rgba(111,224,74,.5)); animation: bubble 2.4s ease-in-out infinite alternate; }
@@ -262,4 +251,3 @@
 :root[data-holiday="halloween"] .decor-row span[data-k="tombstone"] { align-self: flex-end; }
 .fx--float svg { width: 100%; height: auto; }
 :root[data-theme="light"][data-holiday="halloween"] .fx--float { --o: .5; }
-@media (prefers-reduced-motion: reduce) { :root[data-holiday="halloween"] .decor-row span[data-k="cauldron"] svg { animation: none !important; } }

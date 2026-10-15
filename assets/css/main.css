@@ -281,11 +281,6 @@ a:hover { text-decoration-color: var(--crimson-t); }
   .dlg__in { padding: 22px 18px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .js .reveal { opacity: 1; transform: none; }
-}
 .projects > .card:only-child { grid-column: 1 / -1; }
 .lab > .empty { grid-column: 1 / -1; }
 
@@ -360,4 +355,3 @@ a:hover { text-decoration-color: var(--crimson-t); }
   .hero__cta { margin-bottom: 36px; }
   .card, .hero__panel, .lk, .exp { rotate: 0deg; }
 }
-@media (prefers-reduced-motion: reduce) { .card:hover { rotate: -.25deg; } }

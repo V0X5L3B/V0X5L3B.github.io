@@ -30,7 +30,7 @@ Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · 
 - Preview any theme: `?holiday=halloween` (ids: halloween, november, december, january, february, march, july) or `?holiday=none`.
 - Visitors can turn it off in the footer (remembered in their browser). The `holiday` console command previews too.
 - Halloween has the most detail (moon, spiders, graveyard row, witch, fog, glowing eyes, `boo` in the console).
-- Floating particles are hidden when the visitor prefers reduced motion; static decor stays.
+- Motion is always on: the site deliberately ignores the visitor's reduced-motion setting (owner's choice).
 - To add or move a holiday: edit `HOLIDAYS` in `holiday.js` and add a colour block in `holidays.css`.
 
 ## Look & fonts
@@ -68,7 +68,7 @@ git push origin main   # or whichever branch Pages is set to
 Check Settings → Pages: source = "Deploy from a branch", branch matches the one you push, custom domain `v0x5l3b.is-a.dev`. DNS is untouched.
 
 ## Motion
-`assets/css/motion.css` + `assets/js/motion.js` add the entrance, scroll-reveal, hover and cursor effects. Delete both (and their two tags in index.html) to turn them off. Reduced-motion users get a static page.
+`assets/css/motion.css` + `assets/js/motion.js` add the entrance, scroll-reveal, hover and cursor effects. Delete both (and their two tags in index.html) to turn them off.
 The opening animation plays once per browser session; add `?intro` to the URL to replay it. Click or press a key to skip it.
 
 ## Libraries

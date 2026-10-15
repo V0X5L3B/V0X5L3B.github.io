@@ -5,7 +5,7 @@
  */
 import Lenis from "../vendor/lenis/index.js";
 
-const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const reduce = false; /* motion is always on (owner's choice) */
 const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
 const g = window.gsap;
 const $ = (s, r = document) => r.querySelector(s);
@@ -16,7 +16,7 @@ if (!reduce && g && window.ScrollTrigger) {
   if (window.SplitText) g.registerPlugin(window.SplitText);
 
   /* ---- Lenis smooth scroll, driven by GSAP's ticker ---- */
-  const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, anchors: { offset: -76 } });
+  const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, anchors: { offset: -76 }, respectReducedMotion: false });
   window.v0xLenis = lenis;
   lenis.on("scroll", window.ScrollTrigger.update);
   g.ticker.add((t) => lenis.raf(t * 1000));
