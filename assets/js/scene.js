@@ -89,9 +89,12 @@ export class Backdrop {
     if (w !== this.w || h > this.h + this.ext - 20) this.paint(false);
   }
 
+  /* drawn a few canvases at a time with frames in between, so a big redraw never holds the page up
+     for long; the finished set replaces the old one in one go. A newer paint (another theme flip,
+     a resize) cancels this one. */
   paint(fade) {
     if (!this.el.isConnected) return;
-    const t0 = performance.now();
+    const gen = (this.gen = (this.gen || 0) + 1);
     const [w, h] = this.size();
     this.w = w; this.h = h;
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -99,23 +102,38 @@ export class Backdrop {
     const H = h + this.ext;
     const set = document.createElement("div");
     set.className = "backdrop__set";
-    for (const L of this.layers) {
-      let node;
-      if (L.html) {
-        node = document.createElement("div");
-      } else {
-        node = document.createElement("canvas");
-        const k = dpr * (L.res ?? 1);
-        node.width = Math.round(w * k); node.height = Math.round(H * k);
-        node.style.height = `${H}px`;
-        const ctx = node.getContext("2d");
-        ctx.scale(k, k);
-        L.draw(ctx, w, h, pal, seeded(L.seed ?? 7), H);
+    const todo = [...this.layers];
+    let ms = 0;
+    const step = () => {
+      if (gen !== this.gen || !this.el.isConnected) return;
+      const t0 = performance.now();
+      while (todo.length) {
+        const L = todo.shift();
+        let node;
+        if (L.html) {
+          node = document.createElement("div");
+        } else {
+          node = document.createElement("canvas");
+          const k = dpr * (L.res ?? 1);
+          node.width = Math.round(w * k); node.height = Math.round(H * k);
+          node.style.height = `${H}px`;
+          const ctx = node.getContext("2d");
+          ctx.scale(k, k);
+          L.draw(ctx, w, h, pal, seeded(L.seed ?? 7), H);
+        }
+        node.className = `bd-${L.name}`;
+        node.dataset.depth = L.depth || 0;
+        set.append(node);
+        if (performance.now() - t0 > 24) break;    // used up this frame's share; carry on after the next one
       }
-      node.className = `bd-${L.name}`;
-      node.dataset.depth = L.depth || 0;
-      set.append(node);
-    }
+      ms += performance.now() - t0;
+      if (todo.length) afterPaint(step);
+      else this.show(set, fade, ms);
+    };
+    step();
+  }
+
+  show(set, fade, ms) {
     const old = this.set;
     this.set = set;
     if (fade) {
@@ -130,7 +148,7 @@ export class Backdrop {
       old?.remove();
     }
     this.drift();
-    this.ms = Math.round(performance.now() - t0);
+    this.ms = Math.round(ms);
     this.el.dataset.ms = this.ms;
   }
 

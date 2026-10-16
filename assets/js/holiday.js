@@ -8,7 +8,7 @@
  */
 
 import { forestBackdrop, forestAir, forestFloor } from "./forest.js";
-import { graveyardBackdrop, graveyardFloor } from "./graveyard.js";
+import { graveyardBackdrop, graveyardFloor, wakeFloatGhost } from "./graveyard.js";
 
 const NS = "http://www.w3.org/2000/svg";
 const OFF_KEY = "v0x-holiday";
@@ -41,7 +41,7 @@ const ICONS = {
 /*
  * fx: floating particles   { icon, mode: fall|rise|drift, n, size:[min,max], colors:[1..3] (→ --fx1..3) }
  * row: icons shown in a decorative row above the footer
- * corners: cobwebs etc. in the hero corners;  float: a fixed bobbing icon;  lights: string lights under the header
+ * corners: cobwebs etc. in the hero corners;  float: a fixed bobbing icon (wakeFloat: its behaviour);  lights: string lights under the header
  */
 export const HOLIDAYS = {
   halloween: {
@@ -54,7 +54,7 @@ export const HOLIDAYS = {
     ],
     // painted night sky and hill behind the page, and a small graveyard above the footer (graveyard.js)
     backdrop: graveyardBackdrop, floor: graveyardFloor,
-    corners: ["cobweb"], float: "ghost", scene: true,
+    corners: ["cobweb"], float: "ghost", wakeFloat: wakeFloatGhost, scene: true,
   },
   november: {
     month: 10, name: "Thanksgiving season", greet: "Happy Thanksgiving",
@@ -122,10 +122,11 @@ function clear() {
 function buildForest() {
   document.documentElement.setAttribute("data-scene", "forest");
   scenes.push(forestBackdrop());                   // canvases behind the page (forest.js)
-  const air = forestAir();                         // butterflies, dust and fireflies
+  const air = forestAir();                         // animals, dust and fireflies over the page
   document.body.append(air); extras.push(air);
-  const floor = forestFloor();                     // log, mushrooms, ferns and two banana slugs above the footer
+  const floor = forestFloor();                     // log, ferns, mushrooms, a deer, an owl and two banana slugs above the footer
   document.querySelector("footer.foot")?.before(floor); extras.push(floor);
+  for (const n of [air, floor]) if (n.wake) scenes.push(n.wake());   // their behaviour (alive.js), stopped in clear()
 }
 
 function build(id) {
@@ -165,6 +166,7 @@ function build(id) {
   if (H.floor) {
     const fl = H.floor();
     document.querySelector("footer.foot")?.before(fl); extras.push(fl);
+    if (fl.wake) scenes.push(fl.wake());           // its animals' behaviour (alive.js), stopped in clear()
   }
 
   /* decorative row above footer */
@@ -199,6 +201,7 @@ function build(id) {
   if (H.float) {
     const f = make("decor-float", ICONS[H.float]);
     document.body.append(f); extras.push(f);
+    if (H.wakeFloat) scenes.push(H.wakeFloat(f));
   }
 
   /* Halloween extras: hanging spiders and glowing eyes (the moon, sky and fog are painted by graveyard.js) */
