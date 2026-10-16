@@ -406,7 +406,10 @@ const COMMANDS = {
     const songs = music.songs();
     if (arg === "list" || arg === "ls") {
       print(`${music.playlist()}:`);
-      songs.forEach((m, k) => print(`  ${m.current ? "\u25b6" : " "} `, h("button", { type: "button", class: "inline", onclick: () => music.playAt(k) }, m.title)));
+      songs.forEach((m) => print(`  ${m.current ? "\u25b6" : " "} `, h("button", { type: "button", class: "inline", onclick: () => {
+        const k = music.songs().findIndex((x) => x.id === m.id);   // the mix may have changed since this list was printed
+        if (k < 0) print(`${m.title} isn't in the ${music.playlist()} right now`); else music.playAt(k);
+      } }, m.title)));
       return print("original pieces, played live by your browser.");
     }
     const k = songs.findIndex((m) => m.title.startsWith(arg) || m.id.startsWith(arg));

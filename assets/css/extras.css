@@ -109,6 +109,7 @@
 .player__row { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .player__vol { display: flex; align-items: center; gap: 8px; color: var(--muted); }
 .player__vol input { width: 120px; accent-color: var(--crimson); }
+.player__sub, .player__time { color: var(--muted); }
 .player__time { font-variant-numeric: tabular-nums; }
 .player__list { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .player__list .chip { padding: 6px 10px; font-size: .7rem; }

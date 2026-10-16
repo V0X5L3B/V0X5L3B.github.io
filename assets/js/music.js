@@ -130,19 +130,28 @@ function pinkFill(r, amp) {
     return (b0 + b1 + b2 + w * 0.1848) * 0.11 * amp;
   };
 }
+/* each sound is made the first time something needs it (the rain loop only for a rainy song, and
+   so on), never inside the click that starts the music */
 function sounds(ctx) {
   if (made.has(ctx)) return made.get(ctx);
-  const sr = ctx.sampleRate, r = rng(1234);
-  const noise = ctx.createBuffer(1, sr * 2, sr);
-  noise.getChannelData(0).forEach((_, i, d) => { d[i] = r() * 2 - 1; });
-
+  const s = {}, sr = ctx.sampleRate;
+  const lazy = (name, make) => Object.defineProperty(s, name, {
+    configurable: true,
+    get() { const v = make(); Object.defineProperty(s, name, { value: v }); return v; },
+  });
+  lazy("noise", () => {
+    const r = rng(1234), b = ctx.createBuffer(1, sr * 2, sr), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = r() * 2 - 1;
+    return b;
+  });
   /* a soft sawtooth (harmonics fall off faster than a real saw) for pads */
-  const n = 28, re = new Float32Array(n), im = new Float32Array(n);
-  for (let k = 1; k < n; k++) im[k] = 1 / k ** 1.35;
-  const soft = ctx.createPeriodicWave(re, im);
-
+  lazy("soft", () => {
+    const n = 28, re = new Float32Array(n), im = new Float32Array(n);
+    for (let k = 1; k < n; k++) im[k] = 1 / k ** 1.35;
+    return ctx.createPeriodicWave(re, im);
+  });
   /* record crackle: faint hiss plus random ticks and the odd pop */
-  const vinyl = loopable(ctx, 7, 2, (d, sr2, c) => {
+  lazy("vinyl", () => loopable(ctx, 7, 2, (d, sr2, c) => {
     const p = pinkFill(rng(50 + c), 0.15);
     let y = 0;
     for (let i = 0; i < d.length; i++) { y += (p() - y) * 0.5; d[i] = y; }
@@ -151,9 +160,9 @@ function sounds(ctx) {
       const a = rr() ** 3 * (rr() < 0.04 ? 1 : 0.55), len = 8 + Math.floor(rr() * 50);
       for (let k = 0; k < len && t + k < d.length; k++) d[t + k] += (rr() * 2 - 1) * a * (1 - k / len) ** 2;
     }
-  });
+  }));
   /* rain: soft filtered noise plus lots of tiny drops */
-  const rain = loopable(ctx, 8, 2, (d, sr2, c) => {
+  lazy("rain", () => loopable(ctx, 8, 2, (d, sr2, c) => {
     const p = pinkFill(rng(90 + c), 0.6);
     let y = 0, y2 = 0;
     for (let i = 0; i < d.length; i++) { y += (p() - y) * 0.35; y2 += (y - y2) * 0.02; d[i] = y - y2; }
@@ -162,30 +171,32 @@ function sounds(ctx) {
       const f = 1800 + rr() * 4200, a = rr() ** 2 * 0.22, len = Math.floor(sr2 * (0.002 + rr() * 0.006));
       for (let k = 0; k < len && t + k < d.length; k++) d[t + k] += Math.sin((k / sr2) * f * 6.283) * a * (1 - k / len) ** 3;
     }
-  });
+  }));
   /* two crickets, one on each side */
-  const crickets = loopable(ctx, 6, 2, (d, sr2, c) => {
+  lazy("crickets", () => loopable(ctx, 6, 2, (d, sr2, c) => {
     const rr = rng(130 + c), f = c ? 4280 : 4560, every = c ? 0.71 : 0.63;
     for (let t0 = rr() * 0.3; t0 < 6.1; t0 += every * (0.95 + rr() * 0.1)) {
       for (let p = 0; p < 3; p++) {
-        const s = Math.floor((t0 + p * 0.032) * sr2), len = Math.floor(0.02 * sr2);
-        for (let k = 0; k < len && s + k < d.length; k++) d[s + k] += Math.sin(((s + k) / sr2) * f * 6.283) * Math.sin((k / len) * Math.PI) ** 2 * 0.22;
+        const st = Math.floor((t0 + p * 0.032) * sr2), len = Math.floor(0.02 * sr2);
+        for (let k = 0; k < len && st + k < d.length; k++) d[st + k] += Math.sin(((st + k) / sr2) * f * 6.283) * Math.sin((k / len) * Math.PI) ** 2 * 0.22;
       }
     }
-  });
+  }));
   /* reverb: three seconds of noise that gets darker as it fades */
-  const ir = ctx.createBuffer(2, Math.floor(sr * 3), sr);
-  for (let c = 0; c < 2; c++) {
-    const d = ir.getChannelData(c), rr = rng(150 + c), pre = Math.floor(sr * 0.018);
-    let y = 0;
-    for (let i = pre; i < d.length; i++) {
-      const t = (i - pre) / sr, a = 0.85 - 0.7 * Math.min(1, t / 2.2);
-      y += ((rr() * 2 - 1) - y) * a;
-      d[i] = y * Math.exp(-t * 2.6);
+  lazy("ir", () => {
+    const ir = ctx.createBuffer(2, Math.floor(sr * 3), sr);
+    for (let c = 0; c < 2; c++) {
+      const d = ir.getChannelData(c), rr = rng(150 + c), pre = Math.floor(sr * 0.018);
+      let y = 0;
+      for (let i = pre; i < d.length; i++) {
+        const t = (i - pre) / sr, a = 0.85 - 0.7 * Math.min(1, t / 2.2);
+        y += ((rr() * 2 - 1) - y) * a;
+        d[i] = y * Math.exp(-t * 2.6);
+      }
+      for (const [ms, g] of [[23, 0.5], [41, 0.35], [67, 0.28]]) d[pre + Math.floor((ms + c * 4) * sr / 1000)] += g;
     }
-    for (const [ms, g] of [[23, 0.5], [41, 0.35], [67, 0.28]]) d[pre + Math.floor((ms + c * 4) * sr / 1000)] += g;
-  }
-  const s = { noise, soft, vinyl, rain, crickets, ir };
+    return ir;
+  });
   made.set(ctx, s);
   return s;
 }
@@ -466,15 +477,16 @@ const ROLES = {
     const out = s.part(name, cfg, s.low), style = cfg.style || "lofi", r = s.rnd;
     const play = (step, m, len, v) => s.note(name, "bass", out, s.at16(t, step), m, len * s.beat / 4, v, cfg);
     const nb = s.bars[i + 1], next = nb ? nb.ch[0].bass : B.ch[0].bass, n = s.n16;
-    const fifth = (m) => (m + 7 <= 50 ? m + 7 : m - 5);
+    const fifth = (ch) => nearestIn(ch.bass + 7, [mod12(ch.root + 7)], 33, 50);   // the chord's fifth, also over a slash bass
+    const near = (m) => { const up = r() >= 0.5; return up || m - 1 < 33 ? m + 1 : m - 1; };   // a half step into the next chord, never below the range
     if (i === s.bars.length - 1) return play(0, B.ch[0].bass, n + 10, 0.8);
     if (style === "drone") return B.ch.forEach((ch, seg) => play(seg * n / B.ch.length, ch.bass, n / B.ch.length + 1, 0.75));
-    if (style === "waltz") { play(0, B.ch[0].bass, 5, 0.8); if (B.b % 2) play(8, fifth(B.ch[0].bass), 3, 0.5); return; }
+    if (style === "waltz") { play(0, B.ch[0].bass, 5, 0.8); if (B.b % 2) play(8, fifth(B.ch[0]), 3, 0.5); return; }
     if (style === "walk") {
       const q = [];
-      if (B.ch.length > 1) q.push(B.ch[0].bass, fifth(B.ch[0].bass), B.ch[1].bass);
+      if (B.ch.length > 1) q.push(B.ch[0].bass, fifth(B.ch[0]), B.ch[1].bass);
       else { const c = B.ch[0]; q.push(c.bass, nearestIn(c.bass + 4, [c.tones[1] ?? c.root], 33, 52), nearestIn(c.bass + 7, [c.tones[2] ?? c.root], 33, 52)); }
-      q.push(next + (r() < 0.5 ? -1 : 1));
+      q.push(near(next));
       q.forEach((m, k) => play(k * 4, m, 3.6, k ? 0.62 : 0.8));
       return;
     }
@@ -482,9 +494,9 @@ const ROLES = {
     B.ch.forEach((ch, seg) => {
       const L = n / B.ch.length, base = seg * L;
       play(base, ch.bass, L > 8 ? 9 : 6, 0.82);
-      if (L > 8 && r() < 0.5) play(base + 10, r() < 0.5 ? fifth(ch.bass) : ch.bass + 12 <= 52 ? ch.bass + 12 : ch.bass, 3, 0.55);
+      if (L > 8 && r() < 0.5) play(base + 10, r() < 0.5 ? fifth(ch) : ch.bass + 12 <= 52 ? ch.bass + 12 : ch.bass, 3, 0.55);
     });
-    if (r() < 0.55 && next !== B.ch[B.ch.length - 1].bass) play(14, next + (r() < 0.5 ? -1 : 1), 2, 0.5);
+    if (r() < 0.55 && next !== B.ch[B.ch.length - 1].bass) play(14, near(next), 2, 0.5);
   },
   drums(s, i, B, t, cfg, name) {
     const out = s.part(name, cfg, s.drm), kit = KITS[cfg.kit || "lofi"];
@@ -619,14 +631,19 @@ export class Song {
     this.at = 0; this.mem = {}; this.mot = {}; this.parts = {}; this.tex = {}; this.srcs = [];
 
     const fx = def.fx || {};
-    /* bus → fader → output; the fader is only used to cut a song off (skip, playlist change) */
+    /* bus → fader → output, and the reverb send → its own fader → shared reverb. Both follow the
+       song's level and end fade; the faders are only used to cut a song off (skip, playlist change) */
     this.fader = this.gain(1); this.fader.connect(out.input);
     this.bus = this.gain(0); this.bus.connect(this.fader);
+    this.vfader = this.gain(1); this.vfader.connect(out.verbIn);
+    this.verb = this.gain(0); this.verb.connect(this.vfader);
     const lvl = def.gain ?? 1;
-    this.bus.gain.setValueAtTime(lvl, t0);
-    this.bus.gain.setValueAtTime(lvl, this.barsEnd - this.bar);
-    this.bus.gain.linearRampToValueAtTime(lvl * 0.55, this.barsEnd);
-    this.bus.gain.linearRampToValueAtTime(0, this.end);
+    for (const p of [this.bus.gain, this.verb.gain]) {
+      p.setValueAtTime(lvl, t0);
+      p.setValueAtTime(lvl, this.barsEnd - this.bar);
+      p.linearRampToValueAtTime(lvl * 0.55, this.barsEnd);
+      p.linearRampToValueAtTime(0, this.end);
+    }
 
     /* melodic parts: a touch of tape wobble, ducking under the kick, reverb and echo sends */
     this.mel = this.gain(1);
@@ -636,20 +653,20 @@ export class Song {
     this.osc("sine", 5.3, t0, this.end).connect(this.gain(0.00006)).connect(wob.delayTime);
     this.duck = this.gain(1);
     this.mel.connect(tone).connect(hp).connect(wob).connect(this.duck).connect(this.bus);
-    this.duck.connect(this.gain(fx.verb ?? 0.3)).connect(out.verbIn);
+    this.duck.connect(this.gain(fx.verb ?? 0.3)).connect(this.verb);
     this.echo = this.gain(1);
     const dl = ctx.createDelay(2); dl.delayTime.value = Math.min(1.9, this.beat * 0.75);
-    const fb = this.gain(fx.feedback ?? 0.33), elp = this.filt("lowpass", 2600, 0.5), ehp = this.filt("highpass", 350, 0.5);
+    const fb = (this.fb = this.gain(fx.feedback ?? 0.33)), elp = this.filt("lowpass", 2600, 0.5), ehp = this.filt("highpass", 350, 0.5);
     this.echo.connect(dl).connect(elp).connect(ehp).connect(fb).connect(dl);
-    ehp.connect(this.bus); ehp.connect(this.gain(0.4)).connect(out.verbIn);
+    ehp.connect(this.bus); ehp.connect(this.gain(0.4)).connect(this.verb);
     /* bass, drums, ambience */
     this.low = this.gain(1); this.low.connect(this.filt("lowpass", 900, 0.5)).connect(this.bus);
     this.drm = this.gain(1);
     const sh = ctx.createWaveShaper();
     sh.curve = Float32Array.from({ length: 257 }, (_, k) => Math.tanh((k / 128 - 1) * 1.6) / Math.tanh(1.6));
     this.drm.connect(this.filt("lowpass", fx.drumTone ?? 6500, 0.5)).connect(sh).connect(this.gain(0.56)).connect(this.bus);
-    this.drm.connect(this.gain(0.06)).connect(out.verbIn);
-    this.fx = this.gain(1); this.fx.connect(this.bus); this.fx.connect(this.gain(0.5)).connect(out.verbIn);
+    this.drm.connect(this.gain(0.06)).connect(this.verb);
+    this.fx = this.gain(1); this.fx.connect(this.bus); this.fx.connect(this.gain(0.5)).connect(this.verb);
     this.bed = this.gain(1); this.bed.connect(this.bus);
 
     /* looping ambience for the textures this song uses; each bar fades them in or out */
@@ -765,13 +782,13 @@ export class Song {
   }
   /* cut the song off: fade out, then stop everything still waiting to play */
   stop(at, fade = 1) {
-    const g = this.fader.gain;
-    g.setValueAtTime(1, at); g.linearRampToValueAtTime(0, at + fade);
+    for (const g of [this.fader.gain, this.vfader.gain]) { g.setValueAtTime(1, at); g.linearRampToValueAtTime(0, at + fade); }
     for (const [n] of this.srcs) { try { n.stop(at + fade + 0.05); } catch { /* already stopped */ } }
     this.end = Math.min(this.end, at + fade + 0.1);
     this.at = this.bars.length;
   }
-  disconnect() { try { this.fader.disconnect(); } catch { /* gone */ } }
+  /* unhook from the shared output; cutting the echo's feedback loop lets the browser free it */
+  disconnect() { for (const n of [this.fader, this.vfader, this.fb]) { try { n.disconnect(); } catch { /* gone */ } } }
 }
 
 /* ---------------- offline render (used to check levels; not used by the page) ---------------- */
@@ -795,22 +812,22 @@ export class Player {
     this.ctx = null; this.song = null; this.after = null; this.old = []; this.timer = 0;
   }
   get current() { return this.songs[this.queue[this.i]]; }
+  /* only the context is made inside the click; the sounds and the output chain come after it starts */
   ensure() {
     if (this.ctx) return true;
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return false;
-    try { this.ctx = new AC({ latencyHint: "playback" }); } catch { return false; }
-    this.out = createOutput(this.ctx);
-    this.out.vol.gain.value = 0;
+    if (!window.AudioContext) return false;
+    try { this.ctx = new AudioContext({ latencyHint: "playback" }); } catch { return false; }
     this.ctx.onstatechange = () => this.onChange("state");
     return true;
   }
+  get playing() { return this.on && this.ctx?.state === "running"; }
   /* call from a click / tap / key press: browsers only let sound start from one */
   async play(fade = 0.8) {
     if (!this.ensure()) return false;
     const resumed = this.ctx.resume();
     const ok = await Promise.race([resumed.then(() => true, () => false), new Promise((r) => setTimeout(() => r(false), 1500))]);
     if (!ok || this.ctx.state !== "running") return false;
+    if (!this.out) { this.out = createOutput(this.ctx); this.out.vol.gain.value = 0; }
     const now = this.ctx.currentTime;
     if (!this.song) this.song = new Song(this.out, this.current, now + 0.08);
     const g = this.out.vol.gain;
@@ -834,7 +851,9 @@ export class Player {
   level() { return this.vol * this.vol; }
   setVolume(v) {
     this.vol = Math.min(1, Math.max(0, v));
-    if (this.ctx && this.on) this.out.vol.gain.setTargetAtTime(this.level(), this.ctx.currentTime, 0.03);
+    if (!this.ctx || !this.on) return;
+    const g = this.out.vol.gain, now = this.ctx.currentTime;
+    g.cancelScheduledValues(now); g.setValueAtTime(g.value, now); g.setTargetAtTime(this.level(), now, 0.03);   // replaces a fade-in still running
   }
   setQueue(ids, start = 0) {
     const same = ids.length === this.queue.length && ids.every((id, k) => id === this.queue[k]);
@@ -849,7 +868,8 @@ export class Player {
     this.i = ((i % this.queue.length) + this.queue.length) % this.queue.length;
     if (!this.ctx) { this.onChange("song"); return; }
     const now = this.ctx.currentTime;
-    for (const s of [this.song, this.after]) if (s) { s.stop(now, 0.9); this.old.push(s); }
+    /* while paused the clock is frozen, so a slow fade would play on resume: cut straight away instead */
+    for (const s of [this.song, this.after]) if (s) { s.stop(now, this.on ? 0.9 : 0.01); this.old.push(s); }
     this.after = null;
     this.song = this.on || this.song ? new Song(this.out, this.current, now + (this.on ? 0.25 : 0.05)) : null;
     if (this.on) this.tick();
@@ -884,7 +904,7 @@ export class Player {
   /* phones suspend audio when the screen locks; pick back up when the page is shown again */
   wake() { if (this.on && this.ctx && this.ctx.state !== "running") this.ctx.resume().catch(() => {}); }
   levels(n) {
-    if (!this.ctx || !this.on) return null;
+    if (!this.playing || !this.out) return null;
     const a = this.out.an, d = new Uint8Array(a.frequencyBinCount);
     a.getByteFrequencyData(d);
     const out = [];

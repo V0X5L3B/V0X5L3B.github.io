@@ -35,7 +35,7 @@ const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStar
 export function initMusic({ store }) {
   const root = document.documentElement;
   const wrap = document.getElementById("player"), btn = document.getElementById("musicBtn");
-  if (!wrap || !(window.AudioContext || window.webkitAudioContext)) return null;
+  if (!wrap || !window.AudioContext || !("createStereoPanner" in AudioContext.prototype)) return null;
   const still = () => root.classList.contains("calm") || matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* which song a playlist starts on: the one after the last song this visitor heard, or (first visit,
@@ -49,6 +49,13 @@ export function initMusic({ store }) {
 
   let list = playlistFor(root.dataset.holiday), ready = false;
   const player = new Player(SONGS, (why) => ready && paint(why));
+  /* the old mp3 player kept its volume in v0x-vol (a straight gain; this one squares the slider) */
+  const old = parseFloat(store.get("v0x-vol"));
+  if (store.get("v0x-volume") === null && Number.isFinite(old)) {
+    if (old <= 0) store.set("v0x-music", "off");          // they had muted it: keep it quiet
+    else store.set("v0x-volume", String(Math.sqrt(Math.min(1, old))));
+  }
+  try { localStorage.removeItem("v0x-vol"); } catch { /* storage unavailable */ }
   const v0 = parseFloat(store.get("v0x-volume"));
   player.setVolume(Number.isFinite(v0) ? v0 : 0.55);
   player.setQueue(PLAYLISTS[list].songs, startAt(PLAYLISTS[list].songs));
@@ -59,7 +66,6 @@ export function initMusic({ store }) {
   meta.append(title, sub);
   const button = (icon, label, cls = "") => { const b = el("button", `icon-btn ${cls}`.trim()); b.type = "button"; b.setAttribute("aria-label", label); b.title = label; b.append(svg(icon)); return b; };
   const prevB = button("prev", "Previous song"), playB = button("play", "Play music", "player__pp"), nextB = button("next", "Next song");
-  playB.setAttribute("aria-pressed", "false");
   const ctl = el("div", "player__ctl");
   ctl.append(prevB, playB, nextB);
   const prog = el("div", "player__prog"), bar = el("i");
@@ -87,14 +93,14 @@ export function initMusic({ store }) {
 
   /* ---- the header button ---- */
   const eqSmall = eq(3);
-  if (btn) { btn.append(eqSmall); btn.hidden = false; }
+  if (btn) { btn.append(eqSmall); btn.setAttribute("aria-label", "Music"); btn.hidden = false; }
   const sb = document.getElementById("sbMusic");
 
   const fillList = () => {
     songsL.replaceChildren(...player.queue.map((id, k) => {
       const li = el("li"), b = el("button", "chip", SONGS[id].title);
       b.type = "button";
-      b.addEventListener("click", () => { player.jump(k); if (!player.on) start(); });
+      b.addEventListener("click", () => { player.jump(k); if (!player.playing) start(); });
       li.append(b);
       return li;
     }));
@@ -102,14 +108,15 @@ export function initMusic({ store }) {
 
   let said = "";
   function paint(why) {
-    const s = player.current, on = player.on, n = player.queue.length;
+    const s = player.current, on = player.playing, n = player.queue.length;   // not "on" while the phone has the sound interrupted
     title.textContent = s.title;
     sub.textContent = `${PLAYLISTS[list].name} · ${player.i + 1} of ${n}`;
     playB.replaceChildren(svg(on ? "pause" : "play"));
-    for (const b of [playB, btn].filter(Boolean)) {
-      b.setAttribute("aria-pressed", String(on));
-      b.setAttribute("aria-label", on ? "Pause music" : "Play music");
-      b.title = on ? `Pause music (${s.title})` : "Play music";
+    playB.setAttribute("aria-label", on ? "Pause music" : "Play music");
+    playB.title = on ? "Pause" : "Play";
+    if (btn) {                                   // a toggle: the name stays "Music", aria-pressed says whether it's on
+      btn.setAttribute("aria-pressed", String(on));
+      btn.title = on ? `Music on: ${s.title}` : "Music off";
     }
     btn?.classList.toggle("is-on", on);
     wrap.classList.toggle("is-on", on);
@@ -134,7 +141,7 @@ export function initMusic({ store }) {
     if (raf) return;
     const frame = (ts) => {
       raf = 0;
-      if (!player.on || document.hidden) { bars.forEach((b) => b.style.removeProperty("--l")); return; }
+      if (!player.playing || document.hidden) { bars.forEach((b) => b.style.removeProperty("--l")); return; }
       if (ts - lastDraw > 40) {
         lastDraw = ts;
         tickUI();
@@ -152,15 +159,20 @@ export function initMusic({ store }) {
   }
 
   /* ---- actions ---- */
+  let chose = false;   // the visitor pressed play or pause themselves (kept here too, in case storage is blocked)
   async function start(fade = 0.8) {
+    chose = true;
+    removeGestures();
+    /* pressing play means "play it like music": on iPhone that also plays with the silent switch on */
+    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch { /* not supported */ }
     const ok = await player.play(fade);
     if (ok) store.set("v0x-music", "on");
     else if (fade < 2) { live.textContent = "This browser didn't let the music start. Try again."; said = ""; }
     return ok;
   }
-  function stop() { player.pause(); store.set("v0x-music", "off"); }
-  const toggle = () => (player.on ? stop() : start());
-  const skip = (d) => { d > 0 ? player.next() : player.prev(); if (!player.on) start(); };
+  function stop() { chose = true; removeGestures(); player.pause(); store.set("v0x-music", "off"); }
+  const toggle = () => (player.playing ? stop() : start());
+  const skip = (d) => { d > 0 ? player.next() : player.prev(); if (!player.playing) start(); };
   playB.addEventListener("click", toggle);
   btn?.addEventListener("click", toggle);
   prevB.addEventListener("click", () => skip(-1));
@@ -176,14 +188,14 @@ export function initMusic({ store }) {
     fillList(); paint("song");
   }).observe(root, { attributes: true, attributeFilter: ["data-holiday", "data-scene"] });
 
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) { player.wake(); if (player.on) loop(); } });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { player.wake(); if (player.playing) loop(); } });
 
   /* start on the first tap / click / key press (owner's choice), unless this visitor switched it off */
   const gestures = ["pointerdown", "keydown", "touchend"];
   const removeGestures = () => gestures.forEach((g) => document.removeEventListener(g, onGesture, true));
   async function onGesture(e) {
     if (e.target.closest?.("#player, #musicBtn")) return;   // the music's own controls decide for themselves
-    if (player.on || store.get("v0x-music") === "off") return removeGestures();
+    if (chose || player.on || store.get("v0x-music") === "off") return removeGestures();
     if (navigator.userActivation && !navigator.userActivation.isActive) return;   // a touch that became a scroll, a lone Shift: wait for one that counts
     if (await player.play(4)) removeGestures();
   }
@@ -197,15 +209,15 @@ export function initMusic({ store }) {
   paint();
 
   return {
-    get on() { return player.on; },
+    get on() { return player.playing; },
     get volume() { return player.vol; },
     playlist: () => PLAYLISTS[list].name,
     songs: () => player.queue.map((id, k) => ({ id, title: SONGS[id].title, current: k === player.i })),
     current: () => player.current.title,
-    play: () => (player.on ? Promise.resolve(true) : start()),
+    play: () => (player.playing ? Promise.resolve(true) : start()),
     pause: () => player.on && stop(),
     toggle, next: () => skip(1), prev: () => skip(-1),
-    playAt: (k) => { player.jump(k); if (!player.on) start(); },
+    playAt: (k) => { player.jump(k); if (!player.playing) start(); },
     setVolume: (v) => { player.setVolume(v); vol.value = String(player.vol); store.set("v0x-volume", String(player.vol)); },
   };
 }
