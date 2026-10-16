@@ -198,12 +198,6 @@ export const DIRECTION = [
   "More JavaScript, more of the web, built the hard way",
 ];
 
-export const TRACKS = [
-  { name: "track 01", src: "audio/track1.mp3" },
-  { name: "track 02", src: "audio/track2.mp3" },
-  { name: "track 03", src: "audio/track3.mp3" },
-];
-
 /* What I'm working on right now. One short line, shown in the hero terminal. Set to null to hide. */
 export const NOW = "a pastel terminal remodel of this site";
 

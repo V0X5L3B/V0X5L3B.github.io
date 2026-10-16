@@ -235,9 +235,7 @@ a:hover { text-decoration-color: var(--crimson-t); }
 .foot__id { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .foot__sh { grid-column: 1 / -1; margin: 0; font: 400 .78rem/1.5 var(--mono); color: var(--dim); }
 .foot__sh a { color: var(--muted); }
-.player { display: flex; align-items: center; gap: 8px; font: 400 .75rem/1 var(--mono); color: var(--dim); }
-.player[hidden] { display: none; }
-.player input[type="range"] { width: 90px; accent-color: var(--crimson); }
+/* the music player is styled in extras.css */
 
 /* ---------- dialog ---------- */
 .dlg { width: min(680px, calc(100% - 24px)); max-height: calc(100dvh - 40px); padding: 0; color: var(--text); background: var(--surface); border: 1px solid var(--line-2); border-radius: 10px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7); overflow: auto; }

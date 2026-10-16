@@ -69,9 +69,12 @@ export function initPalette({ items, keys = {}, goto = {}, help = [] }) {
     const groups = [...new Set(all.map((i) => i.group))];
     shown = [];
     list.replaceChildren();
-    for (const g of groups) {
-      const hits = all.filter((i) => i.group === g).map((i) => [i, score(i, q)]).filter(([, s]) => s > 0)
-        .sort((a, b) => b[1] - a[1]).map(([i]) => i);
+    /* groups with the best match come first, so typing a song or project name puts it on top */
+    const ranked = groups.map((g) => {
+      const hits = all.filter((i) => i.group === g).map((i) => [i, score(i, q)]).filter(([, s]) => s > 0).sort((a, b) => b[1] - a[1]);
+      return [g, hits.map(([i]) => i), hits[0]?.[1] ?? 0];
+    }).sort((a, b) => b[2] - a[2]);
+    for (const [g, hits] of ranked) {
       if (!hits.length) continue;
       const head = el("li", "pal__g", g);
       head.setAttribute("role", "presentation");
