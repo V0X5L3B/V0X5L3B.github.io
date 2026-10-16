@@ -3,6 +3,9 @@ import {
   SERVICES, PROCESS, HIRE, NOW, PROMOS, NOTES,
 } from "./data.js";
 import { initHoliday, preview as previewHoliday, setEnabled as setHolidayEnabled, HOLIDAYS, current as currentHoliday } from "./holiday.js";
+import { initPalette } from "./palette.js";
+import { initBrief } from "./brief.js";
+import { petCounts } from "./alive.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -32,6 +35,28 @@ const store = {
   get(k) { try { return localStorage.getItem(k); } catch { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch { /* storage unavailable */ } },
 };
+
+/* scroll to a section or element (Lenis when it's running, so the smooth scroll isn't fought) */
+function goTo(target, block = "start") {
+  const node = typeof target === "string" ? $(target) : target;
+  if (!node) return;
+  if (window.v0xLenis) window.v0xLenis.scrollTo(node, block === "center" ? { offset: -innerHeight / 3 } : {});
+  else node.scrollIntoView({ block, behavior: reduced ? "auto" : "smooth" });
+}
+
+/* a "Copy link" button for a project or note; the link opens the site right at it */
+function shareBtn(hash, name) {
+  const url = `${PROFILE.site}#${hash}`;
+  const status = h("span", { class: "sr-only", role: "status", "aria-live": "polite" });
+  const btn = h("button", { type: "button", class: "link-btn share", title: url }, "Copy link");
+  btn.addEventListener("click", async () => {
+    const ok = await copyText(url);
+    btn.textContent = ok ? "Link copied \u2713" : "Copy failed";
+    status.textContent = ok ? `Link to ${name} copied` : "Copy failed";
+    setTimeout(() => { btn.textContent = "Copy link"; status.textContent = ""; }, 1800);
+  });
+  return h("span", { class: "share__w" }, btn, status);
+}
 
 /* ---------------- theme ---------------- */
 const root = document.documentElement;
@@ -103,7 +128,8 @@ function projectView(p) {
     h("h4", { class: "mini", text: "How it's built" }),
     h("ul", { class: "det" }, p.details.map((d) => h("li", { text: d }))),
     h("ul", { class: "tags", "aria-label": "Technologies" }, p.tags.map((t) => h("li", { text: t }))),
-    h("div", { class: "card__actions" }, links, !links.length && h("span", { class: "nolink", text: "No public source or demo yet." })),
+    h("div", { class: "card__actions" }, links, !links.length && h("span", { class: "nolink", text: "No public source or demo yet." }),
+      shareBtn(`project-${p.id}`, p.name)),
   );
 }
 
@@ -133,7 +159,7 @@ tree.append(
     "data-cats": p.categories.join(" "), "aria-controls": "projectView",
     onclick: () => selectProject(p.id),
   }, h("span", { class: "tree__n", text: p.name }), h("span", { class: "tree__s", text: p.status }))),
-  h("a", { class: "tree__i tree__you", href: "#hire" },
+  h("a", { class: "tree__i tree__you", href: "#brief" },
     h("span", { class: "tree__n", text: "+ Your project" }), h("span", { class: "tree__s", text: "Tell me what you want to make" })),
 );
 tree.addEventListener("keydown", (e) => {
@@ -191,7 +217,12 @@ $("#hirePrice").textContent = HIRE.price;
     : h("a", { class: "btn btn--primary", href: "#contact" }, "Start a project ↓"));
   if (HIRE.pay?.url) cta.append(ext(HIRE.pay.url, `${HIRE.pay.label} ↗`, "btn"));
   if (LINKS.discord?.copy) cta.append(h("p", { class: "hire__dm", text: `or message ${LINKS.discord.copy} on Discord` }));
+  cta.append(h("a", { class: "hire__brief", href: "#brief" }, "Not sure what to say? Write a quick brief \u2193"));
 })();
+const brief = initBrief({
+  mount: $("#brief"), services: SERVICES, handle: PROFILE.handle,
+  dm: LINKS.discord?.copy ?? null, server: LINKS.discordServer?.url ?? null, copy: copyText,
+});
 
 /* ---------------- skills ---------------- */
 $("#skillGrid").append(...SKILLS.map((g) =>
@@ -211,7 +242,15 @@ $("#notesList").append(...NOTES.map((n) =>
         h("span", { class: "note-i__s", text: n.summary })),
       h("div", { class: "note-i__b" },
         n.body.map((para) => h("p", { text: para })),
-        h("ul", { class: "tags", "aria-label": "Topics" }, n.tags.map((t) => h("li", { text: t }))))))));
+        h("ul", { class: "tags", "aria-label": "Topics" }, n.tags.map((t) => h("li", { text: t }))),
+        shareBtn(`note-${n.id}`, n.title))))));
+function openNote(id, scroll = true) {
+  const li = $(`#note-${id}`);
+  if (!li) return false;
+  li.querySelector("details").open = true;
+  if (scroll) goTo(li, "center");
+  return true;
+}
 
 /* ---------------- contact ---------------- */
 async function copyText(text) {
@@ -276,6 +315,11 @@ const COMMANDS = {
     print("  links             public links");
     print("  theme [dark|light] switch or toggle theme");
     print("  holiday [id|on|off] preview or toggle seasonal themes");
+    print("  motion [on|off]   turn animations on or off");
+    print("  brief             write a project brief");
+    print("  pets              how many animals you've petted");
+    print("  menu              open the quick menu (ctrl k)");
+    print("  keys              keyboard shortcuts");
     print("  clear             clear this screen");
   },
   whoami() { print(`${PROFILE.handle} (${PROFILE.tag}) — developer, open for projects`); },
@@ -332,6 +376,25 @@ const COMMANDS = {
     print("  | O |");
     print("  '~~~'");
   },
+  motion(arg) {
+    const on = !reduced;
+    if (arg === "on" && on) return print("animations are already on");
+    if (arg === "off" && !on) return print("animations are already off");
+    print(`animations ${on ? "off" : "on"}, reloading…`);
+    setTimeout(toggleMotion, 400);
+  },
+  brief() {
+    print("opening the brief builder: answer a few questions and copy the message to Discord.");
+    goBrief();
+  },
+  pets() {
+    const all = Object.entries(petCounts());
+    if (!all.length) return print(reduced ? "turn animations on (`motion on`), then come up slowly to an animal and tap it." : "no pets yet. come up slowly to an animal and tap it.");
+    all.sort((a, b) => b[1] - a[1]).forEach(([k, n]) => print(`  ${k.padEnd(9)} ${"\u2665".repeat(Math.min(n, 12))}${n > 12 ? ` ${n}` : ""}`));
+    print("counted in this browser only.");
+  },
+  menu() { pal.open(); },
+  keys() { pal.showKeys(); },
   clear() { out.replaceChildren(); },
 };
 function run(raw) {
@@ -436,10 +499,11 @@ if (motionBtn) {
   motionBtn.textContent = reduced ? "Off" : "On";
   motionBtn.setAttribute("aria-pressed", String(!reduced));
   motionBtn.setAttribute("aria-label", reduced ? "Turn animations on" : "Turn animations off");
-  motionBtn.addEventListener("click", () => {
-    store.set("v0x-motion", reduced ? "on" : "off");
-    location.reload();                              // the animation layers read the setting once, at load
-  });
+  motionBtn.addEventListener("click", toggleMotion);
+}
+function toggleMotion() {
+  store.set("v0x-motion", reduced ? "on" : "off");
+  location.reload();                                // the animation layers read the setting once, at load
 }
 function paintStatus() {
   const t = $("#sbTheme"), s = $("#sbSeason");
@@ -448,3 +512,92 @@ function paintStatus() {
 }
 paintStatus();
 new MutationObserver(paintStatus).observe(root, { attributes: true, attributeFilter: ["data-theme", "data-holiday", "data-scene"] });
+
+/* ---------------- a short message at the bottom of the screen ---------------- */
+const toastEl = h("p", { class: "toast", role: "status", "aria-live": "polite" });
+document.body.append(toastEl);
+let toastT = 0;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add("is-on");
+  clearTimeout(toastT);
+  toastT = setTimeout(() => toastEl.classList.remove("is-on"), 2200);
+}
+async function copyWithToast(text, what) { toast(await copyText(text) ? `${what} copied` : "Copy failed"); }
+
+/* ---------------- links straight to a project or a note (#project-<id>, #note-<id>) ---------------- */
+function openHash() {
+  const m = location.hash.match(/^#(project|note)-([\w-]+)$/);
+  if (!m) return;
+  if (m[1] === "project") { if (selectProject(m[2])) goTo("#projects"); }
+  else openNote(m[2]);
+}
+addEventListener("hashchange", openHash);
+if (document.readyState === "complete") setTimeout(openHash, 150);
+else addEventListener("load", () => setTimeout(openHash, 150), { once: true });
+
+/* ---------------- print / save as PDF: every project and every note, opened up ---------------- */
+$(".explorer")?.after(h("div", { class: "print-only print-projects" }, PROJECTS.map((p) =>
+  h("article", { class: "print-projects__i" },
+    h("h3", { text: p.name }),
+    h("p", { class: "print-projects__k", text: `${p.kicker} \u00b7 ${p.status}` }),
+    h("p", { text: p.summary }),
+    h("ul", {}, p.details.map((d) => h("li", { text: d }))),
+    h("p", { class: "print-projects__l", text: [p.links?.github && `Source: ${p.links.github}`, p.links?.live && `Live: ${p.links.live}`].filter(Boolean).join("  \u00b7  ") || "No public source or demo yet." })))));
+let notesOpen = [];
+addEventListener("beforeprint", () => { const ds = $$("#notesList details"); notesOpen = ds.map((d) => d.open); ds.forEach((d) => { d.open = true; }); });
+addEventListener("afterprint", () => $$("#notesList details").forEach((d, i) => { d.open = notesOpen[i] ?? false; }));
+
+/* ---------------- quick menu + keyboard shortcuts ---------------- */
+function goBrief() {
+  goTo("#brief");
+  setTimeout(() => brief?.focus(), reduced ? 50 : 700);
+}
+const order = [".hero", "#about", "#projects", "#hire", "#notes", "#contact"].map((q) => $(q)).filter(Boolean);
+function stepSection(d) {
+  const tops = order.map((n) => n.getBoundingClientRect().top - 80);
+  let i = d > 0 ? tops.findIndex((t) => t > 4) : tops.findLastIndex((t) => t < -4);
+  if (i < 0) i = d > 0 ? order.length - 1 : 0;
+  goTo(order[i]);
+}
+const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+const menuKey = isMac ? "\u2318 K" : "Ctrl K";
+const toggleTheme = () => setTheme(currentTheme() === "light" ? "dark" : "light");
+const SECTIONS = [
+  ["Top", ".hero", "home start hero", "g t"], ["About", "#about", "readme me", "g a"], ["Skills", "#skills", "what I work with stack languages"],
+  ["Projects", "#projects", "work made things", "g p"], ["Hire me", "#hire", "services work with me price", "g h"],
+  ["Notes", "#notes", "write-ups bugs fixes blog", "g n"], ["Console", "#console", "terminal commands"], ["Contact", "#contact", "links discord github hello", "g c"],
+];
+const pal = initPalette({
+  items: () => {
+    const hol = root.dataset.holiday, month = currentHoliday();
+    const playBtn = $("#playBtn"), player = $("#player");
+    return [
+      ...SECTIONS.map(([label, q, keys, hint]) => ({ group: "Go to", label, keys, hint, run: () => goTo(q) })),
+      { group: "Do", label: "Write a project brief", keys: "hire message discord start project", hint: "g b", run: goBrief },
+      { group: "Do", label: `Switch to ${currentTheme() === "light" ? "dark" : "light"} theme`, keys: "theme dark light mode", hint: "t", run: toggleTheme },
+      { group: "Do", label: `Turn animations ${reduced ? "on" : "off"}`, keys: "motion animals calm", hint: "m", run: toggleMotion },
+      month && HOLIDAYS[month] && { group: "Do", label: hol ? `Turn off the ${HOLIDAYS[month].name} look` : `Turn on the ${HOLIDAYS[month].name} look`, keys: "seasonal holiday theme", run: () => setHolidayEnabled(!hol) },
+      player && !player.hidden && { group: "Do", label: playBtn?.textContent === "Pause" ? "Pause the music" : "Play the ambient music", keys: "music sound audio", run: () => playBtn.click() },
+      LINKS.discord?.copy && { group: "Do", label: "Copy my Discord name", keys: "discord handle", run: () => copyWithToast(LINKS.discord.copy, "Discord name") },
+      { group: "Do", label: "Copy the link to this site", keys: "share url", run: () => copyWithToast(PROFILE.site, "Link") },
+      { group: "Do", label: "Print or save as PDF", keys: "print pdf resume", run: () => window.print() },
+      { group: "Do", label: "Keyboard shortcuts", keys: "keys help", hint: "?", run: () => pal.showKeys() },
+      ...PROJECTS.map((p) => ({ group: "Projects", label: p.name, keys: `${p.id} ${p.tags.join(" ")} project`, run: () => openProject(p.id) })),
+      ...NOTES.map((n) => ({ group: "Notes", label: n.title, keys: `${n.tags.join(" ")} note`, run: () => openNote(n.id) })),
+      ...Object.values(LINKS).filter((l) => l?.url && l.url !== PROFILE.site).map((l) => ({ group: "Links", label: `${l.label} \u2197`, keys: "open link", run: () => window.open(l.url, "_blank", "noopener") })),
+    ].filter(Boolean);
+  },
+  keys: { t: toggleTheme, m: toggleMotion, j: () => stepSection(1), k: () => stepSection(-1) },
+  goto: { t: () => goTo(".hero"), a: () => goTo("#about"), s: () => goTo("#skills"), p: () => goTo("#projects"), h: () => goTo("#hire"), b: goBrief, n: () => goTo("#notes"), c: () => goTo("#contact") },
+  help: [
+    [menuKey, "Open the quick menu"], ["/", "Open the quick menu"], ["?", "Show these shortcuts"],
+    ["t", "Switch light / dark"], ["m", "Turn animations on / off"], ["j", "Next section"], ["k", "Previous section"],
+    ["g a", "Go to about"], ["g p", "Go to projects"], ["g h", "Go to hire me"], ["g b", "Write a project brief"],
+    ["g n", "Go to notes"], ["g c", "Go to contact"], ["g t", "Back to the top"],
+  ],
+});
+$("#palBtn")?.addEventListener("click", () => pal.open());
+$("#palBtn")?.setAttribute("title", `Quick menu (${menuKey})`);
+const sbKeys = $("#sbKeys");
+if (sbKeys) sbKeys.textContent = `${menuKey.toLowerCase()} menu \u00b7 ? keys`;

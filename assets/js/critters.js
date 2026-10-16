@@ -5,7 +5,8 @@
  *               newt and a banana slug wandering along the bottom of the window
  *   floor       a black-tailed deer that walks, stops to graze and looks up, a spotted owl on the log
  *               (asleep by day, awake at night) and two banana slugs
- * Each one has its own behaviour loop below (alive.js runs them) and shies away from the pointer.
+ * Each one has its own behaviour loop below (alive.js runs them): quick pointer moves startle them,
+ * a slow approach and a tap pets them.
  * Colours: the --cr-* and --ff-* variables in forest.css. Gaits and habits: forest.css.
  */
 import { seeded } from "./scene.js";
@@ -176,7 +177,7 @@ async function jay(c) {
       el.classList.toggle("is-glide", glide);
       const tilt = (Math.atan2(ny - c.y, step) * 180 / Math.PI) * 0.5 * dir;
       const ok = await c.go({ x: c.x + dir * step, y: ny, r: last && spot ? -12 * dir : tilt }, step / (glide ? 0.24 : 0.3), last && spot ? "cubic-bezier(.2,.6,.35,1)" : "linear");
-      if (!ok) { scared = true; break; }
+      if (!ok) { if (c.loved) continue; scared = true; break; }   // petted mid-flight: carry on
     }
     el.classList.remove("is-glide");
     if (spot && !scared && c.alive) {             // landed: hop about, look around, flick the tail
@@ -195,6 +196,7 @@ async function jay(c) {
         } else if (h === "turn") { c.face(-c.dir); ok = await c.wait(300); }
         else ok = await c.act(`is-${h}`, h === "look" ? 1500 : h === "call" ? 1000 : 600);
         if (ok) ok = await c.wait(rnd(400, 1500));
+        if (!ok && c.loved) ok = true;             // petted: stays on the perch
       }
       removeEventListener("scroll", onScroll);
       el.classList.remove("is-perch");
@@ -236,6 +238,7 @@ async function squirrel(c) {
       if (!ok) {
         if (!c.scared()) continue;
         ok = await c.act("is-alert", rnd(500, 1100));      // freeze, tail up...
+        if (c.loved) continue;                              // (petted while it froze: it stays)
         el.classList.add("is-run"); c.pace(3);              // ...then bolt
         await c.go({ y: c.y + (up ? -1 : 1) * rnd(170, 280) }, 520, "cubic-bezier(.2,.7,.3,1)");
         el.classList.remove("is-run"); c.pace(0);
@@ -297,8 +300,9 @@ function wanderer({ band, speed, bout, rest, artAngle, onPause, onScare }) {
 const newtBrain = wanderer({
   band: [0.72, 0.88], speed: 0.032, bout: [30, 110], artAngle: 180,
   onPause: (c) => (chance(0.35) ? c.act("is-look", rnd(1500, 2400)) : c.wait(rnd(400, 2600))),
-  async onScare(c, n) {                            // freeze, then scurry off
+  async onScare(c, n) {                            // freeze, then scurry off (unless petted meanwhile)
     await c.wait(rnd(900, 1800));
+    if (c.loved) return;
     const b = c.box, ang = Math.atan2(b.top + b.height / 2 - n.y, b.left + b.width / 2 - n.x);
     await c.go({ r: c.heading((ang * 180) / Math.PI + 180) }, 220, "ease-out");
     c.pace(2.4);
@@ -318,10 +322,10 @@ export function wakeScreenCritters(list) {
   const life = new Life();
   const by = (k) => list.find((n) => n.classList.contains(`critter--${k}`));
   const opt = (el, radius) => ({ radius, face: el?.querySelector(".cr-face") });
-  life.add(by("jay"), jay, opt(by("jay"), 70));
-  life.add(by("squirrel"), squirrel, opt(by("squirrel"), 90));
-  life.add(by("newt"), newtBrain, opt(by("newt"), 70));
-  life.add(by("slug"), slugBrain, opt(by("slug"), 60));
+  life.add(by("jay"), jay, { ...opt(by("jay"), 70), name: "jay", pet: "is-call" });
+  life.add(by("squirrel"), squirrel, { ...opt(by("squirrel"), 90), name: "squirrel", pet: "is-chatter is-flick", petMs: 900 });
+  life.add(by("newt"), newtBrain, { ...opt(by("newt"), 70), name: "newt", pet: "is-look", petMs: 2000 });
+  life.add(by("slug"), slugBrain, { ...opt(by("slug"), 60), name: "slug", pet: "is-look", petMs: 2400 });
   return life;
 }
 
@@ -394,6 +398,7 @@ async function deer(c) {
       const n = c.scared(4000);
       if (!n) continue;
       ok = await c.act("is-alert", rnd(1100, 1900));   // head up, ears forward, tail raised
+      if (c.loved) continue;
       const b = c.box, away = n.x < b.left + b.width / 2 ? -1 : 1;   // -1: run toward the right of the screen
       await walk(clamp(c.x - away * rnd(260, 420), OFF_L, OFF_R), 1.8);
       continue;
@@ -463,10 +468,10 @@ function floorSlug(max) {
 export function wakeFloorCritters(floor) {
   const life = new Life();
   const q = (s) => floor.querySelector(s);
-  life.add(q(".deer__walk"), deer, { radius: 70, face: q(".deer__face") });
-  life.add(q(".owl"), owl, { radius: 90 });
+  life.add(q(".deer__walk"), deer, { radius: 70, face: q(".deer__face"), name: "deer", pet: "is-ear is-flick", petMs: 900 });
+  life.add(q(".owl"), owl, { radius: 90, skittish: false, name: "owl", pet: "is-ruffle", petMs: 700 });
   const a = q(".slug--a .slug__go"), b = q(".slug--b .slug__go");
-  life.add(a, floorSlug(160), { radius: 50, face: a?.querySelector(".slug__turn") });
-  life.add(b, floorSlug(240), { radius: 50, face: b?.querySelector(".slug__turn") });
+  life.add(a, floorSlug(160), { radius: 50, face: a?.querySelector(".slug__turn"), name: "slug", pet: "is-look", petMs: 2400 });
+  life.add(b, floorSlug(240), { radius: 50, face: b?.querySelector(".slug__turn"), name: "slug", pet: "is-look", petMs: 2400 });
   return life;
 }

@@ -505,6 +505,7 @@ async function crow(c) {
       else if (h === "l" || h === "r") ok = await pose(c, `is-${h}`, rnd(700, 2000));
       else ok = await c.act(`is-${h}`, h === "caw" ? 900 : 600);
       if (ok) ok = await c.wait(rnd(500, 2200));
+      if (!ok && c.loved) ok = true;               // petted: stays on its stone
     }
     if (!c.alive) break;
     const n = c.scared(6000), away = n ? (side(c, n) === "l" ? 1 : -1) : chance(0.5) ? 1 : -1;
@@ -552,15 +553,15 @@ async function floatGhost(c) {
 function wakeGraveyard(floor) {
   const life = new Life();
   const q = (s) => floor.querySelector(s);
-  life.add(q(".gf-ghost"), ghost, { radius: 60 });
-  life.add(q(".gf-cat"), cat, { radius: 110 });
-  life.add(q(".gf-crow"), crow, { radius: 70, face: q(".gf-crow__face") });
+  life.add(q(".gf-ghost"), ghost, { radius: 60, name: "ghost", pet: "is-wave", petMs: 1500 });
+  life.add(q(".gf-cat"), cat, { radius: 110, skittish: false, name: "cat", pet: "is-sblink", petMs: 1400 });
+  life.add(q(".gf-crow"), crow, { radius: 70, face: q(".gf-crow__face"), name: "crow", pet: "is-caw", petMs: 900 });
   return life;
 }
 
 /** Behaviour for the floating ghost icon (holiday.js makes the element). */
 export function wakeFloatGhost(el) {
   const life = new Life();
-  life.add(el, floatGhost, { radius: 70 });
+  life.add(el, floatGhost, { radius: 70, name: "ghost", pet: "is-loop", petMs: 1300 });
   return life;
 }
