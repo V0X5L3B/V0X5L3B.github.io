@@ -37,6 +37,15 @@ Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · 
 - Animal behaviour lives in `assets/js/alive.js`. Each animal runs its own loop of moves, pauses and habits (looking around, grazing, blinking, tail flicks) with new random timing each round, and reacts when the pointer comes close. Moves are Web Animations on the animal's transform; legs, wings and tails are CSS animations named `g-*`; habits are `is-*` classes styled in `forest.css` / `holidays.css`. Nothing runs while animations are switched off.
 - To add or move a holiday: edit `HOLIDAYS` in `holiday.js` and add a colour block in `holidays.css`.
 
+## Visitor tools
+
+- **Quick menu**: `Ctrl K` / `Cmd K`, `/` or the search button in the header. Type to jump to a section, project or note, switch theme or animations, copy the Discord name, print. Entries are built in `main.js`; the menu itself is `assets/js/palette.js`.
+- **Keyboard shortcuts** (`?` lists them): `t` theme, `m` animations, `j`/`k` next/previous section, `g` then `a`/`p`/`h`/`b`/`n`/`c`/`t` to jump.
+- **Project brief** (Hire me section, `assets/js/brief.js`): a few questions become a message ready to paste on Discord. Nothing is sent from the page; the draft stays in the visitor's browser (`v0x-brief`).
+- **Pet the animals**: quick pointer moves startle them, a slow approach and a tap pets them (a heart pops up). The `pets` console command shows the count, kept in the browser only (`v0x-pets`).
+- **Links to a project or note**: `#project-<id>` and `#note-<id>` open it; each one has a Copy link button.
+- **Print / save as PDF**: `assets/css/print.css` prints a plain light page with every project, service and note.
+
 ## Look & fonts
 
 Warm paper/terracotta palette (follows the visitor's system light/dark setting until they use the toggle), a serif for headings, and hand-drawn details (uneven corners, wobbly ink lines, highlighter, sticky note, margin scribbles). Fonts are self-hosted subsets in `assets/fonts/`: Newsreader (headings) and Caveat (handwriting), both SIL Open Font License (see the `OFL-*.txt` files).
@@ -59,7 +68,11 @@ assets/js/holiday.js  month → holiday logic, SVG decor
 assets/js/scene.js    painted canvas backgrounds (redrawn on resize and light/dark, a few layers per frame)
 assets/js/forest.js   default forest scene + floor
 assets/js/critters.js forest animals
-assets/js/alive.js    animal behaviour (moves, pauses, habits, pointer reactions)
+assets/js/alive.js    animal behaviour (moves, pauses, habits, pointer reactions, petting)
+assets/js/palette.js  quick menu + keyboard shortcuts
+assets/js/brief.js    project brief builder
+assets/css/extras.css quick menu, brief, copy-link buttons, toast
+assets/css/print.css  print / PDF layout
 assets/js/graveyard.js Halloween scene + floor
 assets/js/data.js     all editable content
 assets/js/main.js     rendering + interactions

@@ -104,6 +104,17 @@
 .critter .cr-face { transition: transform .22s ease-in-out; }
 .critter .cr-face.is-back { transform: scaleX(-1); }
 .critter svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* petting (alive.js): the pointer turns into a hand over an animal, and a heart floats up where it was tapped */
+html.on-critter, html.on-critter a, html.on-critter button { cursor: pointer; }
+.pet-heart {
+  position: fixed; z-index: 60; pointer-events: none; font: 700 20px/1 var(--sans); color: var(--crimson);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, .18); transform: translate(-50%, -60%); animation: pet-heart 1.1s ease-out forwards;
+}
+@keyframes pet-heart {
+  0% { opacity: 0; transform: translate(-50%, -40%) scale(.4); }
+  20% { opacity: 1; transform: translate(-50%, -90%) scale(1.15); }
+  100% { opacity: 0; transform: translate(-30%, -260%) scale(.9) rotate(12deg); }
+}
 .cr-eye { fill: var(--cr-eye); }
 .cr-glint { fill: #fff; }
 .cr-nose { fill: #2a1f1a; }
