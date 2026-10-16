@@ -28,13 +28,13 @@ Everything lives in **`assets/js/data.js`**: profile text, links, projects, prom
 ## Seasonal themes
 
 `assets/js/holiday.js` + `assets/css/holidays.css` switch the look automatically by month (visitor's local time):
-Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · Oct Halloween · Nov Thanksgiving season · Dec Winter holidays. Other months (and `?holiday=none`, or a visitor turning the seasonal theme off) use the default pastel redwood forest look: a painted background (`assets/js/forest.js`, drawn on canvas by `assets/js/scene.js`) with giant redwoods, buttress roots, burls, moss and lichen, redwood animals that wander over the page (`assets/js/critters.js`: a Steller's jay, a Douglas squirrel, a newt, banana slugs, a deer and an owl) and a forest floor above the footer. Colours live in `assets/css/forest.css`.
+Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · Oct Halloween · Nov Thanksgiving season · Dec Winter holidays. Other months (and `?holiday=none`, or a visitor turning the seasonal theme off) use the default pastel redwood forest look: a painted background (`assets/js/forest.js`, drawn on canvas by `assets/js/scene.js`) with giant redwoods, buttress roots, burls, moss carpets, lichen and sword ferns, and a forest floor above the footer. Colours live in `assets/css/forest.css`.
 
 - Preview any theme: `?holiday=halloween` (ids: halloween, november, december, january, february, march, july) or `?holiday=none`.
 - Visitors can turn it off in the footer (remembered in their browser). The `holiday` console command previews too.
 - Halloween has the most detail: a painted night sky with a moon and a haunted house on the hill (`assets/js/graveyard.js`), a little graveyard above the footer with a ghost, pumpkins, a cauldron, a cat and a crow, plus spiders, a witch, glowing eyes and `boo` in the console.
 - Motion is on by default and ignores the visitor's reduced-motion setting (owner's choice). Visitors can turn animations off with the footer switch (stored in localStorage as `v0x-motion`).
-- Animal behaviour lives in `assets/js/alive.js`. Each animal runs its own loop of moves, pauses and habits (looking around, grazing, blinking, tail flicks) with new random timing each round, and reacts when the pointer comes close. Moves are Web Animations on the animal's transform; legs, wings and tails are CSS animations named `g-*`; habits are `is-*` classes styled in `forest.css` / `holidays.css`. Nothing runs while animations are switched off.
+- Animal behaviour (the Halloween cat, crow and ghosts) lives in `assets/js/alive.js`. Each animal runs its own loop of moves, pauses and habits (looking around, blinking, tail flicks) with new random timing each round, and reacts when the pointer comes close. Moves are Web Animations on the animal's transform; legs, wings and tails are CSS animations named `g-*`; habits are `is-*` classes styled in `forest.css` / `holidays.css`. Nothing runs while animations are switched off.
 - To add or move a holiday: edit `HOLIDAYS` in `holiday.js` and add a colour block in `holidays.css`.
 
 ## Visitor tools
@@ -42,7 +42,7 @@ Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · 
 - **Quick menu**: `Ctrl K` / `Cmd K`, `/` or the search button in the header. Type to jump to a section, project or note, switch theme or animations, copy the Discord name, print. Entries are built in `main.js`; the menu itself is `assets/js/palette.js`.
 - **Keyboard shortcuts** (`?` lists them): `t` theme, `m` animations, `j`/`k` next/previous section, `g` then `a`/`p`/`h`/`b`/`n`/`c`/`t` to jump.
 - **Project brief** (Hire me section, `assets/js/brief.js`): a few questions become a message ready to paste on Discord. Nothing is sent from the page; the draft stays in the visitor's browser (`v0x-brief`).
-- **Pet the animals**: quick pointer moves startle them, a slow approach and a tap pets them (a heart pops up). The `pets` console command shows the count, kept in the browser only (`v0x-pets`).
+- **Pet the animals** (Halloween look): quick pointer moves startle them, a slow approach and a tap pets them (a heart pops up). The `pets` console command shows the count, kept in the browser only (`v0x-pets`).
 - **Links to a project or note**: `#project-<id>` and `#note-<id>` open it; each one has a Copy link button.
 - **Print / save as PDF**: `assets/css/print.css` prints a plain light page with every project, service and note.
 
@@ -78,7 +78,6 @@ assets/css/hire.css   services / hire me section
 assets/js/holiday.js  month → holiday logic, SVG decor
 assets/js/scene.js    painted canvas backgrounds (redrawn on resize and light/dark, a few layers per frame)
 assets/js/forest.js   default forest scene + floor
-assets/js/critters.js forest animals
 assets/js/alive.js    animal behaviour (moves, pauses, habits, pointer reactions, petting)
 assets/js/palette.js  quick menu + keyboard shortcuts
 assets/js/brief.js    project brief builder
