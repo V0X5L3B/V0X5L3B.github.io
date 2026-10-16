@@ -3,13 +3,11 @@
  *   background  far trees lost in the haze, a row of slimmer redwoods, a few old giants with buttress
  *               roots, deep bark, burls, moss and lichen, light shafts, sword ferns and sorrel on the
  *               ground, and two giant trunks framing the edges
- *   floor       a little scene above the footer: a mossy log, mushrooms, ferns, two banana slugs,
- *               a deer walking through and an owl on the log
- *   air         redwood animals wandering over the page (critters.js), dust by day and fireflies at night
+ *   floor       a little scene above the footer: a mossy log, moss mounds, mushrooms and ferns
+ *   air         dust by day and fireflies at night
  * Colours: the --fs-* and --ff-* variables in forest.css.
  */
-import { Backdrop, palette, mix, rgba, seeded, still } from "./scene.js";
-import { screenCritters, wakeScreenCritters, wakeFloorCritters, DEER, OWL } from "./critters.js";
+import { Backdrop, palette, mix, rgba, seeded } from "./scene.js";
 
 const NAMES = ["haze", "sky", "ray", "bark", "bark-hi", "bark-lo", "ink", "leaf", "leaf-hi", "leaf-lo", "moss", "lichen", "fern", "fern-hi", "ground", "sorrel", "cap"];
 const read = () => Object.assign(palette("fs-", NAMES), { dark: document.documentElement.dataset.theme === "dark" });
@@ -203,6 +201,26 @@ function moss(ctx, t, P, r, f, big) {
   } else mid.addPath(lo);
   ctx.fillStyle = rgba(tint(P, "moss", f), 0.85); ctx.fill(mid);
   ctx.fillStyle = rgba(tint(P, "leaf-hi", f), big ? 0.6 : 0.75); ctx.fill(top);
+}
+
+/* a carpet of moss over the ground: overlapping soft mounds, darker underneath, lit on top, with a
+   speckle of sporophyte tips; m mounds spread over the width, all sitting on the line y */
+function mossBed(ctx, w, y, m, size, P, r, f, k) {
+  const lo = new Path2D(), mid = new Path2D(), top = new Path2D(), tips = new Path2D();
+  for (let i = 0; i < m; i++) {
+    const x = r() * w, R = size * (0.5 + r() * 0.8), H = R * (0.35 + r() * 0.25), yy = y + (r() - 0.3) * size * 0.5;
+    lo.moveTo(x - R, yy + 2); lo.ellipse(x, yy + 2, R, H, 0, Math.PI, 0); lo.lineTo(x - R, yy + 2);
+    mid.moveTo(x - R * 0.86, yy); mid.ellipse(x, yy, R * 0.86, H * 0.86, 0, Math.PI, 0); mid.lineTo(x - R * 0.86, yy);
+    top.moveTo(x - R * 0.2 + R * 0.45, yy - H * 0.55); top.ellipse(x - R * 0.2, yy - H * 0.55, R * 0.45, H * 0.3, 0, 0, Math.PI * 2);
+    for (let q = 0, n = Math.round(R / (3.2 * k)); q < n; q++) {   // tiny stalks poking out of the mound
+      const a = Math.PI + r() * Math.PI, px = x + Math.cos(a) * R * 0.8 * r(), py = yy + Math.sin(a) * H * 0.85, L = (2 + r() * 3) * k;
+      tips.moveTo(px, py); tips.lineTo(px + (r() - 0.5) * 1.5 * k, py - L);
+    }
+  }
+  ctx.fillStyle = rgba(tint(P, "leaf-lo", f), 0.95); ctx.fill(lo);
+  ctx.fillStyle = rgba(tint(P, "moss", f), 0.95); ctx.fill(mid);
+  ctx.fillStyle = rgba(tint(P, "leaf-hi", f), 0.55); ctx.fill(top);
+  ctx.strokeStyle = rgba(tint(P, "moss", f * 0.7), 0.8); ctx.lineWidth = 0.7 * k; ctx.stroke(tips);
 }
 
 /* a burl: a low lumpy swelling with the bark grain flowing around it */
@@ -449,8 +467,9 @@ const LAYERS = [
         ctx.fillStyle = rgba(tint(P, "leaf", f + 0.05), 0.9); ctx.fill(blob);
       }
       ground(ctx, w, base + 4, H, P, r, f + 0.1, 1.3);
+      mossBed(ctx, w, base + 8, Math.round(w / 22), 14 * k, P, r, f + 0.1, 0.7 * k);
       fadeTop(ctx, w, h * 0.55, 0.85);
-      mist(ctx, w, h * 0.5, h * 0.9, P, P.dark ? 0.55 : 0.75);
+      mist(ctx, w, h * 0.5, h * 0.9, P, P.dark ? 0.55 : 0.6);
     },
   },
   { /* back: a row of slimmer redwoods with branches of hanging sprays, ferns at their feet */
@@ -467,9 +486,10 @@ const LAYERS = [
         needles(ctx, P, f, 0.75 * k, P3);
       }
       ground(ctx, w, base + 2, H, P, r, f + 0.05, 4.1);
-      for (let i = 0, m = Math.round(w / 160); i < m; i++) fern(ctx, r() * w, base + 12 + r() * 8, (18 + r() * 12) * k, P, r, f + 0.05, 0.65 * k);
+      mossBed(ctx, w, base + 8, Math.round(w / 16), 18 * k, P, r, f + 0.05, 0.8 * k);
+      for (let i = 0, m = Math.round(w / 70); i < m; i++) fern(ctx, r() * w, base + 12 + r() * 8, (20 + r() * 16) * k, P, r, f + 0.05, 0.65 * k);
       fadeTop(ctx, w, h * 0.35, 0.65);
-      mist(ctx, w, h * 0.58, h * 0.92, P, P.dark ? 0.4 : 0.55);
+      mist(ctx, w, h * 0.58, h * 0.92, P, P.dark ? 0.4 : 0.4);
     },
   },
   { /* mid: a few old giants, trunks running out of the top of the screen, buttress roots, burls, moss */
@@ -489,15 +509,16 @@ const LAYERS = [
         needles(ctx, P, f, 1.05 * k, front);
       }
       ground(ctx, w, base + 2, H, P, r, f + 0.05, 2.7);
+      mossBed(ctx, w, base + 10, Math.round(w / 12), 24 * k, P, r, f, k);
       for (const t of trees) {
         fern(ctx, t.cx(t.base) - t.hw(t.base) - t.w * (0.2 + r() * 0.4), t.base + 12, 40 * k, P, r, f, 0.85 * k);
         fern(ctx, t.cx(t.base) + t.hw(t.base) + t.w * (0.3 + r() * 0.5), t.base + 14, 32 * k, P, r, f, 0.8 * k);
         sorrel(ctx, t.cx(t.base), t.base + 12, 9, t.w * 1.6, P, r, f, 0.85 * k);
       }
-      for (let i = 0, m = Math.round(w / 240); i < m; i++) fern(ctx, r() * w, base + 16 + r() * 10, (20 + r() * 14) * k, P, r, f + 0.05, 0.7 * k);
+      for (let i = 0, m = Math.round(w / 95); i < m; i++) fern(ctx, r() * w, base + 16 + r() * 10, (24 + r() * 20) * k, P, r, f + 0.05, 0.7 * k);
       for (let i = 0, m = Math.round(w / 90); i < m; i++) sorrel(ctx, r() * w, base + 18 + r() * 18, 5, 30 * k, P, r, f, 0.8 * k);
       fadeTop(ctx, w, h * 0.22, 0.4);
-      mist(ctx, w, h * 0.66, h * 0.97, P, P.dark ? 0.3 : 0.42);
+      mist(ctx, w, h * 0.66, h * 0.97, P, P.dark ? 0.3 : 0.28);
     },
   },
   { /* light shafts from the canopy (drawn small, so they come out soft) */
@@ -534,10 +555,11 @@ const LAYERS = [
       }
       for (const t of edge) roots(ctx, t, P, r, f, base);
       ground(ctx, w, base, H, P, r, f + 0.1, 2.2);
+      mossBed(ctx, w, base + 8, Math.round(w / 14), 30 * k, P, r, f, 1.1 * k);
       const L = edge[0].cx(base) + edge[0].hw(base), R = edge[1].cx(base) - edge[1].hw(base);
       fern(ctx, L + 10 * k, base + 8, 70 * k, P, r, f, 1.2 * k);
       fern(ctx, R - 14 * k, base + 10, 64 * k, P, r, f, 1.2 * k);
-      if (w > 760) { fern(ctx, w * 0.3, base + 18, 40 * k, P, r, f + 0.1, k); fern(ctx, w * 0.74, base + 16, 46 * k, P, r, f + 0.1, k); }
+      for (let i = 0, m = Math.max(2, Math.round(w / 200)); i < m; i++) fern(ctx, (i + 0.2 + r() * 0.6) * (w / m), base + 14 + r() * 8, (38 + r() * 18) * k, P, r, f + 0.1, k);
       for (let i = 0, m = Math.round(w / 60); i < m; i++) sorrel(ctx, r() * w, base + 10 + r() * 30, 7, 40 * k, P, r, f, k);
       for (const x of [L + 34 * k, R - 40 * k]) { mushroom(ctx, x, base + 6, 16 * k, P, f); mushroom(ctx, x + 12 * k, base + 8, 11 * k, P, f); }
     },
@@ -548,16 +570,11 @@ export function forestBackdrop() {
   return new Backdrop("forest", LAYERS, read).mount();
 }
 
-/* ---------------- animals, dust and fireflies over the page ---------------- */
+/* ---------------- dust and fireflies over the page ---------------- */
 export function forestAir() {
   const air = document.createElement("div");
   air.className = "forest-air";
   air.setAttribute("aria-hidden", "true");
-  if (!still()) {                                  // the animals only come out when animations are on
-    const critters = screenCritters();
-    air.append(...critters);
-    air.wake = () => wakeScreenCritters(critters);
-  }
   const r = seeded(5);
   for (let i = 0; i < 14; i++) {                   // fireflies (night) and dust in the light (day)
     const f = document.createElement("i");
@@ -604,27 +621,6 @@ function sorrelSVG(x, y, n, spread, r) {
   return s;
 }
 
-/* a banana slug, side view, facing right; tail tip at 0,0 */
-const SLUG = `
-  <ellipse class="ff-shadow" cx="44" cy="1.5" rx="46" ry="3"/>
-  <g class="slug__body">
-    <path class="ff-slug" d="M0-1C9-2 22-8 37-12.5C48-16 59-18.5 70-17.5C80-16.5 88-11.5 91-5.5C92.5-1.5 89.5 0 85 0H5C1 0-1 0 0-1Z"/>
-    <path class="ff-slug-foot" d="M4 0H86"/>
-    <path class="ff-slug-keel" d="M2-1.5C12-3.5 24-8.5 37-12.5C42-14 47-15.3 52-16.2"/>
-    <path class="ff-slug-mantle" d="M51-15.5C59-19.5 73-19.5 81-14.5C79-8.5 71-6.5 62-6.5C55-6.5 50-9.5 51-15.5Z"/>
-    <path class="ff-slug-groove" d="M55-14.5C61-17 71-17 77-13.8M56-11.5C62-14 70-14 75-11.3M58-9C63-10.8 68-10.8 72-9.2"/>
-    <path class="ff-slug-groove" d="M14-3.2l3 2.6M20-5l3.2 3.6M26-7l3.4 4.2M32-9l3.6 5M38-11l3.6 5.6M44-12.6l3.4 5.8"/>
-    <ellipse class="ff-slug-hole" cx="74" cy="-10" rx="1.7" ry="1.3"/>
-    <path class="ff-slug-spot" d="M30-6.5c1.6-.8 3.3-.4 3 1-.5 1.2-2.6 1.3-3.4.6-.4-.4-.2-1.2.4-1.6ZM45-10c1.2-.5 2.4 0 2.1.9-.4.9-1.8 1-2.4.4-.3-.4-.1-1 .3-1.3ZM64-15c1-.4 2 0 1.8.7-.3.7-1.5.8-2 .3-.2-.3 0-.8.2-1Z"/>
-    <path class="ff-slug-shine" d="M8-3C18-6 30-10.5 42-14C52-16.8 62-17.6 72-16.4"/>
-    <circle class="ff-slug-glint" cx="66" cy="-15.2" r="1.1"/><circle class="ff-slug-glint" cx="38" cy="-11.6" r=".8"/>
-  </g>
-  <g class="slug__eyes"><g class="slug__stalks">
-    <path class="ff-slug-tent ff-slug-tent--back" d="M84-13.5Q87-21 86.5-27"/><circle class="ff-slug-eye" cx="86.5" cy="-27.5" r="1.6"/>
-    <path class="ff-slug-tent" d="M86.5-12.5Q91-19.5 92.5-25.5"/><circle class="ff-slug-eye" cx="92.7" cy="-26" r="1.8"/>
-    <path class="ff-slug-tent" d="M90.5-4.5l4.5 1.6M89.5-7l4.2-.6"/>
-  </g></g>`;
-
 function logSVG() {
   /* a fallen redwood lying left to right; cut end on the left shows the rings */
   let rings = "";
@@ -658,6 +654,17 @@ function mushroomSVG(x, y, s, flip = 1) {
   </g>`;
 }
 
+/* soft moss mounds along the soil line */
+function mossSVG(r) {
+  let lo = "", hi = "";
+  for (let x = 10; x < 1200; x += 22 + r() * 34) {
+    const R = 10 + r() * 18, H = R * (0.4 + r() * 0.25), y = 157 - Math.sin(x * 0.0105) * 3 + r() * 4;
+    lo += `M${(x - R).toFixed(1)} ${y.toFixed(1)}a${R.toFixed(1)} ${H.toFixed(1)} 0 0 1 ${(2 * R).toFixed(1)} 0Z`;
+    hi += `M${(x - R * 0.55).toFixed(1)} ${(y - H * 0.45).toFixed(1)}a${(R * 0.45).toFixed(1)} ${(H * 0.4).toFixed(1)} 0 0 1 ${(R * 0.9).toFixed(1)} 0Z`;
+  }
+  return `<path class="ff-mound" d="${lo}"/><path class="ff-mound-hi" d="${hi}"/>`;
+}
+
 export function forestFloor() {
   const r = seeded(77);
   let litter = "";
@@ -685,35 +692,35 @@ export function forestFloor() {
     <defs>
       <linearGradient id="ffSoil" x1="0" y1="0" x2="0" y2="1"><stop class="ff-s1" offset="0"/><stop class="ff-s2" offset=".35"/><stop class="ff-s3" offset="1"/></linearGradient>
       <linearGradient id="ffLog" x1="0" y1="0" x2="0" y2="1"><stop class="ff-l1" offset="0"/><stop class="ff-l2" offset=".45"/><stop class="ff-l3" offset="1"/></linearGradient>
-      <linearGradient id="ffSlug" x1="0" y1="0" x2="0" y2="1"><stop class="ff-g1" offset="0"/><stop class="ff-g2" offset=".55"/><stop class="ff-g3" offset="1"/></linearGradient>
       <radialGradient id="ffCap" cx=".38" cy=".3" r=".8"><stop class="ff-c1" offset="0"/><stop class="ff-c2" offset=".6"/><stop class="ff-c3" offset="1"/></radialGradient>
     </defs>
     ${fernSVG(170, 150, 70, 11, r, "ff-fern ff-fern--back")}
     ${fernSVG(880, 152, 64, 10, r, "ff-fern ff-fern--back")}
-    <g transform="translate(990 151) scale(.84)">${DEER}</g>
+    ${fernSVG(330, 152, 58, 10, r, "ff-fern ff-fern--back")}
+    ${fernSVG(1010, 152, 70, 11, r, "ff-fern ff-fern--back")}
+    ${fernSVG(560, 150, 50, 9, r, "ff-fern ff-fern--back")}
     <path class="ff-soil" d="M0 180V156C60 150 130 146 210 150S360 158 440 154 600 148 700 151 880 158 960 154 1110 146 1200 152V180Z"/>
     <path class="ff-litter" d="${litter}"/>
+    ${mossSVG(r)}
     <path class="ff-tufts" d="${tufts}"/>
     <g class="ff-pebble">${pebbles}</g>
     ${logSVG()}
     <path class="ff-stub" d="M705 118l18-17 4 3-15 18z"/><path class="ff-stub-end" d="M723 101l4 3"/>
     <g class="ff-mossy">${mossDots}</g>
-    <path class="ff-trail" d="M150 154C210 153 270 151.5 340 152.5"/><path class="ff-trail" d="M470 103C530 100 600 100.5 670 101.5"/>
     ${fernSVG(612, 102, 24, 7, r, "ff-fern ff-fern--sprout")}
-    <g transform="translate(748 106)">${OWL}</g>
     ${mushroomSVG(330, 154, 30)}${mushroomSVG(845, 156, 36)}${mushroomSVG(872, 157, 26, -1)}${mushroomSVG(825, 157, 20)}
     ${cone(250, 158)}${cone(985, 160)}${cone(560, 158)}
     ${fernSVG(80, 160, 92, 13, r, "ff-fern")}
     ${fernSVG(1120, 160, 88, 13, r, "ff-fern")}
     ${fernSVG(960, 160, 46, 9, r, "ff-fern")}
+    ${fernSVG(250, 162, 60, 11, r, "ff-fern")}
+    ${fernSVG(800, 162, 56, 10, r, "ff-fern")}
+    ${fernSVG(400, 164, 40, 9, r, "ff-fern")}
     <g class="ff-sorrels">${sorrelSVG(225, 162, 9, 70, r)}${sorrelSVG(395, 163, 8, 60, r)}${sorrelSVG(470, 166, 6, 50, r)}${sorrelSVG(570, 165, 10, 90, r)}${sorrelSVG(745, 164, 9, 80, r)}${sorrelSVG(1030, 165, 9, 70, r)}${sorrelSVG(1180, 166, 5, 30, r)}</g>
-    <g class="slug slug--a" transform="translate(140 154) scale(.82)"><g class="slug__go"><g class="slug__turn">${SLUG}</g></g></g>
-    <g class="slug slug--b" transform="translate(462 103) scale(.64)"><g class="slug__go"><g class="slug__turn">${SLUG}</g></g></g>
   </svg>`;
   const el = document.createElement("div");
   el.className = "forest-floor";
   el.setAttribute("aria-hidden", "true");
   el.innerHTML = svg;                              // static markup built above, no visitor input
-  el.wake = () => wakeFloorCritters(el);
   return el;
 }
