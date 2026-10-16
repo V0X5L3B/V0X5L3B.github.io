@@ -2,11 +2,14 @@
  * Halloween at the same level as the forest.
  *   background  a night (or dusk) sky with a big textured moon and stars, a haunted house on a far hill,
  *               a hill with an iron fence, crooked tombstones and bare trees, and a gnarled tree framing the edge
- *   floor       a small graveyard above the footer: tombstones, a ghost peeking out, carved pumpkins,
- *               a bubbling cauldron, a black cat, a crow and candles
+ *   floor       a small graveyard above the footer: tombstones, a ghost that rises from behind a grave to
+ *               look around, wave and swoop, carved pumpkins, a bubbling cauldron, a black cat that blinks,
+ *               yawns and watches the pointer, a crow that hops, caws and flies off, and candles
+ * The animals' behaviour loops are at the bottom (alive.js runs them).
  * Colours: the --gy-* and --gf-* variables in holidays.css.
  */
 import { Backdrop, palette, mix, rgba, seeded } from "./scene.js";
+import { Life, rnd, pick, chance } from "./alive.js";
 
 const NAMES = ["haze", "sky1", "sky2", "glow", "moon", "moon-lo", "cloud", "hill-far", "hill-mid", "ground", "tree", "rim", "stone", "stone-hi", "window", "star"];
 const read = () => Object.assign(palette("gy-", NAMES), { dark: document.documentElement.dataset.theme === "dark" });
@@ -51,6 +54,40 @@ function drawGnarl(ctx, segs, col, rim, rimA) {
     const o = w * 0.2;
     ctx.lineWidth = Math.max(0.8, w * 0.18); ctx.beginPath(); ctx.moveTo(x0 + o, y0 - o * 0.3); ctx.lineTo(x1 + o, y1 - o * 0.3); ctx.stroke();
   }
+}
+
+/* bark on the thick limbs: dark grooves, and thin ridges catching the moonlight on the right */
+function barkLines(ctx, segs, P, a, r) {
+  const groove = new Path2D(), ridge = new Path2D(), knots = [];
+  for (const [x0, y0, x1, y1, w] of segs) {
+    if (w < 4.5) continue;
+    const dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    for (let q = 0, m = Math.min(7, Math.floor(w / 3.5)); q < m; q++) {
+      const o = (-0.42 + ((q + 0.2 + r() * 0.6) / m) * 0.84) * w, t0 = -0.1 + r() * 0.2, t1 = 1.1 - r() * 0.3;
+      const into = o > w * 0.05 && r() < 0.55 ? ridge : groove, wob = (r() - 0.5) * w * 0.12;
+      into.moveTo(x0 + dx * t0 + nx * o, y0 + dy * t0 + ny * o);
+      into.quadraticCurveTo(x0 + dx * 0.5 + nx * (o + wob), y0 + dy * 0.5 + ny * (o + wob), x0 + dx * t1 + nx * o * 0.92, y0 + dy * t1 + ny * o * 0.92);
+    }
+    if (w > 14 && r() < 0.18) knots.push([x0 + dx * 0.5 - nx * w * 0.1, y0 + dy * 0.5 - ny * w * 0.1, w * 0.13, Math.atan2(dy, dx)]);
+  }
+  const dark = mix(P.tree, P.dark ? [0, 0, 0] : [58, 40, 80], P.dark ? 0.6 : 0.45);
+  ctx.lineCap = "round";
+  ctx.strokeStyle = rgba(dark, (P.dark ? 0.6 : 0.4) * a); ctx.lineWidth = 1.3; ctx.stroke(groove);
+  ctx.strokeStyle = rgba(P.rim, (P.dark ? 0.16 : 0.32) * a); ctx.lineWidth = 0.9; ctx.stroke(ridge);
+  for (const [x, y, R, ang] of knots) {             // old knots where limbs broke off
+    ctx.fillStyle = rgba(dark, 0.7 * a); ctx.beginPath(); ctx.ellipse(x, y, R * 1.6, R, ang, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = rgba(P.rim, (P.dark ? 0.2 : 0.45) * a); ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.ellipse(x, y, R * 2.2, R * 1.5, ang, -0.4, 1.4); ctx.stroke();
+  }
+}
+
+/* a hollow in an old trunk */
+function hollow(ctx, x, y, R, P) {
+  const dark = mix(P.tree, [0, 0, 0], P.dark ? 0.7 : 0.55);
+  ctx.fillStyle = rgba(mix(P.tree, P.rim, P.dark ? 0.12 : 0.3)); ctx.beginPath(); ctx.ellipse(x, y, R * 0.75, R * 1.25, 0.08, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = rgba(dark); ctx.beginPath(); ctx.ellipse(x - R * 0.06, y + R * 0.08, R * 0.58, R * 1.05, 0.08, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = rgba(P.rim, P.dark ? 0.3 : 0.6); ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.ellipse(x, y, R * 0.75, R * 1.25, 0.08, -1.2, 1.1); ctx.stroke();
 }
 
 function moon(ctx, x, y, R, P) {
@@ -187,11 +224,14 @@ const LAYERS = [
     draw(ctx, w, h, P, r, H) {
       const s = k(w), y = ridge(w, h * 0.84, h * 0.035, 4.2);
       const segs = [];
-      for (const fx of w < 700 ? [0.62] : [0.38, 0.66, 0.9]) {
+      for (const fx of w < 700 ? [0.62] : [0.36, 0.66, 0.92]) {
         const x = w * fx + (r() - 0.5) * 40;
-        gnarl(segs, x, y(x) + 4, -Math.PI / 2 + (r() - 0.5) * 0.25, (48 + r() * 30) * s, 7 * s, 5, r);
+        gnarl(segs, x, y(x) + 4, -Math.PI / 2 + (r() - 0.5) * 0.25, (74 + r() * 40) * s, 11 * s, 5, r);
+        for (const sd of [-1, 1]) segs.push([x, y(x) - 2, x + sd * 16 * s, y(x) + 8, 7 * s]);   // roots
       }
-      drawGnarl(ctx, segs, rgba(P["hill-mid"].map((v, i) => Math.round(v * 0.55 + P.tree[i] * 0.45))), P.rim, P.dark ? 0.14 : 0.14);
+      const midTree = { ...P, tree: P["hill-mid"].map((v, i) => Math.round(v * 0.55 + P.tree[i] * 0.45)) };
+      drawGnarl(ctx, segs, rgba(midTree.tree), P.rim, P.dark ? 0.14 : 0.14);
+      barkLines(ctx, segs, midTree, 0.7, r);
       fence(ctx, w, y, { ...P, tree: P["hill-mid"].map((v, i) => Math.round(v * 0.5 + P.tree[i] * 0.5)) }, r, w * 0.04, w * 0.58, s);
       fillRidge(ctx, w, H, y, rgba(P["hill-mid"]));
       for (let i = 0, n = Math.round(w / 70); i < n; i++) {
@@ -209,10 +249,17 @@ const LAYERS = [
     draw(ctx, w, h, P, r, H) {
       const s = k(w), y = ridge(w, h * 0.975, h * 0.012, 2.4);
       const segs = [];
-      const big = Math.min(54, Math.max(22, w * 0.038));
-      gnarl(segs, -big * 0.2, h + 10, -Math.PI / 2 + 0.16, h * (w < 700 ? 0.2 : 0.32), big, w < 700 ? 4 : 6, r);
-      if (w > 700) gnarl(segs, w + 10, h + 10, -Math.PI / 2 - 0.3, h * 0.26, big * 0.7, 5, r);
+      const big = Math.min(76, Math.max(24, w * 0.045)), x0 = big * 0.3;
+      gnarl(segs, x0, h + 10, -Math.PI / 2 + 0.14, h * (w < 700 ? 0.22 : 0.36), big, w < 700 ? 4 : 6, r);
+      const hx = segs[1][0], hy = segs[1][1];      // where the hollow goes, low on the trunk
+      for (const [ang, L] of [[-0.12, 1.6], [0.35, 1.1], [Math.PI + 0.3, 1]]) {     // roots gripping the ground
+        let px = x0, py = h - big * 0.35, a = ang, wd = big * 0.55;
+        for (let q = 0; q < 3; q++) { const nx = px + Math.cos(a) * big * L * 0.45, ny = py + Math.sin(a) * big * L * 0.45 + big * 0.12; segs.push([px, py, nx, ny, wd]); px = nx; py = ny; wd *= 0.62; a += 0.25 * Math.sign(Math.cos(ang)); }
+      }
+      if (w > 700) gnarl(segs, w + 10, h + 10, -Math.PI / 2 - 0.3, h * 0.3, big * 0.75, 5, r);
       drawGnarl(ctx, segs, rgba(P.tree), P.rim, P.dark ? 0.16 : 0.18);
+      barkLines(ctx, segs, P, 1, r);
+      if (w > 700 && hx > big * 0.4) hollow(ctx, hx + big * 0.05, hy + big * 0.3, big * 0.2, P);
       fillRidge(ctx, w, H, y, rgba(P.ground));
       ctx.strokeStyle = rgba(P.ground); ctx.lineWidth = 1.2; ctx.lineCap = "round";   // grass along the edge
       ctx.beginPath();
@@ -296,11 +343,13 @@ export function graveyardFloor() {
     <path class="gf-web" d="${web}"/>
 
     <g class="gf-ghost"><g class="gf-ghost__bob">
-      <path class="gf-ghost-body" d="M180 ${ground(180) + 4}V96C180 80 190 70 204 70S228 80 228 96V${ground(228) + 4}Z"/>
-      <path class="gf-ghost-arm" d="M226 104c8-4 12-12 11-18-4 4-8 8-12 9Z"/>
-      <ellipse class="gf-ghost-eye" cx="200" cy="92" rx="2.6" ry="3.6"/><ellipse class="gf-ghost-eye" cx="213" cy="92" rx="2.6" ry="3.6"/>
-      <ellipse class="gf-ghost-mouth" cx="207" cy="102" rx="3" ry="2.4"/>
-      <ellipse class="gf-blush" cx="195" cy="99" rx="3" ry="1.6"/><ellipse class="gf-blush" cx="219" cy="99" rx="3" ry="1.6"/>
+      <path class="gf-ghost-body" d="M180 136V96C180 80 190 70 204 70S228 80 228 96V136Q224 143 220 136Q216 143 212 136Q208 143 204 136Q200 143 196 136Q192 143 188 136Q184 143 180 136Z"/>
+      <g class="gf-ghost__arm"><path class="gf-ghost-arm" d="M226 104c8-4 12-12 11-18-4 4-8 8-12 9Z"/></g>
+      <g class="gf-ghost__face">
+        <g class="gf-ghost__eyes"><ellipse class="gf-ghost-eye" cx="200" cy="92" rx="2.6" ry="3.6"/><ellipse class="gf-ghost-eye" cx="213" cy="92" rx="2.6" ry="3.6"/></g>
+        <ellipse class="gf-ghost-mouth" cx="207" cy="102" rx="3" ry="2.4"/>
+        <ellipse class="gf-blush" cx="195" cy="99" rx="3" ry="1.6"/><ellipse class="gf-blush" cx="219" cy="99" rx="3" ry="1.6"/>
+      </g>
     </g></g>
     <g transform="translate(176 ${(ground(176) + 3).toFixed(1)}) rotate(-5)">
       <path class="gf-stone" d="M-24 0V-42C-24-57-13-65 0-65S24-57 24-42V0Z"/>
@@ -342,14 +391,19 @@ export function graveyardFloor() {
 
     <g class="gf-cat" transform="translate(770 ${(ground(770) + 3).toFixed(1)})">
       <path class="gf-cat-tail" d="M14-6C30-4 36-18 30-30C27-36 30-42 34-44"/>
-      <path class="gf-cat-body" d="M-16 0C-20-14-16-30-8-36C-12-42-12-50-8-56L-9-66L-2-60C2-61 6-61 10-60L16-66L16-55C20-49 19-41 14-36C20-30 22-14 18 0Z"/>
-      <path class="gf-cat-ear" d="M-6.5-61.5L-7.6-63.6L-3.2-60.6ZM12.6-61.2L14.4-63.4L14.2-58.6Z"/>
-      <path class="gf-cat-rim" d="M15-36C20-30 22-14 18 0M16-55C20-49 19-41 14-36"/>
-      <g class="gf-cat-eyes"><ellipse cx="-1.6" cy="-49" rx="2.6" ry="3"/><ellipse cx="8.6" cy="-49" rx="2.6" ry="3"/></g>
-      <path class="gf-cat-pupil" d="M-1.6-51.4v4.8M8.6-51.4v4.8"/>
-      <path class="gf-cat-nose" d="M2.4-44.4h2.4l-1.2 1.4Z"/>
-      <path class="gf-whisk" d="M-2-43l-9-1M-2-42l-9 2M9-43l9-1M9-42l9 2"/>
+      <path class="gf-cat-body" d="M-16 0C-20-14-16-30-8-36L14-36C20-30 22-14 18 0Z"/>
+      <path class="gf-cat-rim" d="M15-36C20-30 22-14 18 0"/>
       <path class="gf-cat-paw" d="M-8 0c0-3 3-4 5-2M4 0c0-3 3-4 5-2"/>
+      <g class="gf-cat__head">
+        <path class="gf-cat-body" d="M-8-35C-12-42-12-50-8-56L-9-66L-2-60C2-61 6-61 10-60L16-66L16-55C20-49 19-41 14-35C8-31.5-2-31.5-8-35Z"/>
+        <path class="gf-cat-ear" d="M-6.5-61.5L-7.6-63.6L-3.2-60.6ZM12.6-61.2L14.4-63.4L14.2-58.6Z"/>
+        <path class="gf-cat-rim" d="M16-55C20-49 19-41 14-36"/>
+        <g class="gf-cat-eyes"><ellipse cx="-1.6" cy="-49" rx="2.6" ry="3"/><ellipse cx="8.6" cy="-49" rx="2.6" ry="3"/></g>
+        <g class="gf-cat__pupils"><path class="gf-cat-pupil" d="M-1.6-51.4v4.8"/><path class="gf-cat-pupil" d="M8.6-51.4v4.8"/></g>
+        <path class="gf-cat-nose" d="M2.4-44.4h2.4l-1.2 1.4Z"/>
+        <ellipse class="gf-cat__mouth" cx="3.6" cy="-40.6" rx="2.2" ry="2"/>
+        <path class="gf-whisk" d="M-2-43l-9-1M-2-42l-9 2M9-43l9-1M9-42l9 2"/>
+      </g>
     </g>
 
     <g transform="translate(930 ${(ground(930) + 3).toFixed(1)})">
@@ -359,13 +413,15 @@ export function graveyardFloor() {
       <path class="gf-engrave-line" d="M-8-44H8M-8-38H8M-6-32H6"/>
       <path class="gf-crack" d="M-17-30l6 3-2 6"/>
       <path class="gf-moss" d="M-17 0c1-5 5-8 9-5 2-3 6-3 8 1 3-2 7-1 8 4Z"/>
-      <g class="gf-crow" transform="translate(0 -66)">
+      <g transform="translate(0 -66)"><g class="gf-crow"><g class="gf-crow__face"><g class="gf-crow__hop">
+        <path class="gf-crow-spread gf-crow-spread--far" d="M1-9C-1-21-6-30-14-34C-12-28-11-23-11-18C-14-18-17-16-19-13C-11-10-4-9 1-9Z"/>
         <path class="gf-crow-tail" d="M-6-6L-18-2L-16 1L-5-2Z"/>
         <path class="gf-crow-body" d="M-8-4C-8-12 0-16 6-14C10-13 12-10 11-6C9-2 2 0-4 0C-7 0-8-2-8-4Z"/>
         <path class="gf-crow-wing" d="M-6-8C-2-12 6-12 8-8C4-6-2-5-8-4Z"/>
-        <g class="gf-crow-head"><path class="gf-crow-body" d="M5-14C6-20 13-21 15-17C16-14 14-12 10-11Z"/><path class="gf-crow-beak" d="M14.6-17.4L20-16L14.8-14.6Z"/><circle class="gf-crow-eye" cx="11.6" cy="-17" r="1.1"/></g>
+        <g class="gf-crow-head"><path class="gf-crow-body" d="M5-14C6-20 13-21 15-17C16-14 14-12 10-11Z"/><path class="gf-crow-beak" d="M14.6-17.4L20-16.2L14.8-15.6Z"/><path class="gf-crow-beak gf-crow__jaw" d="M14.8-15.8L19.4-15.8L14.6-14.4Z"/><circle class="gf-crow-eye" cx="11.6" cy="-17" r="1.1"/></g>
         <path class="gf-crow-feet" d="M0 0v2M3 0v2"/>
-      </g>
+        <path class="gf-crow-spread gf-crow-spread--near" d="M2-9C-2-20-10-27-21-29C-16-24-13-19-12-14C-16-14-19-12-21-9C-12-7-4-7 2-9Z"/>
+      </g></g></g></g>
     </g>
 
     <g class="gf-candles" transform="translate(1000 ${(ground(1000) + 4).toFixed(1)})">${candle(-12, 22, 0)}${candle(0, 32, -0.7)}${candle(12, 17, -1.3)}</g>
@@ -380,5 +436,131 @@ export function graveyardFloor() {
   el.className = "graveyard-floor";
   el.setAttribute("aria-hidden", "true");
   el.innerHTML = svg;                              // static markup built above, no visitor input
+  el.wake = () => wakeGraveyard(el);
   return el;
+}
+
+/* ---------------- the animals' behaviour ---------------- */
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const side = (c, n) => { const b = c.box; return n.x < b.left + b.width / 2 ? "l" : "r"; };
+async function pose(c, cls, ms, on = c.el) { on.classList.add(cls); const ok = await c.wait(ms); on.classList.remove(cls); return ok; }
+
+/* the ghost behind the RIP stone: rises, looks about, waves, says boo, swoops out and back, sinks again.
+   Hovering near the grave makes it peek; coming close while it is up makes it pop up and hide. */
+async function ghost(c) {
+  const DOWN = 84;
+  c.set(0, DOWN);
+  while (c.alive) {
+    await c.wait(rnd(1500, 6500));
+    if (!c.alive) break;
+    c.scared(1500);
+    let ok = await c.go({ y: rnd(-4, 3) }, 1500, "cubic-bezier(.2,.8,.3,1)");
+    for (let i = 0, m = 1 + Math.floor(rnd(0, 4)); i < m && ok; i++) {
+      const h = pick(["l", "r", "wave", "wave", "boo", "swoop", "blink"]);
+      if (h === "l" || h === "r") ok = await pose(c, `is-${h}`, rnd(900, 1800));
+      else if (h === "swoop") {
+        ok = await c.go({ x: -64, y: -22, r: -8 }, 1800, "cubic-bezier(.4,0,.3,1)")
+          && await c.go({ x: -26, y: -34, r: 6 }, 1500, "ease-in-out")
+          && await c.go({ x: 0, y: 0, r: 0 }, 1700, "ease-in-out");
+      } else ok = await c.act(`is-${h}`, h === "wave" ? 1500 : h === "boo" ? 900 : 200);
+      if (ok) ok = await c.wait(rnd(400, 1500));
+    }
+    if (!ok && c.scared(3000)) await c.act("is-boo", 700);
+    await c.go({ x: 0, y: DOWN, r: 0 }, 1000, "cubic-bezier(.55,0,.8,.45)");
+  }
+}
+
+/* the black cat: blinks, tilts and turns its head, yawns, swishes its tail; watches the pointer
+   with wide pupils and a lashing tail, then gives a slow blink */
+async function cat(c) {
+  while (c.alive) {
+    const n = c.scared(3500);
+    if (n) {
+      c.el.classList.add("is-wide"); c.pace(3);
+      await pose(c, `is-${side(c, n)}`, rnd(1800, 2800));
+      c.el.classList.remove("is-wide"); c.pace(1);
+      await c.act("is-sblink", 1400);
+      continue;
+    }
+    const h = pick(["blink", "blink", "tilt", "l", "r", "yawn", "sblink", "swish"]);
+    if (h === "blink") await c.act("is-blink", 200);
+    else if (h === "yawn" || h === "sblink") await c.act(`is-${h}`, h === "yawn" ? 1700 : 1400);
+    else if (h === "swish") { c.pace(rnd(1.8, 2.8)); await c.wait(rnd(1800, 3200)); c.pace(1); }
+    else await pose(c, `is-${h}`, rnd(1100, 2600));
+    await c.wait(rnd(700, 3000));
+  }
+}
+
+/* the crow on the tall stone: hops, turns, caws, ruffles; after a while (or when the pointer comes
+   close) it flies off across the graveyard and later glides back in to land */
+async function crow(c) {
+  c.set(0, 0);
+  while (c.alive) {
+    let ok = true;
+    const until = performance.now() + rnd(5000, 15000);
+    while (ok && c.alive && performance.now() < until) {
+      const h = pick(["l", "r", "hop", "hop", "caw", "ruffle", "turn"]);
+      if (h === "hop") { c.el.classList.add("is-hop"); ok = await c.go({ x: clamp(c.x + rnd(-6, 6), -8, 8) }, 320, "ease-out"); c.el.classList.remove("is-hop"); }
+      else if (h === "turn") { c.face(-c.dir); ok = await c.wait(300); }
+      else if (h === "l" || h === "r") ok = await pose(c, `is-${h}`, rnd(700, 2000));
+      else ok = await c.act(`is-${h}`, h === "caw" ? 900 : 600);
+      if (ok) ok = await c.wait(rnd(500, 2200));
+    }
+    if (!c.alive) break;
+    const n = c.scared(6000), away = n ? (side(c, n) === "l" ? 1 : -1) : chance(0.5) ? 1 : -1;
+    c.el.classList.add("is-fly"); c.face(away); c.pace(1.5);
+    await c.go({ x: away * 40, y: -30, r: -14 * away }, 450, "ease-out");
+    await c.go({ x: away * rnd(950, 1100), y: -rnd(40, 70), r: -4 * away }, 3400, "cubic-bezier(.3,0,.8,.8)");
+    await c.wait(rnd(6000, 16000));
+    if (!c.alive) break;
+    const from = chance(0.5) ? 1 : -1;
+    c.set(from * 1050, -64, 0); c.face(-from); c.pace(1.1);
+    await c.go({ x: from * 80, y: -24, r: 6 * from }, 3000, "cubic-bezier(.2,.6,.4,1)");
+    await c.go({ x: 0, y: 0, r: 0 }, 650, "ease-out");
+    c.el.classList.remove("is-fly"); c.pace(1);
+  }
+}
+
+/* the little ghost near the bottom-right corner of the window: drifts about, leans into its moves,
+   sometimes loops or fades out for a moment, and flees (going see-through) from the pointer */
+async function floatGhost(c) {
+  const el = c.el;
+  const area = () => { const W = document.documentElement.clientWidth || innerWidth, H = innerHeight; return [W - Math.min(340, W * 0.36), W - 58, H * 0.45, H - 72]; };
+  el.classList.add("is-alive");
+  let [, x1, , y1] = area();
+  c.set(x1, y1);
+  while (c.alive) {
+    const [x0, xa, y0, ya] = area();
+    const n = c.scared(2500);
+    if (n) {
+      const b = c.box, ang = Math.atan2(b.top + b.height / 2 - n.y, b.left + b.width / 2 - n.x);
+      el.classList.add("is-shy");
+      await c.go({ x: clamp(c.x + Math.cos(ang) * 170, x0, xa), y: clamp(c.y + Math.sin(ang) * 170, y0, ya), r: Math.cos(ang) * 14 }, 650, "cubic-bezier(.2,.7,.3,1)");
+      await c.wait(1400);
+      el.classList.remove("is-shy");
+      continue;
+    }
+    const tx = rnd(x0, xa), ty = rnd(y0, ya), d = Math.hypot(tx - c.x, ty - c.y);
+    let ok = await c.go({ x: tx, y: ty, r: clamp((tx - c.x) * 0.05, -12, 12) }, 700 + d / 0.05, "ease-in-out");
+    if (ok) ok = await c.go({ r: 0 }, 500, "ease-out");
+    if (ok && chance(0.15)) ok = await c.act("is-loop", 1300);
+    else if (ok && chance(0.15)) ok = await c.act("is-fade", 2400);
+    if (ok) await c.wait(rnd(1200, 4500));
+  }
+}
+
+function wakeGraveyard(floor) {
+  const life = new Life();
+  const q = (s) => floor.querySelector(s);
+  life.add(q(".gf-ghost"), ghost, { radius: 60 });
+  life.add(q(".gf-cat"), cat, { radius: 110 });
+  life.add(q(".gf-crow"), crow, { radius: 70, face: q(".gf-crow__face") });
+  return life;
+}
+
+/** Behaviour for the floating ghost icon (holiday.js makes the element). */
+export function wakeFloatGhost(el) {
+  const life = new Life();
+  life.add(el, floatGhost, { radius: 70 });
+  return life;
 }

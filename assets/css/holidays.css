@@ -127,8 +127,16 @@
 .corner--r { right: 0; transform: scaleX(-1); }
 
 /* bobbing ghost */
-.decor-float { position: fixed; right: clamp(8px, 2vw, 28px); bottom: 18px; width: 44px; z-index: 40; pointer-events: none; animation: bob 3.6s ease-in-out infinite; opacity: .92; }
+.decor-float { position: fixed; right: clamp(8px, 2vw, 28px); bottom: 18px; width: 44px; z-index: 40; pointer-events: none; animation: bob 3.6s ease-in-out infinite; opacity: .92; transition: opacity .4s; }
 .decor-float svg { display: block; width: 100%; height: auto; }
+/* with its behaviour running (graveyard.js) it is moved by transform instead, and bobs inside */
+.decor-float.is-alive { right: auto; bottom: auto; left: 0; top: 0; animation: none; will-change: transform; }
+.decor-float.is-alive svg { animation: bob 3.6s ease-in-out infinite; }
+.decor-float.is-shy { opacity: .28; }
+.decor-float.is-fade { animation: ghost-fade 2.4s ease-in-out; }
+.decor-float.is-loop svg { animation: ghost-loop 1.3s cubic-bezier(.45, .05, .4, 1); }
+@keyframes ghost-fade { 0%, 100% { opacity: .92; } 40%, 60% { opacity: .08; } }
+@keyframes ghost-loop { 0% { transform: none; } 50% { transform: translate(-14px, -22px) rotate(-180deg); } 100% { transform: rotate(-360deg); } }
 @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-12px) rotate(3deg); } }
 
 /* string lights */
@@ -304,7 +312,19 @@
 .gf-ghost-arm { fill: url(#gfGhost); stroke: #b9b0d2; stroke-width: 1; }
 .gf-ghost-eye, .gf-ghost-mouth { fill: #2b2433; }
 .gf-blush { fill: #f6a6c0; opacity: .7; }
-.gf-ghost__bob { animation: gf-bob 3.4s ease-in-out infinite alternate; }
+.gf-ghost__bob { animation: g-gf-bob 3.4s ease-in-out infinite alternate; }
+.gf-ghost__arm { transform-box: fill-box; transform-origin: 0 100%; transition: transform .4s ease-out; }
+.gf-ghost__face { transform-box: fill-box; transform-origin: 50% 50%; transition: transform .35s ease-out; }
+.gf-ghost__eyes { transform-box: fill-box; transform-origin: 50% 50%; }
+.gf-ghost-mouth { transform-box: fill-box; transform-origin: 50% 30%; transition: transform .2s ease-out; }
+.gf-ghost.is-l .gf-ghost__face { transform: translateX(-3px); }
+.gf-ghost.is-r .gf-ghost__face { transform: translateX(3px); }
+.gf-ghost.is-wave .gf-ghost__arm { animation: gf-wave .5s ease-in-out 3; }
+.gf-ghost.is-blink .gf-ghost__eyes { transform: scaleY(.15); }
+.gf-ghost.is-boo .gf-ghost__face { transform: translateY(-2px) scale(1.15); transition-timing-function: cubic-bezier(.3, 1.8, .5, 1); }
+.gf-ghost.is-boo .gf-ghost-mouth { transform: scale(1.7, 2.3); }
+.gf-ghost.is-boo .gf-ghost__arm { transform: rotate(-34deg); }
+@keyframes gf-wave { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-30deg); } }
 
 .gf-jack-glow { fill: url(#gfGlow); opacity: var(--gf-glow); animation: gf-flicker 3.4s steps(1) infinite; }
 .gf-pump { fill: url(#gfPump); stroke: var(--gf-p3); stroke-width: .8; }
@@ -328,12 +348,23 @@
 .gf-steam { fill: none; stroke: color-mix(in srgb, var(--gf-brew) 50%, #fff); stroke-width: 1.6; stroke-linecap: round; opacity: .35; animation: gf-steam 3s ease-in-out infinite alternate; }
 
 .gf-cat-body { fill: var(--gf-cat); }
-.gf-cat-tail { fill: none; stroke: var(--gf-cat); stroke-width: 6; stroke-linecap: round; transform-box: fill-box; transform-origin: 0 100%; animation: gf-tail 2.6s ease-in-out infinite alternate; }
+.gf-cat-tail { fill: none; stroke: var(--gf-cat); stroke-width: 6; stroke-linecap: round; transform-box: fill-box; transform-origin: 0 100%; animation: g-gf-tail 2.6s ease-in-out infinite alternate; }
+.gf-cat__head { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .45s cubic-bezier(.3, 1.3, .5, 1); }
+.gf-cat.is-tilt .gf-cat__head { transform: rotate(-15deg); }
+.gf-cat.is-l .gf-cat__head { transform: translateX(-1.5px) rotate(-7deg); }
+.gf-cat.is-r .gf-cat__head { transform: translateX(1.5px) rotate(7deg); }
+.gf-cat.is-yawn .gf-cat__head { transform: rotate(-9deg) translateY(-1px); transition-duration: .7s; }
+.gf-cat__mouth { fill: #d77a9c; transform-box: fill-box; transform-origin: 50% 0; transform: scale(0); transition: transform .5s ease-in-out; }
+.gf-cat.is-yawn .gf-cat__mouth { transform: scale(1, 1.3); }
+.gf-cat.is-blink .gf-cat-eyes, .gf-cat.is-blink .gf-cat__pupils { transform: scaleY(.1); transition-duration: .06s; }
+.gf-cat.is-sblink .gf-cat-eyes, .gf-cat.is-sblink .gf-cat__pupils, .gf-cat.is-yawn .gf-cat-eyes, .gf-cat.is-yawn .gf-cat__pupils { transform: scaleY(.14); transition-duration: .55s; }
+.gf-cat__pupils { transform-box: fill-box; transform-origin: 50% 50%; transition: transform .3s ease-out; }
+.gf-cat.is-wide .gf-cat__pupils { transform: scale(2.4, .9); }
 .gf-cat-ear { fill: #b07a9e; opacity: .7; }
 .gf-cat-rim { fill: none; stroke: var(--gf-cat-rim); stroke-width: 1.2; stroke-linecap: round; opacity: .7; }
-.gf-cat-eyes { fill: var(--gf-cat-eye); transform-box: fill-box; transform-origin: 50% 50%; animation: gf-blink 5s infinite; }
+.gf-cat-eyes { fill: var(--gf-cat-eye); transform-box: fill-box; transform-origin: 50% 50%; transition: transform .3s ease-out; }
 :root[data-theme="dark"] .gf-cat-eyes { filter: drop-shadow(0 0 3px rgba(255, 212, 94, .8)); }
-.gf-cat-pupil { stroke: #1b1424; stroke-width: 1.3; stroke-linecap: round; transform-box: fill-box; transform-origin: 50% 50%; animation: gf-blink 5s infinite; }
+.gf-cat-pupil { stroke: #1b1424; stroke-width: 1.3; stroke-linecap: round; }
 .gf-cat-nose { fill: #e79ab8; }
 .gf-whisk { fill: none; stroke: var(--gf-cat-rim); stroke-width: .5; opacity: .8; }
 .gf-cat-paw { fill: none; stroke: var(--gf-cat-rim); stroke-width: .8; opacity: .6; }
@@ -343,7 +374,26 @@
 .gf-crow-beak { fill: #3a3440; }
 .gf-crow-eye { fill: #f3e6c8; }
 .gf-crow-feet { stroke: #3a3440; stroke-width: 1; }
-.gf-crow-head { transform-box: fill-box; transform-origin: 20% 90%; animation: gf-crow 6s ease-in-out infinite; }
+.gf-crow-head { transform-box: fill-box; transform-origin: 20% 90%; transition: transform .3s cubic-bezier(.3, 1.4, .5, 1); }
+.gf-crow__face { transform-box: fill-box; transform-origin: 50% 50%; transition: transform .25s ease-in-out; }
+.gf-crow__face.is-back { transform: scaleX(-1); }
+.gf-crow__hop { transform-box: fill-box; transform-origin: 50% 100%; }
+.gf-crow__jaw { transform-box: fill-box; transform-origin: 0 30%; }
+.gf-crow-spread { display: none; fill: var(--gf-crow); transform-box: fill-box; transform-origin: 100% 85%; animation: g-gf-flap .22s ease-in-out infinite alternate; }
+.gf-crow-spread--far { fill: color-mix(in srgb, var(--gf-crow) 70%, #6a5a8a); animation-delay: -.05s; }
+.gf-crow.is-fly .gf-crow-spread { display: inline; }
+.gf-crow.is-fly .gf-crow-wing, .gf-crow.is-fly .gf-crow-feet { display: none; }
+.gf-crow.is-l .gf-crow-head { transform: rotate(-20deg); }
+.gf-crow.is-r .gf-crow-head { transform: rotate(14deg) translateY(.5px); }
+.gf-crow.is-caw .gf-crow-head { animation: gf-caw .45s ease-in-out 2; }
+.gf-crow.is-caw .gf-crow__jaw { animation: gf-jaw .45s ease-in-out 2; }
+.gf-crow.is-hop .gf-crow__hop { animation: gf-hop .32s ease-out; }
+.gf-crow.is-ruffle .gf-crow__hop { animation: gf-ruffle .6s ease-in-out; }
+@keyframes g-gf-flap { from { transform: rotate(-28deg); } to { transform: rotate(38deg); } }
+@keyframes gf-caw { 0%, 100% { transform: rotate(0); } 35% { transform: rotate(-16deg) translate(1px, -1px); } }
+@keyframes gf-jaw { 0%, 100% { transform: rotate(0); } 35% { transform: rotate(28deg); } }
+@keyframes gf-hop { 0%, 100% { transform: translateY(0) scale(1, 1); } 15% { transform: scale(1.08, .9); } 50% { transform: translateY(-8px) scale(.95, 1.06); } 85% { transform: scale(1.06, .93); } }
+@keyframes gf-ruffle { 0%, 100% { transform: scale(1); } 25% { transform: scale(1.14, .94); } 50% { transform: scale(.95, 1.05); } 75% { transform: scale(1.06, .97); } }
 
 .gf-wax { fill: var(--gf-wax); }
 .gf-drip { fill: none; stroke: color-mix(in srgb, var(--gf-wax) 85%, #c9b88f); stroke-width: 1.4; stroke-linecap: round; }
@@ -354,14 +404,12 @@
 .gf-f1 { stop-color: var(--gf-fog); stop-opacity: 0; } .gf-f2 { stop-color: var(--gf-fog); }
 .gf-fog { fill: url(#gfFog); opacity: .7; animation: gf-fogslide 18s ease-in-out infinite alternate; }
 
-@keyframes gf-bob { from { transform: translateY(6px); } to { transform: translateY(-6px); } }
+@keyframes g-gf-bob { from { transform: translateY(6px); } to { transform: translateY(-6px); } }
 @keyframes gf-flicker { 0% { opacity: var(--gf-glow); } 18% { opacity: calc(var(--gf-glow) * .6); } 22% { opacity: var(--gf-glow); } 60% { opacity: calc(var(--gf-glow) * .8); } 64% { opacity: var(--gf-glow); } }
 @keyframes gf-carve { 0% { opacity: 1; } 18% { opacity: .75; } 22% { opacity: 1; } 60% { opacity: .88; } 64% { opacity: 1; } }
 @keyframes gf-pulse { from { opacity: calc(var(--gf-glow) * .65); } to { opacity: var(--gf-glow); } }
 @keyframes gf-flame { from { transform: scale(1, 1) skewX(-3deg); } to { transform: scale(.88, 1.12) skewX(3deg); } }
 @keyframes gf-bubble { 0% { transform: translateY(0) scale(.6); opacity: 0; } 20% { opacity: 1; } 80% { transform: translateY(-9px) scale(1.2); opacity: .9; } 100% { transform: translateY(-11px) scale(1.5); opacity: 0; } }
 @keyframes gf-steam { from { transform: translateY(0); opacity: .15; } to { transform: translateY(-6px); opacity: .45; } }
-@keyframes gf-tail { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
-@keyframes gf-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
-@keyframes gf-crow { 0%, 40%, 100% { transform: rotate(0); } 50%, 62% { transform: rotate(-14deg); } 72% { transform: rotate(6deg); } }
+@keyframes g-gf-tail { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
 @keyframes gf-fogslide { from { transform: translateX(-60px); } to { transform: translateX(60px); } }
