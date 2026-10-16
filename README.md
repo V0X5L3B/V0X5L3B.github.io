@@ -28,7 +28,7 @@ Everything lives in **`assets/js/data.js`**: profile text, links, projects, prom
 ## Seasonal themes
 
 `assets/js/holiday.js` + `assets/css/holidays.css` switch the look automatically by month (visitor's local time):
-Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · Oct Halloween · Nov Thanksgiving season · Dec Winter holidays. Other months use the default crimson look.
+Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · Oct Halloween · Nov Thanksgiving season · Dec Winter holidays. Other months (and `?holiday=none`, or a visitor turning the seasonal theme off) use the default pastel redwood forest look: colours and scene in `assets/css/forest.css`, built by `buildForest()` in `holiday.js`.
 
 - Preview any theme: `?holiday=halloween` (ids: halloween, november, december, january, february, march, july) or `?holiday=none`.
 - Visitors can turn it off in the footer (remembered in their browser). The `holiday` console command previews too.

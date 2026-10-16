@@ -43,6 +43,11 @@ const ICONS = {
   moon: `<svg viewBox="0 0 120 120"><defs><radialGradient id="mglow"><stop offset=".55" stop-color="#ffe9a8" stop-opacity=".30"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="60" r="60" fill="url(#mglow)"/><circle cx="60" cy="60" r="36" fill="#f6ecc9" stroke="#cdbb85" stroke-width="1"/><circle cx="48" cy="50" r="7" fill="#e3d4a2"/><circle cx="72" cy="66" r="9" fill="#e3d4a2"/><circle cx="58" cy="76" r="4.500" fill="#e3d4a2"/><circle cx="74" cy="46" r="3.500" fill="#e3d4a2"/><path d="M52 52l-3-7-2.500 4.500C42 47 37 47 33 45c2 2.500 2 5.500 4 6.500 1.500-1.500 3.500-1.800 5 0 1 2 2.500 3 4.500 6.500 2-3.500 3.500-4.500 4.500-6.500 1.500-1.800 3.500-1.500 5 0 2-1 2-4 4-6.500-4 2-9 2-13.500 4z" fill="#1c1626" transform="translate(16 -2) scale(.9)"/></svg>`,
   witch: `<svg viewBox="0 0 64 36"><path d="M2 27C18 24 38 26 60 22" stroke="#6b5585" stroke-width="2.600" stroke-linecap="round" fill="none"/><path d="M60 22l4-3-5 1.500 3 4z" fill="#6b5585"/><path d="M26 25c-1-7 1-11 5-12l4 1c3 2 4 6 3 10z" fill="#1c1626" stroke="#4b3a5c" stroke-width=".8"/><circle cx="35" cy="9" r="4.200" fill="#1c1626" stroke="#4b3a5c" stroke-width=".8"/><path d="M28 8.500l5-1 3-7c.5 3 1.500 5 3.500 6.500l3 .5c-2 1.500-5 2.500-8.500 2.500z" fill="#2a1d3a" stroke="#4b3a5c" stroke-width=".8"/><path d="M26 25c-5 1-9 3-12 7 6-1 9-3 14-3" fill="#1c1626" stroke="#4b3a5c" stroke-width=".8"/></svg>`,
   tree: `<svg viewBox="0 0 48 62"><path d="M24 9L12 26h6L8 42h8L4 56h40L32 42h8L30 26h6z" fill="#2f8f57"/><rect x="21" y="56" width="6" height="6" fill="#6b4a2a"/><path d="M24 0l1.800 4 4.200.4-3.200 2.800 1 4.200L24 9.200l-3.800 2.200 1-4.200L18 4.400l4.200-.4z" fill="#ffd166"/><circle cx="19" cy="34" r="1.800" fill="#ff4d5e"/><circle cx="29" cy="46" r="1.800" fill="#ffd166"/><circle cx="17" cy="48" r="1.800" fill="#5aa9ff"/><circle cx="26" cy="27" r="1.600" fill="#ffd166"/></svg>`,
+  /* default forest scene */
+  butterfly: `<svg viewBox="0 0 40 32"><g class="wing wing--l"><path d="M20 15C15 3 4 0 2 6s5 11 18 10z" fill="var(--b1)"/><path d="M20 17C11 17 5 22 8 28s10 1 12-10z" fill="var(--b2)"/></g><g class="wing wing--r"><path d="M20 15C25 3 36 0 38 6s-5 11-18 10z" fill="var(--b1)"/><path d="M20 17c9 0 15 5 12 11s-10 1-12-10z" fill="var(--b2)"/></g><rect x="19" y="10" width="2" height="15" rx="1" fill="#5a4a52"/><path d="M20 10q-2-5-5-6M20 10q2-5 5-6" stroke="#5a4a52" stroke-width=".9" fill="none" stroke-linecap="round"/></svg>`,
+  slug: `<svg viewBox="0 0 96 30"><path d="M6 27c-4 0-5-4-1-5 10-2 22-3 36-9 8-4 14-9 24-9 12 0 20 7 22 14 1 5-2 9-8 9z" fill="#f2c94c" stroke="#c99a1e" stroke-width="1.2"/><path d="M48 13c8-3 16-3 22 1" stroke="#d9ac2c" stroke-width="1.4" fill="none" stroke-linecap="round"/><circle cx="60" cy="19" r="1.4" fill="#b8891a"/><circle cx="52" cy="21" r="1.1" fill="#b8891a"/><circle cx="40" cy="22" r="1.2" fill="#b8891a"/><path d="M78 9l4-8M84 11l7-6" stroke="#c99a1e" stroke-width="1.6" stroke-linecap="round"/><circle cx="82" cy="1.6" r="1.6" fill="#7a5a10"/><circle cx="91" cy="5" r="1.6" fill="#7a5a10"/></svg>`,
+  fern: `<svg viewBox="0 0 60 50" fill="none" stroke="var(--fern)" stroke-width="2.2" stroke-linecap="round"><path d="M30 50C28 32 20 18 6 8"/><path d="M24 36l-9-1M21 29l-9-3M17 22l-8-4M13 16l-6-4M25 33l3-9M21 26l3-9M17 19l3-8"/><path d="M32 50c2-16 10-28 22-36"/><path d="M36 37l9-2M39 30l8-4M43 23l7-5M37 33l-2-9M40 26l-2-8M44 20l-1-7"/></svg>`,
+  mushroom: `<svg viewBox="0 0 40 40"><path d="M16 22h8l1 16h-10z" fill="#f4ead8" stroke="#d9c9a8"/><path d="M3 23C3 11 11 4 20 4s17 7 17 19z" fill="#e8798f"/><circle cx="13" cy="13" r="2.4" fill="#fff4f6"/><circle cx="24" cy="10" r="2" fill="#fff4f6"/><circle cx="29" cy="18" r="2.2" fill="#fff4f6"/><circle cx="18" cy="19" r="1.6" fill="#fff4f6"/></svg>`,
 };
 
 /*
@@ -120,6 +125,79 @@ function clear() {
   decor?.remove(); decor = null;
   extras.forEach((n) => n.remove()); extras = [];
   document.documentElement.removeAttribute("data-holiday");
+  document.documentElement.removeAttribute("data-scene");
+}
+
+/* ---------------- default look (no holiday): a pastel redwood forest ---------------- */
+/* seeded random, so the treeline looks the same on every visit */
+function seeded(seed) { return () => ((seed = (seed * 16807) % 2147483647) / 2147483647); }
+
+/* one layer of redwoods: tall straight trunks (their own path, so they can be tinted like bark)
+   and narrow, layered crowns that start high up the trunk */
+function treeline(seed, count, minH, maxH) {
+  const r = seeded(seed), W = 1600, H = 420;
+  let crowns = "", trunks = "";
+  for (let i = 0; i < count; i++) {
+    const x = (i + 0.15 + r() * 0.7) * (W / count), h = minH + r() * (maxH - minH), w = 34 + r() * 30;
+    const top = H - h, crownEnd = top + h * (0.48 + r() * 0.12), tw = w * (0.11 + r() * 0.05);
+    trunks += `M${(x - tw * 0.7).toFixed(1)} ${(top + h * 0.2).toFixed(1)}L${(x - tw * 1.25).toFixed(1)} ${H}H${(x + tw * 1.25).toFixed(1)}L${(x + tw * 0.7).toFixed(1)} ${(top + h * 0.2).toFixed(1)}Z`;
+    const steps = 7;
+    crowns += `M${(x - tw).toFixed(1)} ${crownEnd.toFixed(1)}`;
+    for (let k = steps; k >= 1; k--) {             // left side, bottom to top: drooping branch tiers
+      const y = top + (crownEnd - top) * (k / steps), spread = (w / 2) * (0.3 + 0.7 * Math.sqrt(k / steps)) * (0.85 + r() * 0.3);
+      crowns += `Q${(x - spread * 0.6).toFixed(1)} ${(y - 2).toFixed(1)} ${(x - spread).toFixed(1)} ${(y + 7).toFixed(1)}L${(x - spread * 0.35).toFixed(1)} ${(y - 3).toFixed(1)}`;
+    }
+    crowns += `L${x.toFixed(1)} ${top.toFixed(1)}`;
+    for (let k = 1; k <= steps; k++) {             // right side, top to bottom
+      const y = top + (crownEnd - top) * (k / steps), spread = (w / 2) * (0.3 + 0.7 * Math.sqrt(k / steps)) * (0.85 + r() * 0.3);
+      crowns += `L${(x + spread * 0.35).toFixed(1)} ${(y - 3).toFixed(1)}Q${(x + spread * 0.6).toFixed(1)} ${(y - 2).toFixed(1)} ${(x + spread).toFixed(1)} ${(y + 7).toFixed(1)}`;
+    }
+    crowns += `L${(x + tw).toFixed(1)} ${crownEnd.toFixed(1)}Z`;
+  }
+  return `<svg viewBox="0 0 1600 420" preserveAspectRatio="xMidYMax slice"><path class="trunk" d="${trunks}"/><path class="crown" d="${crowns}"/></svg>`;
+}
+
+function buildForest() {
+  const root = document.documentElement;
+  root.setAttribute("data-scene", "forest");
+
+  /* background: light rays, three layers of redwoods and a band of mist */
+  const scene = make("forest");
+  scene.innerHTML =
+    `<div class="forest__rays"></div>` +
+    `<div class="forest__layer forest__layer--far">${treeline(11, 16, 260, 410)}</div>` +
+    `<div class="forest__mist"></div>` +
+    `<div class="forest__layer forest__layer--mid">${treeline(29, 9, 300, 420)}</div>` +
+    `<div class="forest__layer forest__layer--near">${treeline(47, 5, 340, 420)}</div>`;
+  document.body.prepend(scene); extras.push(scene);
+
+  /* a few butterflies, and fireflies after dark */
+  const air = make("forest-air");
+  [["--b1:#f7b6c8;--b2:#f3d0dc", 18, 26], ["--b1:#cdb8f5;--b2:#e2d6fb", 32, 34], ["--b1:#f6dc8a;--b2:#fbeab8", 62, 30]].forEach(([cols, y, t], i) => {
+    const b = document.createElement("span");
+    b.className = "bfly";
+    b.style.cssText = `${cols};--y:${y}%;--t:${t}s;--d:-${(i * t) / 3}s`;
+    b.innerHTML = ICONS.butterfly;
+    air.append(b);
+  });
+  const r = seeded(5);
+  for (let i = 0; i < 10; i++) {
+    const f = document.createElement("i");
+    f.className = "firefly";
+    f.style.cssText = `left:${(r() * 96 + 2).toFixed(1)}%;top:${(48 + r() * 46).toFixed(1)}%;--t:${(5 + r() * 6).toFixed(1)}s;--d:-${(r() * 8).toFixed(1)}s`;
+    air.append(f);
+  }
+  document.body.append(air); extras.push(air);
+
+  /* forest floor above the footer: ferns, mushrooms and two banana slugs out for a crawl */
+  const floor = make("decor-row forest-floor");
+  ["fern", "mushroom", "slug", "fern", "fern", "mushroom", "slug", "fern"].forEach((k) => {
+    const sp = document.createElement("span");
+    sp.dataset.k = k;
+    sp.innerHTML = ICONS[k];
+    floor.append(sp);
+  });
+  document.querySelector("footer.foot")?.before(floor); extras.push(floor);
 }
 
 function build(id) {
@@ -266,6 +344,7 @@ export function apply() {
   state.id = id;
   paintNote();
   if (known(id) && store.get(OFF_KEY) !== "off") build(id);
+  else buildForest();
 }
 
 export function setEnabled(on) {
@@ -279,7 +358,7 @@ export function preview(id) {
   state.override = id; state.none = id === null;
   clear();
   paintNote();
-  if (id) build(id);
+  if (id) build(id); else buildForest();
   return true;
 }
 
