@@ -28,11 +28,11 @@ Everything lives in **`assets/js/data.js`**: profile text, links, projects, prom
 ## Seasonal themes
 
 `assets/js/holiday.js` + `assets/css/holidays.css` switch the look automatically by month (visitor's local time):
-Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · Oct Halloween · Nov Thanksgiving season · Dec Winter holidays. Other months (and `?holiday=none`, or a visitor turning the seasonal theme off) use the default pastel redwood forest look: colours and scene in `assets/css/forest.css`, built by `buildForest()` in `holiday.js`.
+Jan New Year · Feb Valentine's · Mar St. Patrick's · Jul Independence Day · Oct Halloween · Nov Thanksgiving season · Dec Winter holidays. Other months (and `?holiday=none`, or a visitor turning the seasonal theme off) use the default pastel redwood forest look: a painted background (`assets/js/forest.js`, drawn on canvas by `assets/js/scene.js`), redwood animals that wander over the page (`assets/js/critters.js`: a Steller's jay, a Douglas squirrel, a newt, banana slugs, a deer and an owl) and a forest floor above the footer. Colours live in `assets/css/forest.css`.
 
 - Preview any theme: `?holiday=halloween` (ids: halloween, november, december, january, february, march, july) or `?holiday=none`.
 - Visitors can turn it off in the footer (remembered in their browser). The `holiday` console command previews too.
-- Halloween has the most detail (moon, spiders, graveyard row, witch, fog, glowing eyes, `boo` in the console).
+- Halloween has the most detail: a painted night sky with a moon and a haunted house on the hill (`assets/js/graveyard.js`), a little graveyard above the footer with a ghost, pumpkins, a cauldron, a cat and a crow, plus spiders, a witch, glowing eyes and `boo` in the console.
 - Motion is on by default and ignores the visitor's reduced-motion setting (owner's choice). Visitors can turn animations off with the footer switch (stored in localStorage as `v0x-motion`).
 - To add or move a holiday: edit `HOLIDAYS` in `holiday.js` and add a colour block in `holidays.css`.
 
@@ -55,6 +55,10 @@ assets/css/main.css   design system (dark default, light theme)
 assets/css/holidays.css seasonal palettes + decor
 assets/css/hire.css   services / hire me section
 assets/js/holiday.js  month → holiday logic, SVG decor
+assets/js/scene.js    painted canvas backgrounds (redrawn on resize and light/dark)
+assets/js/forest.js   default forest scene + floor
+assets/js/critters.js forest animals
+assets/js/graveyard.js Halloween scene + floor
 assets/js/data.js     all editable content
 assets/js/main.js     rendering + interactions
 assets/img/           favicon, social preview (og.png), avatar
