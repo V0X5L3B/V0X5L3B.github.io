@@ -150,6 +150,16 @@ function sounds(ctx) {
     for (let k = 1; k < n; k++) im[k] = 1 / k ** 1.35;
     return ctx.createPeriodicWave(re, im);
   });
+  /* piano: a bright wave for the hammer strike and a mellow one for the ringing string */
+  lazy("pianoHi", () => {
+    const n = 24, re = new Float32Array(n), im = new Float32Array(n);
+    for (let k = 1; k < n; k++) im[k] = (1 / k ** 1.05) * (k % 7 === 0 ? 0.3 : 1);   // a hammer near 1/7 of the string damps the 7th
+    return ctx.createPeriodicWave(re, im);
+  });
+  lazy("pianoLo", () => {
+    const re = new Float32Array(6), im = new Float32Array([0, 1, 0.42, 0.16, 0.07, 0.03]);
+    return ctx.createPeriodicWave(re, im);
+  });
   /* record crackle: faint hiss plus random ticks and the odd pop */
   lazy("vinyl", () => loopable(ctx, 7, 2, (d, sr2, c) => {
     const p = pinkFill(rng(50 + c), 0.15);
@@ -293,6 +303,47 @@ const INST = {
     body.gain.setTargetAtTime(0, t + 0.003, dec / 2.5); body.gain.setTargetAtTime(0, t + dur, 0.07);
     bright.gain.setValueAtTime(0, t); bright.gain.linearRampToValueAtTime(pk * 0.45, t + 0.002); bright.gain.setTargetAtTime(0, t + 0.002, 0.045);
   },
+  /* acoustic piano: a bright strike that fades fast over a mellow string tone that rings on (shorter up
+     high), two strings a note slightly out of tune with each other; the damper stops it at the note's end */
+  piano(s, out, t, m, dur, vel) {
+    const f = mtof(m), ring = Math.max(0.5, 2.6 - (m - 40) * 0.045), end = t + Math.min(dur + 0.6, ring * 4.5);
+    const body = s.gain(0), hit = s.gain(0);
+    const a = s.osc("sine", f, t, end), b = s.osc("sine", f, t, t + 0.9);
+    a.setPeriodicWave(s.S.pianoLo); b.setPeriodicWave(s.S.pianoHi); b.detune.value = 3;
+    a.connect(body).connect(out); b.connect(hit).connect(out);
+    const pk = 0.2 * vel, br = 0.1 * vel ** 1.6 * (m > 80 ? 0.6 : 1);
+    body.gain.setValueAtTime(0, t); body.gain.linearRampToValueAtTime(pk, t + 0.004);
+    body.gain.setTargetAtTime(pk * 0.4, t + 0.004, 0.18); body.gain.setTargetAtTime(0, t + 0.3, ring);
+    body.gain.setTargetAtTime(0, t + dur, 0.09);
+    hit.gain.setValueAtTime(0, t); hit.gain.linearRampToValueAtTime(br, t + 0.002); hit.gain.setTargetAtTime(0, t + 0.003, 0.11);
+  },
+  /* vibraphone: a pure bar tone with its high partial, two slightly detuned so it shimmers like the motor */
+  vibes(s, out, t, m, dur, vel) {
+    const f = mtof(m), ring = Math.max(0.8, 2.4 - (m - 60) * 0.04), end = t + Math.min(dur + 1, ring * 4.5), amp = s.gain(0);
+    for (const det of [-4, 4]) { const o = s.osc("sine", f, t, end); o.detune.value = det; o.connect(amp); }
+    amp.connect(out);
+    const pk = 0.12 * vel;
+    amp.gain.setValueAtTime(0, t); amp.gain.linearRampToValueAtTime(pk, t + 0.003); amp.gain.setTargetAtTime(0, t + 0.004, ring);
+    amp.gain.setTargetAtTime(0, t + dur + 0.25, 0.25);
+    if (f * 4 < 14000) {
+      const o = s.osc("sine", f * 4, t, t + 0.5), g = s.gain(0);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.03 * vel, t + 0.002); g.gain.setTargetAtTime(0, t + 0.002, 0.07);
+      o.connect(g).connect(out);
+    }
+  },
+  /* tin whistle / fife: a breathy flute tone with a chiff at the start and vibrato that comes in late */
+  whistle(s, out, t, m, dur, vel) {
+    const f = mtof(m), end = t + dur + 0.3, amp = s.gain(0);
+    const o = s.osc("sine", f, t, end), o2 = s.osc("sine", f * 2, t, end), g2 = s.gain(0.12);
+    const lfo = s.osc("sine", 5.6, t, end), vg = s.gain(0);
+    vg.gain.setValueAtTime(0, t); vg.gain.linearRampToValueAtTime(0, t + Math.min(0.25, dur * 0.5)); vg.gain.linearRampToValueAtTime(14, t + Math.min(0.6, dur));
+    lfo.connect(vg); vg.connect(o.detune); vg.connect(o2.detune);
+    o.connect(amp); o2.connect(g2).connect(amp); amp.connect(out);
+    const pk = 0.13 * vel;
+    amp.gain.setValueAtTime(0, t); amp.gain.linearRampToValueAtTime(pk, t + 0.03); amp.gain.setTargetAtTime(pk * 0.8, t + 0.03, 0.2);
+    amp.gain.setTargetAtTime(0, t + dur, 0.04);
+    s.hiss(out, t, 0.03 * vel, 3000, 0.03);
+  },
   kalimba: tines([[1, 1, 0.5], [5.9, 0.3, 0.045]], 0.4),
   musicbox: tines([[1, 1, 1.1], [6.27, 0.17, 0.11]], 0.32),
   celesta: tines([[1, 1, 0.9], [4, 0.1, 0.14]], 0.35),
@@ -421,10 +472,34 @@ const KITS = {
     ],
     fill: { k: "x.........x.....", r: "....x.......x.gg", j: "x.x.x.x.x.x.xxxx" },
   },
+  jazz: {                        /* ride "spang-a-lang", hi-hat on 2 and 4, feathered kick, a little snare chatter */
+    bars: [
+      { y: "x...X.g.x...X.g.", h: "....x.......x...", k: "f...f...f...f..." },
+      { y: "x...X.g.x...X.g.", h: "....x.......x...", k: "f...f...f...f...", s: "......g.......g." },
+      { y: "x...X.g.x...X.g.", h: "....x.......x...", k: "f...f...f...f...", s: "..........g....." },
+      { y: "x...X.g.x...X.g.", h: "....x.......x...", k: "f...f...f..xf...", s: "..g.......g...g." },
+    ],
+    fill: { y: "x...X.g.x.......", h: "....x.......x...", k: "f...f...f...x...", s: "..........g.x.gx" },
+  },
+  bossa: {                       /* rim clave, soft kick, shaker in straight 16ths */
+    bars: [
+      { k: "x.....x.x.....x.", r: "x..x..x...x..x..", a: "xgxgxgxgxgxgxgxg" },
+      { k: "x.....x.x.....x.", r: "..x..x...x..x...", a: "xgxgxgxgxgxgxgxg" },
+    ],
+  },
+  jwaltz: { bars: [{ y: "x...X.g.x.g.", h: "....x...x...", k: "f...f...f..." }, { y: "x...X.g.x...", h: "....x...x...", k: "f...f...f...", s: "......g....." }] },
+  march: {                       /* fife-and-drum: a snare with ruffs, bass drum on 1 and 3 */
+    bars: [
+      { k: "x.......x.......", s: "x.gxx.x.x.gxx.x." },
+      { k: "x.......x.......", s: "x.gxx.x.x.gxxgxg" },
+    ],
+    fill: { k: "x.......x.......", s: "x.gxx.x.xgxgxgxX" },
+  },
+  bodhran: { bars: [{ k: "x.....x.....", r: "..g.x...g.x.", a: "x.x.x.x.x.x." }, { k: "x.....x...x.", r: "..g.x.g.g.x.", a: "x.x.x.x.x.x." }] },
   heart: { bars: [{ b: "x.g...x.g..." }] },
   waltz: { bars: [{ k: "x...........", r: "....x...x...", a: "x.x.x.x.x.x." }] },
 };
-const VEL = { x: 0.75, X: 1, g: 0.3 };
+const VEL = { x: 0.75, X: 1, g: 0.3, f: 0.16 };
 
 /* keys rhythms over a whole bar, as [16th step, length in 16ths, velocity, push]: "push" plays the
    next bar's chord an 8th early, the way lo-fi players anticipate the change */
@@ -432,6 +507,12 @@ const COMP = {
   lofi: [[[0, 10, 0.72]], [[0, 6, 0.74], [6, 2, 0.5], [8, 8, 0.66]], [[0, 7, 0.72], [10, 5, 0.55]], [[0, 13, 0.7], [14, 2, 0.55, 1]]],
   stabs: [[[0, 2, 0.7], [6, 2, 0.6]], [[4, 2, 0.6], [12, 2, 0.62]], [[0, 3, 0.7], [6, 2, 0.55], [12, 2, 0.5]]],
   hold: [[[0, 16, 0.62]]],
+  folk: [[[0, 2, 0.64], [4, 2, 0.52], [6, 2, 0.48], [8, 2, 0.6], [12, 2, 0.52], [14, 2, 0.48]], [[0, 3, 0.64], [6, 2, 0.5], [8, 2, 0.6], [10, 2, 0.48], [12, 4, 0.55]]],
+  jig: [[[0, 2, 0.62], [6, 2, 0.55]], [[0, 2, 0.62], [4, 2, 0.45], [6, 2, 0.55], [10, 2, 0.45]]],
+  jazz: [[[0, 3, 0.62], [6, 4, 0.58]], [[6, 4, 0.6], [14, 2, 0.55, 1]], [[0, 2, 0.6], [10, 4, 0.55]], [[2, 2, 0.5], [6, 2, 0.58], [12, 4, 0.55]], [[0, 6, 0.6], [14, 2, 0.55, 1]]],
+  ballad: [[[0, 16, 0.56]], [[0, 8, 0.56], [8, 8, 0.48]], [[0, 12, 0.55], [14, 2, 0.45, 1]]],
+  bossa: [[[0, 3, 0.6], [6, 2, 0.52], [10, 3, 0.56], [14, 2, 0.5, 1]], [[2, 2, 0.52], [6, 3, 0.58], [12, 3, 0.54]], [[0, 3, 0.6], [6, 3, 0.54], [12, 2, 0.5]]],
+  jwaltz: [[[0, 3, 0.6], [6, 2, 0.5]], [[4, 4, 0.55]], [[0, 2, 0.58], [6, 2, 0.5], [10, 2, 0.45]]],
   sparse: [[[0, 16, 0.55]], [[0, 8, 0.5], [10, 6, 0.45]]],
   waltz: [[[0, 4, 0.66], [4, 3, 0.42], [8, 3, 0.42]], [[0, 4, 0.66], [4, 3, 0.4], [8, 2, 0.38], [10, 2, 0.32]]],
 };
@@ -482,6 +563,16 @@ const ROLES = {
     if (i === s.bars.length - 1) return play(0, B.ch[0].bass, n + 10, 0.8);
     if (style === "drone") return B.ch.forEach((ch, seg) => play(seg * n / B.ch.length, ch.bass, n / B.ch.length + 1, 0.75));
     if (style === "waltz") { play(0, B.ch[0].bass, 5, 0.8); if (B.b % 2) play(8, fifth(B.ch[0]), 3, 0.5); return; }
+    if (style === "bossa") {                       // root and fifth in the bossa rhythm, two chords split the bar
+      const [a, b] = B.ch.length > 1 ? B.ch : [B.ch[0], B.ch[0]];
+      play(0, a.bass, 5, 0.8); play(6, fifth(a), 2, 0.6); play(8, B.ch.length > 1 ? b.bass : fifth(a), 5, 0.72); play(14, B.ch.length > 1 ? fifth(b) : a.bass, 2, 0.55);
+      return;
+    }
+    if (style === "walk" && s.meter === 3) {        // jazz waltz: three walking notes a bar
+      const c = B.ch[0];
+      [c.bass, nearestIn(c.bass + 7, [c.tones[2] ?? c.root], 33, 52), near(next)].forEach((m, k) => play(k * 4, m, 3.6, k ? 0.6 : 0.8));
+      return;
+    }
     if (style === "walk") {
       const q = [];
       if (B.ch.length > 1) q.push(B.ch[0].bass, fifth(B.ch[0]), B.ch[1].bass);
@@ -509,6 +600,20 @@ const ROLES = {
     for (const [v, pat] of Object.entries(bar)) for (let st = 0; st < pat.length; st++) if (VEL[pat[st]]) hits.push([st, v, VEL[pat[st]]]);
     hits.sort((a, b) => a[0] - b[0]);
     for (const [st, v, vel] of hits) DRUM[v](s, out, s.at16(t, st) + (v === "k" && !st ? 0 : s.jit()), vel * (0.93 + s.rnd() * 0.14) * (cfg.vel ?? 1));
+  },
+  /* a written-out melody: cfg.notes is bars separated by "|", each note "E5:1" (pitch:beats, "r" rests) */
+  tune(s, i, B, t, cfg, name) {
+    const key = `${name}:bars`;
+    if (!s.mem[key]) s.mem[key] = cfg.notes.split("|").map((bar) => bar.trim().split(/\s+/).map((tok) => {
+      const [p, d] = tok.split(":"), mm = /^([A-G][b#]?)(\d)$/.exec(p);
+      return [mm ? 12 * (+mm[2] + 1) + pc(mm[1]) + (cfg.shift || 0) : null, +d];
+    }));
+    const bars = s.mem[key], out = s.part(name, cfg, s.mel);
+    let pos = 0;
+    for (const [m, d] of bars[B.b % bars.length]) {
+      if (m !== null) s.note(name, cfg.inst || "celesta", out, t + pos * s.beat + s.jit() * 0.5, m, d * s.beat * (cfg.legato ?? 0.9), (cfg.vel ?? 0.72) * (pos % 1 ? 0.86 : 1), cfg);
+      pos += d;
+    }
   },
   lead(s, i, B, t, cfg, name) {
     if (B.b % 2) return;                                  // phrases are two bars and start on even bars
