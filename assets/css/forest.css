@@ -1,0 +1,122 @@
+/*
+ * Default look when no holiday is showing: a pastel redwood forest.
+ * Everything is scoped to :root[data-scene="forest"], which holiday.js sets only when
+ * no seasonal theme is active, so the holiday themes keep their own colours.
+ */
+
+/* ---------- palette: mint paper by day ---------- */
+:root[data-scene="forest"] {
+  --bg: #f0f6ee; --bg-2: #e4efe1; --surface: #f8fbf6; --surface-2: #ffffff;
+  --line: #d3e3cf; --line-2: #b2cdb0;
+  --text: #24332a; --muted: #4f6457; --dim: #6f8276;
+  --crimson: #3b7554; --crimson-t: #2f6a49; --crimson-bg: rgba(59, 117, 84, .11);
+  --green: #4f8a3e; --lime: #a4553a;                /* moss + redwood bark */
+  --code-k: #2f6a49; --code-f: #24332a; --code-c: #6f8276;
+  --note: #e3f2da;
+  --shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 14px 30px -22px rgba(40, 90, 60, .45);
+  --glyph: "\2740";
+  --syn-str: #a4553a; --syn-fn: #6b5aa6; --syn-num: #9a6a0c;
+  --dot1: #e6889f; --dot2: #e3b94a; --dot3: #5c9e6e;
+  --term-bg: color-mix(in srgb, var(--surface-2) 80%, var(--bg-2));
+  /* scene */
+  --tree-far: #cfe3cc; --tree-mid: #b4d3b3; --tree-near: #93bf98;
+  --mist: rgba(255, 255, 255, .65); --ray: rgba(255, 249, 214, .55); --fern: #6fa77a; --bark: #d9a18a;
+}
+
+/* ---------- palette: deep forest by night ---------- */
+:root[data-scene="forest"][data-theme="dark"] {
+  --bg: #121c16; --bg-2: #17241c; --surface: #1b2a21; --surface-2: #22342a;
+  --line: #2c4335; --line-2: #426050;
+  --text: #eaf4ec; --muted: #b8cdbf; --dim: #8aa293;
+  --crimson: #2f6e4d; --crimson-t: #9fdcb4; --crimson-bg: rgba(159, 220, 180, .13);
+  --green: #8fd0b0; --lime: #f0a988;
+  --code-k: #9fdcb4; --code-f: #eaf4ec; --code-c: #8aa293;
+  --note: #d9eccf;
+  --shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 14px 34px -20px rgba(0,0,0,.75);
+  --syn-str: #f0a988; --syn-fn: #c6b4ff; --syn-num: #f3d27a;
+  --term-bg: color-mix(in srgb, var(--bg) 70%, #050a07);
+  --tree-far: #1a2b21; --tree-mid: #162419; --tree-near: #0f1a13;
+  --mist: rgba(159, 220, 180, .08); --ray: rgba(200, 230, 255, .07); --fern: #4f8a5e; --bark: #4a2d24;
+}
+:root[data-scene="forest"] .term__title::after { content: " \00b7  forest.sh"; }
+
+/* ---------- the scene behind the page ---------- */
+.forest { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.forest__rays {
+  position: absolute; inset: -10% -10% 30% -10%;
+  background:
+    linear-gradient(115deg, transparent 18%, var(--ray) 22%, transparent 30%),
+    linear-gradient(115deg, transparent 34%, var(--ray) 37%, transparent 43%),
+    linear-gradient(115deg, transparent 52%, var(--ray) 54%, transparent 59%);
+  filter: blur(14px); opacity: .9; transform-origin: 0 0;
+  animation: forest-rays 18s ease-in-out infinite alternate;
+}
+.forest__layer { position: absolute; left: -2%; right: -2%; bottom: 0; }
+.forest__layer svg { display: block; width: 100%; height: 100%; }
+.forest__layer--far { height: 52vh; opacity: .7; }
+.forest__layer--far path { fill: var(--tree-far); }
+.forest__layer .trunk { fill: color-mix(in srgb, var(--bark) 35%, var(--tree-far)); }
+.forest__layer--mid { height: 46vh; opacity: .6; }
+.forest__layer--mid path { fill: var(--tree-mid); }
+.forest__layer--mid .trunk { fill: color-mix(in srgb, var(--bark) 50%, var(--tree-mid)); }
+.forest__layer--near { height: 40vh; opacity: .45; }
+.forest__layer--near path { fill: var(--tree-near); }
+.forest__layer--near .trunk { fill: color-mix(in srgb, var(--bark) 70%, var(--tree-near)); }
+.forest__mist {
+  position: absolute; left: -10%; right: -10%; bottom: 6vh; height: 22vh;
+  background: radial-gradient(60% 100% at 30% 100%, var(--mist), transparent 70%), radial-gradient(50% 90% at 78% 100%, var(--mist), transparent 70%);
+  filter: blur(12px); animation: forest-mist 30s ease-in-out infinite alternate;
+}
+:root[data-theme="dark"] .forest__layer--far { opacity: .9; }
+:root[data-theme="dark"] .forest__layer--mid { opacity: .85; }
+:root[data-theme="dark"] .forest__layer--near { opacity: .8; }
+@keyframes forest-rays { from { opacity: .55; transform: skewX(-2deg); } to { opacity: 1; transform: skewX(2deg); } }
+@keyframes forest-mist { from { transform: translateX(-4%); } to { transform: translateX(4%); } }
+
+/* ---------- butterflies and fireflies ---------- */
+.forest-air { position: fixed; inset: 0; z-index: 40; pointer-events: none; overflow: hidden; }
+.bfly { position: absolute; left: 0; top: var(--y); width: 36px; animation: forest-fly var(--t) linear var(--d) infinite; }
+.bfly svg { display: block; width: 100%; height: auto; overflow: visible; animation: forest-bob 2.4s ease-in-out infinite alternate; }
+.bfly .wing { transform-box: view-box; transform-origin: 20px 16px; animation: forest-flap .32s ease-in-out infinite alternate; }
+@keyframes forest-fly {
+  0%   { transform: translate3d(-8vw, 0, 0); opacity: 0; }
+  6%   { opacity: .9; }
+  30%  { transform: translate3d(30vw, -6vh, 0); }
+  55%  { transform: translate3d(55vw, 5vh, 0); }
+  80%  { transform: translate3d(82vw, -4vh, 0); }
+  94%  { opacity: .9; }
+  100% { transform: translate3d(108vw, 2vh, 0); opacity: 0; }
+}
+@keyframes forest-bob { from { transform: translateY(-6px) rotate(-6deg); } to { transform: translateY(6px) rotate(6deg); } }
+@keyframes forest-flap { from { transform: scaleX(1); } to { transform: scaleX(.25); } }
+
+.firefly { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #fff6b0; box-shadow: 0 0 10px 3px rgba(255, 240, 140, .6); opacity: 0; animation: forest-glow var(--t) ease-in-out var(--d) infinite; }
+:root[data-theme="light"] .firefly { display: none; }
+@keyframes forest-glow { 0%, 100% { opacity: 0; transform: translate(0, 0); } 40% { opacity: .85; } 50% { transform: translate(14px, -18px); } 70% { opacity: .2; } }
+
+/* ---------- forest floor above the footer ---------- */
+.forest-floor { max-width: 920px; margin: 32px auto 0; padding: 0 clamp(16px, 4vw, 48px) 8px; justify-content: space-evenly; gap: clamp(10px, 3vw, 40px); align-items: flex-end; }
+.forest-floor::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 18px; z-index: 0; border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: color-mix(in srgb, var(--fern) 30%, var(--bg-2));
+}
+.forest-floor span { --h: 40px; height: var(--h); }
+.forest-floor span[data-k="mushroom"] { --h: 28px; }
+.forest-floor span[data-k="slug"] { --h: 22px; animation: forest-crawl 26s ease-in-out infinite; }
+.forest-floor span[data-k="slug"]:nth-of-type(7) { animation-duration: 34s; animation-delay: -12s; }
+.forest-floor span[data-k="slug"] svg { transform-origin: 0 100%; animation: forest-inch 1.8s ease-in-out infinite; }
+@keyframes forest-crawl {
+  0%   { transform: translateX(0) scaleX(1); }
+  48%  { transform: translateX(70px) scaleX(1); }
+  50%  { transform: translateX(70px) scaleX(-1); }
+  98%  { transform: translateX(0) scaleX(-1); }
+  100% { transform: translateX(0) scaleX(1); }
+}
+@keyframes forest-inch { 0%, 100% { transform: scaleX(1) scaleY(1); } 50% { transform: scaleX(1.08) scaleY(.92); } }
+@media (max-width: 640px) {
+  .forest-floor span:nth-child(n+6) { display: none; }
+  .bfly { width: 24px; }
+}
+
+/* hero doodles become green and the sticky note's ink stays readable */
+:root[data-scene="forest"] .about__aside, :root[data-scene="forest"] .about__aside .mini, :root[data-scene="forest"] .about__aside .arrows li { color: #2b3d31; }

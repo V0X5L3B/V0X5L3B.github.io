@@ -40,7 +40,7 @@ const themeBtn = $("#themeBtn");
 function setTheme(t, persist = true) {
   root.setAttribute("data-theme", t);
   const meta = $('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", t === "light" ? "#fff5f7" : "#1f1720");
+  if (meta) meta.setAttribute("content", t === "light" ? "#f0f6ee" : "#121c16");
   themeBtn.setAttribute("aria-pressed", String(t === "light"));
   themeBtn.setAttribute("aria-label", t === "light" ? "Switch to dark theme" : "Switch to light theme");
   if (persist) store.set("v0x-theme", t);
@@ -444,7 +444,7 @@ if (motionBtn) {
 function paintStatus() {
   const t = $("#sbTheme"), s = $("#sbSeason");
   if (t) t.textContent = `theme: ${currentTheme()}`;
-  if (s) s.textContent = `season: ${root.dataset.holiday ?? "none"}`;
+  if (s) s.textContent = `season: ${root.dataset.holiday ?? root.dataset.scene ?? "none"}`;
 }
 paintStatus();
-new MutationObserver(paintStatus).observe(root, { attributes: true, attributeFilter: ["data-theme", "data-holiday"] });
+new MutationObserver(paintStatus).observe(root, { attributes: true, attributeFilter: ["data-theme", "data-holiday", "data-scene"] });
