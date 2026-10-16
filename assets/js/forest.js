@@ -1,8 +1,9 @@
 /*
  * The default look: a painted redwood forest.
  *   background  far trees lost in the haze, a row of slimmer redwoods, a few old giants with buttress
- *               roots, deep bark, burls, moss and lichen, light shafts, sword ferns and sorrel on the
- *               ground, and two giant trunks framing the edges
+ *               roots, deep bark, burls, moss, lichen and climbing vines, a fallen giant covered in moss,
+ *               light shafts, moss carpets, sword ferns and sorrel on the ground, and two giant trunks
+ *               framing the edges with vines hanging between them
  *   floor       a little scene above the footer: a mossy log, moss mounds, mushrooms and ferns
  *   air         dust by day and fireflies at night
  * Colours: the --fs-* and --ff-* variables in forest.css.
@@ -206,7 +207,7 @@ function moss(ctx, t, P, r, f, big) {
 /* a carpet of moss over the ground: overlapping soft mounds, darker underneath, lit on top, with a
    speckle of sporophyte tips; m mounds spread over the width, all sitting on the line y */
 function mossBed(ctx, w, y, m, size, P, r, f, k) {
-  const lo = new Path2D(), mid = new Path2D(), top = new Path2D(), tips = new Path2D();
+  const lo = new Path2D(), mid = new Path2D(), top = new Path2D(), tips = new Path2D(), fur = new Path2D(), furHi = new Path2D(), caps = new Path2D();
   for (let i = 0; i < m; i++) {
     const x = r() * w, R = size * (0.5 + r() * 0.8), H = R * (0.35 + r() * 0.25), yy = y + (r() - 0.3) * size * 0.5;
     lo.moveTo(x - R, yy + 2); lo.ellipse(x, yy + 2, R, H, 0, Math.PI, 0); lo.lineTo(x - R, yy + 2);
@@ -215,12 +216,138 @@ function mossBed(ctx, w, y, m, size, P, r, f, k) {
     for (let q = 0, n = Math.round(R / (3.2 * k)); q < n; q++) {   // tiny stalks poking out of the mound
       const a = Math.PI + r() * Math.PI, px = x + Math.cos(a) * R * 0.8 * r(), py = yy + Math.sin(a) * H * 0.85, L = (2 + r() * 3) * k;
       tips.moveTo(px, py); tips.lineTo(px + (r() - 0.5) * 1.5 * k, py - L);
+      if (r() < 0.25) { caps.moveTo(px + 0.9 * k, py - L); caps.arc(px, py - L, 0.9 * k, 0, Math.PI * 2); }
+    }
+    for (let q = 0, n = Math.round(R / (1.4 * k)); q < n; q++) {   // the soft starry texture of the cushion
+      const a = Math.PI * (1.05 + r() * 0.9), d = 0.35 + r() * 0.6, px = x + Math.cos(a) * R * d, py = yy + Math.sin(a) * H * d, L = (1.2 + r() * 1.6) * k;
+      const into = Math.sin(a) < -0.6 && r() < 0.6 ? furHi : fur, aa = a + (r() - 0.5) * 1.2;
+      into.moveTo(px, py); into.lineTo(px + Math.cos(aa) * L, py + Math.sin(aa) * L * 0.7);
     }
   }
   ctx.fillStyle = rgba(tint(P, "leaf-lo", f), 0.95); ctx.fill(lo);
   ctx.fillStyle = rgba(tint(P, "moss", f), 0.95); ctx.fill(mid);
   ctx.fillStyle = rgba(tint(P, "leaf-hi", f), 0.55); ctx.fill(top);
+  ctx.lineCap = "round";
+  ctx.strokeStyle = rgba(tint(P, "leaf-lo", f), 0.5); ctx.lineWidth = 0.8 * k; ctx.stroke(fur);
+  ctx.strokeStyle = rgba(tint(P, "leaf-hi", f), 0.45); ctx.lineWidth = 0.6 * k; ctx.stroke(furHi);
   ctx.strokeStyle = rgba(tint(P, "moss", f * 0.7), 0.8); ctx.lineWidth = 0.7 * k; ctx.stroke(tips);
+  ctx.fillStyle = rgba(tint(P, "cap", f), 0.7); ctx.fill(caps);
+}
+
+/* a vine leaf: a little pointed oval, added to path p */
+function leafAt(p, x, y, L, a) {
+  const c = Math.cos(a), s = Math.sin(a), w = L * 0.42;
+  p.moveTo(x, y);
+  p.quadraticCurveTo(x + c * L * 0.5 - s * w, y + s * L * 0.5 + c * w, x + c * L, y + s * L);
+  p.quadraticCurveTo(x + c * L * 0.5 + s * w, y + s * L * 0.5 - c * w, x, y);
+}
+/* a vine climbing a trunk: it winds around it, so only the turns on the near side show */
+function climber(ctx, t, P, r, f, k, h) {
+  const stem = new Path2D(), leaves = new Path2D(), lite = new Path2D(), ph = r() * 6.28, turns = 3 + r() * 3, y0 = t.base + t.w * 0.1;
+  let on = false;
+  for (let i = 0; i <= 160; i++) {
+    const u = i / 160, y = y0 - h * u, a = ph + u * turns * 6.283, front = Math.cos(a) > -0.15;
+    const x = t.cx(y) + t.hw(y) * Math.sin(a) * 1.02;
+    if (front) { if (on) stem.lineTo(x, y); else stem.moveTo(x, y); }
+    on = front;
+    if (front && i % 3 === 0) {
+      const side = i % 6 ? 1 : -1, L = (4 + r() * 4) * k * (1 - u * 0.3);
+      leafAt(r() < 0.35 ? lite : leaves, x, y, L, (side > 0 ? -0.5 : Math.PI + 0.5) + (r() - 0.5) * 0.8);
+    }
+  }
+  ctx.lineCap = "round";
+  ctx.strokeStyle = rgba(tint(P, "leaf-lo", f), 0.9); ctx.lineWidth = 1.3 * k; ctx.stroke(stem);
+  ctx.fillStyle = rgba(tint(P, "leaf", f), 0.95); ctx.fill(leaves);
+  ctx.fillStyle = rgba(tint(P, "leaf-hi", f), 0.9); ctx.fill(lite);
+}
+/* a vine hanging in a loose loop from (x0, y0) to (x1, y1), sagging by sag, with leaves and trailing ends */
+function liana(ctx, x0, y0, x1, y1, sag, P, r, f, k) {
+  const stem = new Path2D(), leaves = new Path2D(), lite = new Path2D(), mx = (x0 + x1) / 2, my = Math.max(y0, y1) + sag;
+  const at = (s) => [(1 - s) * (1 - s) * x0 + 2 * (1 - s) * s * mx + s * s * x1, (1 - s) * (1 - s) * y0 + 2 * (1 - s) * s * my + s * s * y1];
+  stem.moveTo(x0, y0); stem.quadraticCurveTo(mx, my, x1, y1);
+  for (let s = 0.04; s < 0.97; s += 0.025 + r() * 0.02) {
+    const [x, y] = at(s);
+    leafAt(r() < 0.3 ? lite : leaves, x, y, (5 + r() * 5) * k, Math.PI / 2 + (r() - 0.5) * 2.2);
+    if (r() < 0.07) {                              // a strand trailing down from the loop
+      const L = (30 + r() * 70) * k;
+      stem.moveTo(x, y); stem.quadraticCurveTo(x + (r() - 0.5) * 14 * k, y + L * 0.5, x + (r() - 0.5) * 8 * k, y + L);
+      for (let q = 0.15; q < 1; q += 0.12 + r() * 0.08) leafAt(r() < 0.3 ? lite : leaves, x + (r() - 0.5) * 6 * k, y + L * q, (4 + r() * 4) * k, Math.PI / 2 + (r() - 0.5) * 2);
+    }
+  }
+  ctx.lineCap = "round";
+  ctx.strokeStyle = rgba(tint(P, "bark-lo", f), 0.85); ctx.lineWidth = 1.6 * k; ctx.stroke(stem);
+  ctx.fillStyle = rgba(tint(P, "leaf", f), 0.95); ctx.fill(leaves);
+  ctx.fillStyle = rgba(tint(P, "leaf-hi", f), 0.9); ctx.fill(lite);
+}
+/* a fallen redwood lying along the ground from x0 to x1: an upturned root plate at the base end,
+   a broken top, deep bark grain, a blanket of moss and young ferns growing out of its back */
+function fallen(ctx, x0, x1, y, R, P, r, f, k) {
+  const { bark, hi, lo, ink } = shades(P, f), L = x1 - x0, tilt = R * 0.25;
+  const top = (u) => y - R * 2 * (1 - u * 0.45) + tilt * u, bot = (u) => y + tilt * u * 0.3;
+  const mid = (u) => (top(u) + bot(u)) / 2, rad = (u) => (bot(u) - top(u)) / 2;
+  /* root plate: a disc of soil and roots tipped up at the base */
+  const pr = R * 1.9, pcx = x0 - R * 0.2, pcy = y - R * 1.1;
+  const plate = new Path2D();
+  for (let i = 0; i <= 28; i++) { const a = (i / 28) * 6.283, w = pr * (0.8 + 0.25 * Math.sin(a * 3 + 1) + r() * 0.12); plate[i ? "lineTo" : "moveTo"](pcx + Math.cos(a) * w * 0.42, pcy + Math.sin(a) * w); }
+  plate.closePath();
+  ctx.fillStyle = rgba(tint(P, "ground", f * 0.6)); ctx.fill(plate);
+  ctx.fillStyle = rgba(mix(tint(P, "bark-lo", f), tint(P, "ground", f), 0.4), 0.9); ctx.fill(plate);
+  const roots = new Path2D();
+  for (let i = 0; i < 16; i++) {
+    const a = (i / 16) * 6.283 + r() * 0.3, w = pr * (0.6 + r() * 0.5);
+    roots.moveTo(pcx, pcy); roots.quadraticCurveTo(pcx + Math.cos(a) * w * 0.3, pcy + Math.sin(a) * w * 0.6, pcx + Math.cos(a) * w * 0.55, pcy + Math.sin(a) * w * 1.08);
+  }
+  ctx.strokeStyle = rgba(lo, 0.9); ctx.lineCap = "round"; ctx.lineWidth = 2.6 * k; ctx.stroke(roots);
+  ctx.strokeStyle = rgba(hi, 0.35); ctx.lineWidth = 1 * k; ctx.stroke(roots);
+  /* the trunk */
+  const body = new Path2D(), n = 40, jag = [];
+  for (let i = 0; i <= n; i++) body[i ? "lineTo" : "moveTo"](x0 + L * (i / n), top(i / n) + Math.sin(i * 1.7) * 0.8 * k);
+  for (let i = 0; i <= 6; i++) jag.push([x1 + (i % 2 ? 6 : -2) * k + r() * 4 * k, top(1) + (bot(1) - top(1)) * (i / 6)]);
+  jag.forEach(([jx, jy]) => body.lineTo(jx, jy));
+  for (let i = n; i >= 0; i--) body.lineTo(x0 + L * (i / n), bot(i / n));
+  body.closePath();
+  const g = ctx.createLinearGradient(0, top(0), 0, bot(0));
+  g.addColorStop(0, rgba(hi)); g.addColorStop(0.3, rgba(bark)); g.addColorStop(1, rgba(lo));
+  ctx.fillStyle = g; ctx.fill(body);
+  ctx.save(); ctx.clip(body);
+  const grain = new Path2D(), deep = new Path2D();
+  for (let q = 0; q < 26; q++) {                   // furrows running along the log, wavy where it was torn
+    const v = r() * 0.94 + 0.03, into = r() < 0.4 ? deep : grain, s0 = r() * 0.3, s1 = 0.6 + r() * 0.4;
+    for (let i = 0; i <= 20; i++) {
+      const u = s0 + (s1 - s0) * (i / 20), yy = mid(u) + (v * 2 - 1) * rad(u) * Math.sin(Math.acos(Math.max(-1, Math.min(1, v * 2 - 1))) * 0.6 + 0.9) + Math.sin(u * 30 + q) * 0.8;
+      into[i ? "lineTo" : "moveTo"](x0 + L * u, yy);
+    }
+  }
+  ctx.strokeStyle = rgba(ink, 0.35); ctx.lineWidth = 1 * k; ctx.stroke(grain);
+  ctx.strokeStyle = rgba(ink, 0.55); ctx.lineWidth = 2 * k; ctx.stroke(deep);
+  ctx.restore();
+  /* the snapped top shows pale wood */
+  ctx.fillStyle = rgba(mix(hi, [250, 230, 200], 0.35), 0.9);
+  ctx.beginPath(); ctx.ellipse(x1, mid(1), rad(1) * 0.32, rad(1) * 0.92, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = rgba(lo, 0.6); ctx.lineWidth = 0.8 * k;
+  for (let q = 1; q <= 4; q++) { ctx.beginPath(); ctx.ellipse(x1, mid(1), rad(1) * 0.08 * q, rad(1) * 0.22 * q, 0, 0, Math.PI * 2); ctx.stroke(); }
+  /* moss blanket along the back, dripping over the sides in places */
+  const blanket = new Path2D(), drip = new Path2D();
+  blanket.moveTo(x0 + L * 0.03, top(0.03) + 2 * k);
+  for (let i = 0; i <= 50; i++) { const u = 0.03 + 0.9 * (i / 50); blanket.lineTo(x0 + L * u, top(u) - (2 + Math.sin(i * 1.3) * 1.5 + r() * 2) * k); }
+  for (let i = 50; i >= 0; i--) { const u = 0.03 + 0.9 * (i / 50); blanket.lineTo(x0 + L * u, top(u) + (4 + Math.sin(i * 0.8) * 3 + r() * 3) * k); }
+  blanket.closePath();
+  for (let q = 0; q < 9; q++) { const u = 0.08 + r() * 0.8, dx = x0 + L * u, len = rad(u) * (0.4 + r() * 0.8); drip.moveTo(dx, top(u) + 3 * k); drip.quadraticCurveTo(dx + 2 * k, top(u) + len * 0.6, dx, top(u) + len); }
+  ctx.fillStyle = rgba(tint(P, "moss", f)); ctx.fill(blanket);
+  ctx.strokeStyle = rgba(tint(P, "moss", f), 0.9); ctx.lineWidth = 3.4 * k; ctx.stroke(drip);
+  const ytop = (xx) => top((xx - x0) / L);
+  for (let q = 0; q < Math.round(L / (26 * k)); q++) {             // cushions on the moss
+    const u = 0.06 + r() * 0.84, cx = x0 + L * u, Rm = (5 + r() * 7) * k;
+    ctx.fillStyle = rgba(tint(P, "leaf-hi", f), 0.5); ctx.beginPath(); ctx.ellipse(cx, ytop(cx) - Rm * 0.2, Rm, Rm * 0.45, 0, Math.PI, 0); ctx.fill();
+  }
+  for (let q = 0; q < Math.max(2, Math.round(L / (120 * k))); q++) {   // young ferns and a mushroom or two on its back
+    const u = 0.15 + r() * 0.7, fx = x0 + L * u;
+    fern(ctx, fx, ytop(fx) + 2 * k, (14 + r() * 10) * k, P, r, f, 0.7 * k);
+  }
+  for (const u of [0.32 + r() * 0.1, 0.68 + r() * 0.1]) { const mx2 = x0 + L * u; mushroom(ctx, mx2, ytop(mx2) + 1, 7 * k, P, f); }
+  /* shelf fungus on the side */
+  ctx.fillStyle = rgba(mix(hi, [250, 230, 200], 0.4), 0.95);
+  for (let q = 0; q < 4; q++) { const u = 0.2 + r() * 0.6, sx = x0 + L * u, sy = mid(u) + rad(u) * (0.1 + r() * 0.4), w = (6 + r() * 5) * k; ctx.beginPath(); ctx.ellipse(sx, sy, w, w * 0.35, 0, Math.PI, 0); ctx.fill(); }
 }
 
 /* a burl: a low lumpy swelling with the bark grain flowing around it */
@@ -371,17 +498,28 @@ const sprays = () => ({ lo: new Path2D(), mid: new Path2D(), hi: new Path2D() })
 
 /* sword fern: a fan of long arching fronds with narrow leaflets */
 function fern(ctx, x, y, size, P, r, f, k) {
-  const back = new Path2D(), mid = new Path2D(), front = new Path2D();
+  const back = new Path2D(), mid = new Path2D(), front = new Path2D(), rib = new Path2D(), curl = new Path2D();
   const n = 9 + Math.floor(r() * 5);
   for (let i = 0; i < n; i++) {
     const u = i / (n - 1) - 0.5, a = -Math.PI / 2 + u * 2.3 + (r() - 0.5) * 0.2;
     const L = size * (0.75 + r() * 0.4) * (1 - Math.abs(u) * 0.3), pin = size * (0.085 + r() * 0.03);
     const into = Math.abs(u) > 0.35 ? back : i % 3 ? mid : front;
-    spray(into, x + u * size * 0.15, y, a, L, 0.55 + r() * 0.35, (s) => pin * Math.sin(Math.PI * Math.min(1, s * 1.1 + 0.06)) + 0.6 * k);
+    const x0 = x + u * size * 0.15, dr = 0.55 + r() * 0.35;
+    spray(into, x0, y, a, L, dr, (s) => pin * Math.sin(Math.PI * Math.min(1, s * 1.1 + 0.06)) + 0.6 * k);
+    rib.moveTo(x0, y);                             // the stem down the middle of each frond
+    for (let q = 1; q <= 8; q++) { const s = q / 8; rib.lineTo(x0 + Math.cos(a) * L * s, y + Math.sin(a) * L * s + dr * L * s * s); }
+  }
+  for (let q = 0, m = size > 30 * k && r() < 0.6 ? 1 + Math.floor(r() * 2) : 0; q < m; q++) {   // a young frond still curled up
+    const fx = x + (r() - 0.5) * size * 0.3, h = size * (0.3 + r() * 0.2), R = size * 0.05 + k;
+    curl.moveTo(fx, y); curl.quadraticCurveTo(fx + R, y - h * 0.6, fx, y - h);
+    curl.arc(fx + R, y - h, R, Math.PI, Math.PI * 2.6);
   }
   ctx.fillStyle = rgba(tint(P, "leaf-lo", f), 0.95); ctx.fill(back);
   ctx.fillStyle = rgba(tint(P, "fern", f)); ctx.fill(mid);
   ctx.fillStyle = rgba(tint(P, "fern-hi", f)); ctx.fill(front);
+  ctx.lineCap = "round";
+  ctx.strokeStyle = rgba(tint(P, "leaf-lo", f), 0.55); ctx.lineWidth = 0.7 * k; ctx.stroke(rib);
+  ctx.strokeStyle = rgba(tint(P, "fern-hi", f), 0.9); ctx.lineWidth = 1.4 * k; ctx.stroke(curl);
 }
 
 /* redwood sorrel: a low carpet of clover-like trios of leaves */
@@ -508,8 +646,14 @@ const LAYERS = [
         for (let b = 0, m = 3 + Math.floor(r() * 2); b < m; b++) branch(ctx, t, h * (0.0 + (b / m) * 0.34 + r() * 0.05), b % 2 ? 1 : -1, P, r, f, 1.05 * k, front);
         needles(ctx, P, f, 1.05 * k, front);
       }
+      for (const t of trees) if (r() < 0.65) climber(ctx, t, P, r, f, k, h * (0.35 + r() * 0.35));
       ground(ctx, w, base + 2, H, P, r, f + 0.05, 2.7);
       mossBed(ctx, w, base + 10, Math.round(w / 12), 24 * k, P, r, f, k);
+      {                                              // a fallen giant lying across the forest floor
+        const len = Math.min(w * 0.66, 820 * k), x0 = w * (0.1 + r() * 0.16), R = (27 + r() * 6) * k;
+        fallen(ctx, x0, Math.min(w - 10, x0 + len), base + 8 * k, R, P, r, f, k);
+        mossBed(ctx, w, base + 14 * k, Math.round(w / 30), 16 * k, P, r, f, 0.9 * k);
+      }
       for (const t of trees) {
         fern(ctx, t.cx(t.base) - t.hw(t.base) - t.w * (0.2 + r() * 0.4), t.base + 12, 40 * k, P, r, f, 0.85 * k);
         fern(ctx, t.cx(t.base) + t.hw(t.base) + t.w * (0.3 + r() * 0.5), t.base + 14, 32 * k, P, r, f, 0.8 * k);
@@ -554,6 +698,12 @@ const LAYERS = [
         needles(ctx, P, f, 1.15 * k, P3);
       }
       for (const t of edge) roots(ctx, t, P, r, f, base);
+      {                                              // vines hanging in loops from the big trunks
+        const a = edge[0].cx(h * 0.06) + edge[0].hw(h * 0.06) * 0.6, b = edge[1].cx(h * 0.1) - edge[1].hw(h * 0.1) * 0.6;
+        liana(ctx, a, h * 0.06, a + (b - a) * (0.3 + r() * 0.1), -12, h * (0.08 + r() * 0.05), P, r, f, k);
+        liana(ctx, b, h * 0.1, b - (b - a) * (0.28 + r() * 0.1), -12, h * (0.07 + r() * 0.05), P, r, f, k);
+        for (const t of edge) climber(ctx, t, P, r, f, 1.2 * k, h * (0.5 + r() * 0.3));
+      }
       ground(ctx, w, base, H, P, r, f + 0.1, 2.2);
       mossBed(ctx, w, base + 8, Math.round(w / 14), 30 * k, P, r, f, 1.1 * k);
       const L = edge[0].cx(base) + edge[0].hw(base), R = edge[1].cx(base) - edge[1].hw(base);
