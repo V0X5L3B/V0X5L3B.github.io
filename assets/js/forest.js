@@ -279,26 +279,20 @@ function liana(ctx, x0, y0, x1, y1, sag, P, r, f, k) {
   ctx.fillStyle = rgba(tint(P, "leaf", f), 0.95); ctx.fill(leaves);
   ctx.fillStyle = rgba(tint(P, "leaf-hi", f), 0.9); ctx.fill(lite);
 }
-/* a fallen redwood lying along the ground from x0 to x1: an upturned root plate at the base end,
+/* a fallen redwood lying along the ground from x0 to x1: broken roots at the base end,
    a broken top, deep bark grain, a blanket of moss and young ferns growing out of its back */
 function fallen(ctx, x0, x1, y, R, P, r, f, k) {
   const { bark, hi, lo, ink } = shades(P, f), L = x1 - x0, tilt = R * 0.25;
   const top = (u) => y - R * 2 * (1 - u * 0.45) + tilt * u, bot = (u) => y + tilt * u * 0.3;
   const mid = (u) => (top(u) + bot(u)) / 2, rad = (u) => (bot(u) - top(u)) / 2;
-  /* root plate: a disc of soil and roots tipped up at the base */
-  const pr = R * 1.9, pcx = x0 - R * 0.2, pcy = y - R * 1.1;
-  const plate = new Path2D();
-  for (let i = 0; i <= 28; i++) { const a = (i / 28) * 6.283, w = pr * (0.8 + 0.25 * Math.sin(a * 3 + 1) + r() * 0.12); plate[i ? "lineTo" : "moveTo"](pcx + Math.cos(a) * w * 0.42, pcy + Math.sin(a) * w); }
-  plate.closePath();
-  ctx.fillStyle = rgba(tint(P, "ground", f * 0.6)); ctx.fill(plate);
-  ctx.fillStyle = rgba(mix(tint(P, "bark-lo", f), tint(P, "ground", f), 0.4), 0.9); ctx.fill(plate);
+  /* the base end: a few broken roots splaying out low around the torn end */
   const roots = new Path2D();
-  for (let i = 0; i < 16; i++) {
-    const a = (i / 16) * 6.283 + r() * 0.3, w = pr * (0.6 + r() * 0.5);
-    roots.moveTo(pcx, pcy); roots.quadraticCurveTo(pcx + Math.cos(a) * w * 0.3, pcy + Math.sin(a) * w * 0.6, pcx + Math.cos(a) * w * 0.55, pcy + Math.sin(a) * w * 1.08);
+  for (let i = 0; i < 7; i++) {
+    const v = i / 6, sy = top(0) + (bot(0) - top(0)) * (0.2 + v * 0.75), len = R * (0.5 + r() * 0.6), dy = (v - 0.4) * R * 0.8;
+    roots.moveTo(x0 + R * 0.2, sy); roots.quadraticCurveTo(x0 - len * 0.5, sy + dy * 0.3, x0 - len, Math.min(y + 2 * k, sy + dy));
   }
-  ctx.strokeStyle = rgba(lo, 0.9); ctx.lineCap = "round"; ctx.lineWidth = 2.6 * k; ctx.stroke(roots);
-  ctx.strokeStyle = rgba(hi, 0.35); ctx.lineWidth = 1 * k; ctx.stroke(roots);
+  ctx.strokeStyle = rgba(lo, 0.95); ctx.lineCap = "round"; ctx.lineWidth = 3 * k; ctx.stroke(roots);
+  ctx.strokeStyle = rgba(hi, 0.3); ctx.lineWidth = 1 * k; ctx.stroke(roots);
   /* the trunk */
   const body = new Path2D(), n = 40, jag = [];
   for (let i = 0; i <= n; i++) body[i ? "lineTo" : "moveTo"](x0 + L * (i / n), top(i / n) + Math.sin(i * 1.7) * 0.8 * k);
