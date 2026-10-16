@@ -1,11 +1,12 @@
 import {
-  PROFILE, LINKS, SHOUTOUTS, PROJECTS, FILTERS, SKILLS, DIRECTION, TRACKS,
+  PROFILE, LINKS, SHOUTOUTS, PROJECTS, FILTERS, SKILLS, DIRECTION,
   SERVICES, PROCESS, HIRE, NOW, PROMOS, NOTES,
 } from "./data.js";
 import { initHoliday, preview as previewHoliday, setEnabled as setHolidayEnabled, HOLIDAYS, current as currentHoliday } from "./holiday.js";
 import { initPalette } from "./palette.js";
 import { initBrief } from "./brief.js";
 import { petCounts } from "./alive.js";
+import { initMusic } from "./player.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -318,6 +319,7 @@ const COMMANDS = {
     print("  motion [on|off]   turn animations on or off");
     print("  brief             write a project brief");
     print("  pets              how many animals you've petted");
+    print("  music [on|off|next|prev|list|<song>] the background music");
     print("  menu              open the quick menu (ctrl k)");
     print("  keys              keyboard shortcuts");
     print("  clear             clear this screen");
@@ -393,6 +395,28 @@ const COMMANDS = {
     all.sort((a, b) => b[1] - a[1]).forEach(([k, n]) => print(`  ${k.padEnd(9)} ${"\u2665".repeat(Math.min(n, 12))}${n > 12 ? ` ${n}` : ""}`));
     print("counted in this browser only.");
   },
+  music(arg) {
+    if (!music) return print("music needs a browser with Web Audio.");
+    const say = () => print(music.on ? `playing ${music.current()} (${music.playlist()}) \u00b7 volume ${Math.round(music.volume * 100)}%` : "music is off. try `music on`");
+    if (!arg) return say();
+    if (arg === "on" || arg === "play") return music.play().then((ok) => (ok ? say() : print(h("span", { class: "err", text: "this browser didn't let the music start" }))));
+    if (arg === "off" || arg === "pause" || arg === "stop") { music.pause(); return print("music off"); }
+    if (arg === "next" || arg === "skip") { music.next(); return setTimeout(say, 300); }
+    if (arg === "prev" || arg === "back") { music.prev(); return setTimeout(say, 300); }
+    const songs = music.songs();
+    if (arg === "list" || arg === "ls") {
+      print(`${music.playlist()}:`);
+      songs.forEach((m) => print(`  ${m.current ? "\u25b6" : " "} `, h("button", { type: "button", class: "inline", onclick: () => {
+        const k = music.songs().findIndex((x) => x.id === m.id);   // the mix may have changed since this list was printed
+        if (k < 0) print(`${m.title} isn't in the ${music.playlist()} right now`); else music.playAt(k);
+      } }, m.title)));
+      return print("original pieces, played live by your browser.");
+    }
+    const k = songs.findIndex((m) => m.title.startsWith(arg) || m.id.startsWith(arg));
+    if (k < 0) return print(h("span", { class: "err", text: `no song "${arg}". try: music list` }));
+    music.playAt(k);
+    setTimeout(say, 300);
+  },
   menu() { pal.open(); },
   keys() { pal.showKeys(); },
   clear() { out.replaceChildren(); },
@@ -417,58 +441,8 @@ print("v0x lab console — type `help` or tap a command below.");
 
 initHoliday();
 
-/* ---------------- ambient audio (autoplays; falls back to first interaction) ---------------- */
-(function player() {
-  if (!TRACKS.length) return;
-  const wrap = $("#player");
-  const audio = new Audio();
-  audio.preload = "auto";
-  audio.loop = false;
-  let idx = 0, ready = false;
-  const label = $("#playerLabel");
-  const play = $("#playBtn");
-  const vol = $("#vol");
-  const saved = parseFloat(store.get("v0x-vol"));
-  audio.volume = Number.isFinite(saved) ? Math.min(1, Math.max(0, saved)) : 0.3;
-  vol.value = String(audio.volume);
-
-  const load = () => { audio.src = TRACKS[idx].src; ready = true; };
-  const paint = (playing) => {
-    play.textContent = playing ? "Pause" : "Play";
-    play.setAttribute("aria-pressed", String(playing));
-    label.textContent = playing ? `ambient · ${TRACKS[idx].name}` : "ambient · off";
-  };
-  play.addEventListener("click", async () => {
-    if (!ready) load();
-    if (audio.paused) {
-      try { await audio.play(); paint(true); } catch { label.textContent = "ambient · couldn't play"; }
-    } else { audio.pause(); paint(false); }
-  });
-  $("#nextBtn").addEventListener("click", async () => {
-    idx = (idx + 1) % TRACKS.length; load();
-    try { await audio.play(); paint(true); } catch { paint(false); }
-  });
-  audio.addEventListener("ended", () => $("#nextBtn").click());
-  audio.addEventListener("error", () => { label.textContent = "ambient · track missing"; });
-  vol.addEventListener("input", () => { audio.volume = parseFloat(vol.value); store.set("v0x-vol", vol.value); });
-  paint(false);
-  wrap.hidden = false;
-
-  /* Autoplay: try immediately. Browsers usually block sound until the first
-     user gesture, so if that happens, start on the first click/tap/keypress. */
-  const start = async () => {
-    if (!audio.paused) return true;
-    if (!ready) load();
-    try { await audio.play(); paint(true); return true; } catch { return false; }
-  };
-  const onGesture = async (e) => {
-    if (e.target.closest && e.target.closest("#player")) return; // let the player's own controls decide
-    if (await start()) removeGestures();
-  };
-  const gestures = ["pointerdown", "keydown", "touchend"];
-  const removeGestures = () => gestures.forEach((g) => document.removeEventListener(g, onGesture, true));
-  start().then((ok) => { if (!ok) gestures.forEach((g) => document.addEventListener(g, onGesture, true)); });
-})();
+/* ---------------- music (player.js: original songs played live in the browser) ---------------- */
+const music = initMusic({ store });
 
 /* ---------------- scroll: active nav + reveal ---------------- */
 // the hero has no nav link, so reaching it again clears the highlight
@@ -571,20 +545,21 @@ const SECTIONS = [
 const pal = initPalette({
   items: () => {
     const hol = root.dataset.holiday, month = currentHoliday();
-    const playBtn = $("#playBtn"), player = $("#player");
     return [
       ...SECTIONS.map(([label, q, keys, hint]) => ({ group: "Go to", label, keys, hint, run: () => goTo(q) })),
       { group: "Do", label: "Write a project brief", keys: "hire message discord start project", hint: "g b", run: goBrief },
       { group: "Do", label: `Switch to ${currentTheme() === "light" ? "dark" : "light"} theme`, keys: "theme dark light mode", hint: "t", run: toggleTheme },
       { group: "Do", label: `Turn animations ${reduced ? "on" : "off"}`, keys: "motion animals calm", hint: "m", run: toggleMotion },
       month && HOLIDAYS[month] && { group: "Do", label: hol ? `Turn off the ${HOLIDAYS[month].name} look` : `Turn on the ${HOLIDAYS[month].name} look`, keys: "seasonal holiday theme", run: () => setHolidayEnabled(!hol) },
-      player && !player.hidden && { group: "Do", label: playBtn?.textContent === "Pause" ? "Pause the music" : "Play the ambient music", keys: "music sound audio", run: () => playBtn.click() },
+      music && { group: "Do", label: music.on ? "Pause the music" : "Play the music", keys: "music sound audio song", run: () => music.toggle() },
+      music?.on && { group: "Do", label: "Next song", keys: "music skip track", run: () => music.next() },
       LINKS.discord?.copy && { group: "Do", label: "Copy my Discord name", keys: "discord handle", run: () => copyWithToast(LINKS.discord.copy, "Discord name") },
       { group: "Do", label: "Copy the link to this site", keys: "share url", run: () => copyWithToast(PROFILE.site, "Link") },
       { group: "Do", label: "Print or save as PDF", keys: "print pdf resume", run: () => window.print() },
       { group: "Do", label: "Keyboard shortcuts", keys: "keys help", hint: "?", run: () => pal.showKeys() },
       ...PROJECTS.map((p) => ({ group: "Projects", label: p.name, keys: `${p.id} ${p.tags.join(" ")} project`, run: () => openProject(p.id) })),
       ...NOTES.map((n) => ({ group: "Notes", label: n.title, keys: `${n.tags.join(" ")} note`, run: () => openNote(n.id) })),
+      ...(music ? music.songs().map((m, k) => ({ group: "Music", label: m.current && music.on ? `${m.title} (playing)` : m.title, keys: `music song ${music.playlist()}`, run: () => music.playAt(k) })) : []),
       ...Object.values(LINKS).filter((l) => l?.url && l.url !== PROFILE.site).map((l) => ({ group: "Links", label: `${l.label} \u2197`, keys: "open link", run: () => window.open(l.url, "_blank", "noopener") })),
     ].filter(Boolean);
   },

@@ -1,4 +1,4 @@
-/* Quick menu, keyboard shortcuts, project brief builder, copy-link buttons and the little toast.
+/* Quick menu, keyboard shortcuts, project brief builder, copy-link buttons, the music player and the little toast.
    Colours come from the theme tokens in main.css, so holidays restyle these too. */
 
 /* ---------- quick menu (palette.js) ---------- */
@@ -76,6 +76,47 @@
 .note-i__b .share__w { margin-top: 10px; }
 .link-btn.share { color: var(--muted); border-style: dashed; }
 .link-btn.share:hover { color: var(--text); }
+
+/* ---------- music player (player.js) ---------- */
+.music-btn { position: relative; }
+.music-btn[hidden] { display: none; }
+.music-btn .eq { position: absolute; inset: 0; width: 15px; height: 13px; margin: auto; opacity: 0; }
+.music-btn.is-on { color: var(--crimson-t); border-color: color-mix(in srgb, var(--crimson) 55%, var(--line)); }
+.music-btn.is-on .music-btn__note { opacity: 0; }
+.music-btn.is-on .eq { opacity: 1; }
+
+.eq { display: inline-flex; align-items: flex-end; justify-content: center; gap: 2px; width: 30px; height: 24px; }
+.eq i { flex: 1; height: 100%; border-radius: 2px; background: var(--crimson-t); transform-origin: 50% 100%; transition: transform .09s linear; }
+.eq i:nth-child(1) { transform: scaleY(var(--l, .35)); }
+.eq i:nth-child(2) { transform: scaleY(var(--l, .65)); }
+.eq i:nth-child(3) { transform: scaleY(var(--l, .45)); }
+.eq i:nth-child(4) { transform: scaleY(var(--l, .75)); }
+.eq i:nth-child(5) { transform: scaleY(var(--l, .4)); }
+.player:not(.is-on) .eq i { opacity: .4; }
+
+.player { width: min(460px, 100%); justify-self: end; font: 500 .74rem/1.3 var(--mono); color: var(--dim); }
+.player[hidden] { display: none; }
+.player__in { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 14px; }
+.player__meta { display: grid; gap: 4px; min-width: 0; }
+.player__title, .player__sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.player__title { font: 600 .92rem/1.2 var(--mono); color: var(--text); }
+.player__ctl { display: flex; gap: 6px; }
+.player__ctl .icon-btn { width: 36px; height: 36px; }
+.player__pp, .player__pp:hover { color: #fff; background: var(--crimson); border-color: var(--crimson); }
+.player__pp:hover { filter: brightness(1.08); }
+.player__prog { grid-column: 1 / -1; height: 4px; border-radius: 999px; background: var(--bg-2); overflow: hidden; }
+.player__prog i { display: block; height: 100%; background: var(--crimson); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+.player__row { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.player__vol { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.player__vol input { width: 120px; accent-color: var(--crimson); }
+.player__sub, .player__time { color: var(--muted); }
+.player__time { font-variant-numeric: tabular-nums; }
+.player__list { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.player__list .chip { padding: 6px 10px; font-size: .7rem; }
+.player__list .chip[aria-current="true"] { color: var(--crimson-t); border-color: var(--crimson); background: var(--crimson-bg); }
+.player__list .chip[aria-current="true"]::before { content: "\266a  "; }
+.sb__music:empty { display: none; }
+@media (max-width: 760px) { .player { justify-self: stretch; width: 100%; } }
 
 /* ---------- toast ---------- */
 .toast {
