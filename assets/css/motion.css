@@ -152,14 +152,12 @@ html[data-holiday] .doodle { display: none; }
 :root[data-holiday="halloween"] .decor-row span[data-k="candle"] { animation: candlebob 3s ease-in-out infinite alternate; }
 :root[data-holiday="halloween"] .corner--l svg, :root[data-holiday="halloween"] .corner--r svg { transform-origin: top left; animation: websway 7s ease-in-out infinite alternate; }
 :root[data-holiday="halloween"] .corner--r svg { transform-origin: top left; animation-delay: -3s; }
-:root[data-holiday="halloween"] .moon svg { animation: moonpulse 6s ease-in-out infinite alternate; }
 @keyframes ghostfloat { 0%, 100% { transform: translateY(0) rotate(-6deg); opacity: .8; } 50% { transform: translateY(-30px) rotate(6deg); opacity: 1; } }
 @keyframes hatwobble { 0%, 100% { transform: rotate(-11deg); } 50% { transform: rotate(11deg); } }
 @keyframes rattle { 0%, 60%, 100% { transform: none; } 64% { transform: rotate(-14deg) translateY(-4px); } 68% { transform: rotate(14deg); } 72% { transform: rotate(-10deg) translateY(-3px); } 76% { transform: rotate(10deg); } 80% { transform: rotate(-4deg); } }
 @keyframes catsway { 0%, 100% { transform: rotate(-5deg) scaleY(1); } 50% { transform: rotate(5deg) scaleY(1.08); } }
 @keyframes candlebob { to { transform: translateY(-4px) rotate(2deg); } }
 @keyframes websway { to { transform: rotate(4deg) scale(1.07); } }
-@keyframes moonpulse { to { transform: scale(1.1); filter: brightness(1.18); } }
 :root[data-holiday="halloween"] .decor-row span[data-k="pumpkin"], :root[data-holiday="halloween"] .decor-row span[data-k="pumpkinPlain"] { transform-origin: 50% 100%; animation: flicker 3.4s steps(1) infinite, pumphop 4.4s ease-in-out infinite; }
 :root[data-holiday="halloween"] .decor-row span[data-k="pumpkinPlain"] { animation: pumphop 4.4s ease-in-out infinite; }
 @keyframes pumphop { 0%, 70%, 100% { transform: none; } 76% { transform: translateY(-14px) scale(.94, 1.08); } 84% { transform: translateY(0) scale(1.08, .92); } 90% { transform: scale(.98, 1.02); } }
