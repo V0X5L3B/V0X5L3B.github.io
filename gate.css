@@ -146,20 +146,3 @@ body {
   .term-body { font-size: 13px; }
   .term-measure { font-size: 13px; }
 }
-
-.inside {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 24px;
-  text-align: center;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-}
-.inside h1 { margin: 0; font-size: clamp(24px, 6vw, 36px); }
-.inside p { margin: 0; color: #aaa; }
-.inside .inside-tag { color: #27c93f; }
-.inside button { margin-top: 16px; background: none; color: #aaa; border: 1px solid #444; border-radius: 6px; padding: 8px 16px; font: inherit; cursor: pointer; }
-.inside button:hover { color: #fff; border-color: #888; }
