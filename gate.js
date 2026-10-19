@@ -2,7 +2,7 @@
 // Only a salted PBKDF2 hash of the password is stored here, never the password itself.
 const SALT = 'v0x5l3b-gate';
 const ROUNDS = 150000;
-const HASH = 'a6e4b2c9f10ab2baf843a5fbb7e15dde20fff80693671fb30bca392a98b9a836';
+const HASH = 'f3a2420596a5c871d749ebce2ed6c068377d9d98fd2bcd383279ebd8c415d41d';
 const KEY = 'v0x-gate';
 const PROMPT = 'guest@v0x5l3b ~ % ';
 const TRIES = 3;
@@ -32,7 +32,7 @@ function line(text) {
 
 function setMode(next) {
   mode = next;
-  promptEl.textContent = next === 'shell' ? PROMPT : next === 'pass' ? 'Password:' : '';
+  promptEl.textContent = next === 'shell' ? PROMPT : next === 'pass' ? 'Password: ' : '';
   title.textContent = next === 'shell' ? 'guest — -zsh — 80×24' : 'guest — unlock — 80×24';
   form.classList.toggle('is-busy', next === 'busy');
   input.type = next === 'pass' ? 'password' : 'text';
@@ -54,11 +54,14 @@ async function typeCommand(cmd) {
   promptEl.textContent = PROMPT;
   for (const ch of cmd) {
     typed.textContent += ch;
-    await wait(70 + Math.random() * 60);
+    await wait(45 + Math.random() * 40);
   }
-  await wait(180);
+  await wait(150);
   line(PROMPT + cmd);
+  const early = input.value; // keep anything typed while the command was being typed
   startUnlock();
+  input.value = early;
+  typed.textContent = '*'.repeat(early.length);
 }
 
 function startUnlock() {
@@ -109,10 +112,10 @@ async function hash(text) {
 }
 
 async function checkPassword(value) {
-  line('Password:');
+  line('Password: ' + '*'.repeat(value.length));
   setMode('busy');
   let ok = false;
-  try { ok = (await hash(value)) === HASH; } catch (err) { ok = false; }
+  try { ok = (await hash(value.trim().toLowerCase())) === HASH; } catch (err) { ok = false; }
   if (ok) {
     await wait(300);
     unlock();
@@ -157,8 +160,8 @@ form.addEventListener('submit', (e) => {
 });
 
 input.addEventListener('input', () => {
-  if (mode === 'busy') { input.value = ''; return; }
-  typed.textContent = mode === 'pass' ? '' : input.value; // passwords never echo
+  if (mode === 'busy') return;
+  typed.textContent = mode === 'pass' ? '*'.repeat(input.value.length) : input.value;
   body.scrollTop = 1e9;
 });
 
@@ -167,7 +170,7 @@ input.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.key === 'c') {
     e.preventDefault();
     if (mode === 'busy') return;
-    line((mode === 'pass' ? 'Password:' : PROMPT + input.value) + '^C');
+    line((mode === 'pass' ? 'Password: ' + '*'.repeat(input.value.length) : PROMPT + input.value) + '^C');
     setMode('shell');
   }
   if (e.ctrlKey && e.key === 'l') { e.preventDefault(); log.textContent = ''; }
