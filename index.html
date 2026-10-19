@@ -7,32 +7,30 @@
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="dark">
   <title>Page Not Found</title>
-  <link rel="icon" href="/stop.svg" type="image/svg+xml">
+  <link rel="icon" href="/x.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/gate.css">
   <script src="/gate.js" defer></script>
 </head>
 <body>
   <main class="notfound" id="notfound">
-    <svg class="stop" id="stop" viewBox="0 0 200 200" role="img" aria-label="Stop sign">
-      <polygon points="58.6,0 141.4,0 200,58.6 200,141.4 141.4,200 58.6,200 0,141.4 0,58.6" fill="#fff"/>
-      <polygon points="61.5,7 138.5,7 193,61.5 193,138.5 138.5,193 61.5,193 7,138.5 7,61.5" fill="#c8102e"/>
-      <polygon points="64.4,14 135.6,14 186,64.4 186,135.6 135.6,186 64.4,186 14,135.6 14,64.4" fill="none" stroke="#fff" stroke-width="3"/>
-      <text x="100" y="100" text-anchor="middle" dominant-baseline="central" fill="#fff" font-family="Arial Black, Helvetica, Arial, sans-serif" font-weight="900" font-size="54" letter-spacing="1">STOP</text>
+    <svg class="mark" id="mark" viewBox="0 0 200 200" role="img" aria-label="X">
+      <path d="M40 40 L160 160 M160 40 L40 160" stroke="#e5232f" stroke-width="34" stroke-linecap="round" fill="none"/>
     </svg>
     <h1>Page Not Found</h1>
   </main>
 
   <section class="term" id="term" hidden aria-label="Terminal">
-    <div class="term-bar">
-      <button class="dot dot-close" id="term-close" type="button" aria-label="Close terminal"></button>
-      <span class="dot dot-min"></span>
-      <span class="dot dot-max"></span>
+    <div class="term-bar" id="term-bar">
+      <button class="dot dot-close" id="term-close" type="button" aria-label="Close"></button>
+      <button class="dot dot-min" id="term-min" type="button" aria-label="Minimize"></button>
+      <button class="dot dot-max" id="term-max" type="button" aria-label="Zoom"></button>
       <span class="term-title" id="term-title">guest — -zsh — 80×24</span>
     </div>
     <div class="term-body" id="term-body">
       <div id="term-log"></div>
-      <form class="term-line" id="term-form" autocomplete="off"><span id="term-prompt"></span><span id="term-typed"></span><span class="cursor" id="term-cursor"></span><input id="term-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Terminal input"></form>
+      <div class="term-line" id="term-line"><span id="term-prompt"></span><span id="term-before"></span><span class="cursor" id="term-cursor"> </span><span id="term-after"></span><input id="term-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Terminal input"></div>
     </div>
+    <span class="term-measure" id="term-measure" aria-hidden="true">0000000000</span>
   </section>
 
   <main class="inside" id="inside" hidden>
