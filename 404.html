@@ -3,15 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="dark">
   <title>Page Not Found</title>
   <link rel="icon" href="/x.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/gate.css">
-  <link rel="stylesheet" href="/site.css">
   <script src="/gate.js" defer></script>
-  <script src="/site.js" defer></script>
 </head>
 <body>
   <main class="notfound" id="notfound">
@@ -35,146 +33,11 @@
     <span class="term-measure" id="term-measure" aria-hidden="true">0000000000</span>
   </section>
 
-  <div class="site" id="inside" hidden>
-    <header class="topbar">
-      <a class="brand" href="#top"><span class="brand-x" aria-hidden="true">&times;</span> v0x5l3b</a>
-      <nav class="nav" aria-label="Sections">
-        <a href="#projects">Projects</a>
-        <a href="#help">Help</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <div class="tools">
-        <button class="tool" id="theme" type="button" aria-label="Switch to light theme">Light</button>
-        <button class="tool" id="lock" type="button">Lock</button>
-      </div>
-    </header>
-
-    <main id="top">
-      <section class="hero">
-        <img class="avatar" src="/assets/img/avatar.webp" width="160" height="160" alt="A black and white kitten holding a guitar">
-        <div class="hero-text">
-          <p class="handle">@v0x5l3b <span class="status"><span class="status-dot" aria-hidden="true"></span>open for projects</span></p>
-          <h1>I build things, and I help you make yours.</h1>
-          <p class="intro">Self-directed developer working in Python and the web. I make websites, small tools and experiments, and I'd love to help you build the thing you've been picturing, from a first idea to something that actually works.</p>
-          <div class="actions">
-            <a class="btn btn-main" href="#contact">Get in touch</a>
-            <a class="btn" href="#projects">See projects</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="block" id="projects" aria-labelledby="projects-h">
-        <h2 id="projects-h"><span class="num">01</span> Projects</h2>
-        <div class="cards">
-          <article class="card">
-            <p class="kicker">Web &middot; ongoing</p>
-            <h3>This website</h3>
-            <p>My personal site, written by hand in plain HTML, CSS and JavaScript and hosted on GitHub Pages. No framework, no build step, no trackers.</p>
-            <ul>
-              <li>The front page is a Page Not Found screen. Tab or Ctrl opens a terminal that looks and behaves like macOS Terminal with zsh.</li>
-              <li>The terminal only holds a salted PBKDF2 hash of the password, never the password itself.</li>
-              <li>A strict Content Security Policy: every script, style and font is served from this site.</li>
-            </ul>
-            <p class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Static site</span></p>
-          </article>
-          <article class="card">
-            <p class="kicker">Python &middot; experiment</p>
-            <h3>Experimental AI agent</h3>
-            <p>A task-oriented agent that works inside a controlled environment through tools: it can look around, read and write files, run code and tests, and read its own errors.</p>
-            <ul>
-              <li>Tools: list directories, create and read files, write files, create directories, run code, run tests, inspect errors.</li>
-              <li>Exploring training loops, checkpoints, exploration and task difficulty.</li>
-              <li>Learning reinforcement-learning ideas with Stable-Baselines3 and related tooling.</li>
-              <li>This is experimental work, not a production coding agent.</li>
-            </ul>
-            <p class="tags"><span>Python</span><span>Reinforcement learning</span><span>Stable-Baselines3</span><span>Tool use</span></p>
-          </article>
-        </div>
-      </section>
-
-      <section class="block" id="help" aria-labelledby="help-h">
-        <h2 id="help-h"><span class="num">02</span> What I can help with</h2>
-        <div class="cards cards-3">
-          <article class="card">
-            <h3>A website of your own</h3>
-            <p>A personal page, portfolio or small project site, built by hand: quick to load, no trackers, and yours to keep.</p>
-          </article>
-          <article class="card">
-            <h3>Python scripts and small tools</h3>
-            <p>Something that does a boring job for you: a script, a small command-line tool, or a helper for your project or your files.</p>
-          </article>
-          <article class="card">
-            <h3>Help making your thing</h3>
-            <p>Stuck on a bug or an idea you can't get started on? I'll read the error with you, explain what it means, and help you get it working.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="block" id="skills" aria-labelledby="skills-h">
-        <h2 id="skills-h"><span class="num">03</span> Skills</h2>
-        <div class="skills">
-          <div class="skill-group">
-            <h3>Languages</h3>
-            <dl>
-              <div><dt>Python</dt><dd>Building with</dd></div>
-              <div><dt>HTML &amp; CSS</dt><dd>Building with</dd></div>
-              <div><dt>JavaScript</dt><dd>Experimenting with</dd></div>
-            </dl>
-          </div>
-          <div class="skill-group">
-            <h3>AI and experiments</h3>
-            <dl>
-              <div><dt>Reinforcement-learning concepts</dt><dd>Learning</dd></div>
-              <div><dt>Stable-Baselines3</dt><dd>Experimenting with</dd></div>
-              <div><dt>Agent tool environments</dt><dd>Building with</dd></div>
-              <div><dt>Training loops &amp; checkpoints</dt><dd>Experimenting with</dd></div>
-            </dl>
-          </div>
-          <div class="skill-group">
-            <h3>Tools and workflow</h3>
-            <dl>
-              <div><dt>Git &amp; GitHub</dt><dd>Using</dd></div>
-              <div><dt>Command line &amp; PowerShell</dt><dd>Using</dd></div>
-              <div><dt>AI coding assistants</dt><dd>Using</dd></div>
-            </dl>
-          </div>
-        </div>
-        <h3 class="sub">Where I'd like to go next</h3>
-        <ul class="next">
-          <li>Agents that talk to each other</li>
-          <li>Agent support for more programming languages</li>
-          <li>More JavaScript and more of the web</li>
-        </ul>
-      </section>
-
-      <section class="block" id="contact" aria-labelledby="contact-h">
-        <h2 id="contact-h"><span class="num">04</span> Contact</h2>
-        <p class="lead">Got something you want to make? Message me on Discord and tell me your idea.</p>
-        <div class="links">
-          <div class="link-card">
-            <p class="kicker">Discord</p>
-            <p class="link-main">v0x5l.3b</p>
-            <button class="btn" id="copy-discord" type="button" data-copy="v0x5l.3b">Copy username</button>
-          </div>
-          <div class="link-card">
-            <p class="kicker">Discord server</p>
-            <p class="link-main">Come hang out and see what I'm building.</p>
-            <a class="btn" href="https://discord.gg/y9vfNpFgN" rel="noopener">Join the server</a>
-          </div>
-          <div class="link-card">
-            <p class="kicker">Recommended</p>
-            <p class="link-main">Clanker, an entertainment Discord bot with economy, memes and games.</p>
-            <a class="btn" href="https://clanker.pxsl.dev/" rel="noopener">Visit Clanker</a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="foot">
-      <span>v0x5l3b.is-a.dev</span>
-      <span>Plain HTML, CSS and JavaScript on GitHub Pages.</span>
-    </footer>
-  </div>
+  <main class="inside" id="inside" hidden>
+    <p class="inside-tag">v0x5l3b</p>
+    <h1>You're in.</h1>
+    <p>The new site is being built. Check back soon.</p>
+    <button type="button" id="lock">Lock</button>
+  </main>
 </body>
 </html>
